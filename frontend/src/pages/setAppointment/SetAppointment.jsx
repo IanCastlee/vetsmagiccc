@@ -31,6 +31,7 @@ const SetAppointment = () => {
   const [showDateTime, setshowDateTime] = useState("1");
   const [showSummaryForm, setShowSummaryForm] = useState(false);
   const [showLoader3, setShowLoader3] = useState(false);
+  const [noInternetConn, setNoInternetConn] = useState(false);
 
   //setAppointment
   const [appointmentForm, setAppointment] = useState({
@@ -293,8 +294,32 @@ const SetAppointment = () => {
     setShowSummaryForm(true);
   };
 
+  useEffect(() => {
+    const handleOffline = () => console.log("You are offline");
+    const handleOnline = () => console.log("Back online");
+
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+    };
+  }, []);
+
   //handle submit
   const handleSubmitAppointment = async () => {
+    if (!navigator.onLine) {
+      console.log("No internet connection.");
+      setNoInternetConn(true);
+
+      setTimeout(() => {
+        setNoInternetConn(false);
+      }, 3000);
+
+      return false;
+    }
+
     if (!appointmentForm.appointment_date) {
       console.warn("Appointment date is required.");
       return false;
@@ -328,7 +353,6 @@ const SetAppointment = () => {
     formData.append("appointment_time", selectedTimeSlot);
     formData.append("price", price);
 
-    // Only append image if a file is selected
     if (appointmentForm.image) {
       formData.append("image", appointmentForm.image);
     }
@@ -909,6 +933,20 @@ const SetAppointment = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {noInternetConn && (
+        <motion.div
+          className="no-internet"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <span>
+            Can't proceed with the request. Please check your internet
+            connection.
+          </span>
+        </motion.div>
       )}
     </>
   );

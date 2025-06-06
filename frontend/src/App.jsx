@@ -34,6 +34,7 @@ import DoneAppointment from "./pages/ADMIN/appointment/DoneAppointment";
 
 import FollowupAppointment from "./pages/ADMIN/appointment/FollowupAppointment";
 import CompletedFollowUpAppointment from "./pages/ADMIN/appointment/CompletedFollowUpAppointment";
+import SMSNotif from "./pages/SMSNotif";
 
 const Layout = () => {
   const location = useLocation();
@@ -61,6 +62,7 @@ const Layout = () => {
         <Route path="/signin/" element={<Signin />} />
         <Route path="/signup/" element={<Signup />} />
         <Route path="/confirm/" element={<ConfirmationForm />} />
+        <Route path="/sms/" element={<SMSNotif />} />
       </Routes>
     </>
   );

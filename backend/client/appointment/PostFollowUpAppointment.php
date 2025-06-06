@@ -12,6 +12,8 @@ $appointment_time = $data['time_slot'];
 $fa_id = $data['fa_id'];
 $payment = $data['payment'];
 $status = 0;
+$status_set = 1;
+
 
 if (!$appointment_id || !$appointment_date || !$appointment_time || !$fa_id) {
     echo json_encode([
@@ -54,7 +56,7 @@ try {
 
     if ($insert->execute()) {
         $updateFollowUp = $conn->prepare("UPDATE followup_appointment SET status = ? WHERE fa_id = ?");
-        $updateFollowUp->bind_param("ii",  $status, $fa_id);
+        $updateFollowUp->bind_param("ii",  $status_set, $fa_id);
         $updateFollowUp->execute();
         echo json_encode([
             "success" => true,

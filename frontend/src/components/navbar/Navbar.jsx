@@ -10,10 +10,6 @@ import axiosIntance from "../../../axios";
 import logo from "../../assets/icons/logo.png";
 
 //ICONS
-import { RiHomeLine } from "react-icons/ri";
-import { RiCalendarScheduleLine } from "react-icons/ri";
-import { LuCalendarSync } from "react-icons/lu";
-
 import { AiOutlineBell } from "react-icons/ai";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { RiMenu3Line } from "react-icons/ri";
@@ -32,6 +28,7 @@ const Navbar = ({ isHome }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showActiveModal, setShowActiveModal] = useState("");
+  const [activeLink, setActiveLink] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,26 +74,52 @@ const Navbar = ({ isHome }) => {
               </div>
             )}
             <div className="bot">
-              <Link to="/home/" title="Home" className="list-icon">
-                <RiHomeLine className="nav-icon" />
+              <Link
+                to="/home/"
+                onClick={() => setActiveLink("home")}
+                title="Home"
+                className={`list-icon ${
+                  activeLink === "home" ? "active" : ""
+                } `}
+              >
+                {/* <RiHomeLine className="nav-icon" /> */}
+                Home
               </Link>
 
-              <Link to="/medicine/" title="Vetcare Shop" className="list-icon">
-                <AiOutlineMedicineBox className="nav-icon" />
+              <Link
+                to="/medicine/"
+                onClick={() => setActiveLink("shop")}
+                title="Vetcare Shop"
+                className={`list-icon ${
+                  activeLink === "shop" ? "active" : ""
+                } `}
+              >
+                {/* <AiOutlineMedicineBox className="nav-icon" /> */}
+                Shop
               </Link>
               <Link
                 to="/myappointment/"
+                onClick={() => setActiveLink("appointment")}
                 title="Appointment"
-                className="list-icon"
+                className={`list-icon ${
+                  activeLink === "appointment" ? "active" : ""
+                } `}
               >
-                <RiCalendarScheduleLine className="nav-icon" />
+                {/* <RiCalendarScheduleLine className="nav-icon" /> */}
+                Appointment
               </Link>
               <Link
                 title="Follow-up Appointment"
-                className="list-icon"
-                onClick={() => setModlToShow("follow-up")}
+                onClick={() => {
+                  setModlToShow("follow-up");
+                  setActiveLink("fa-appointment");
+                }}
+                className={`list-icon ${
+                  activeLink === "fa-appointment" ? "active" : ""
+                } `}
               >
-                <LuCalendarSync className="nav-icon" />
+                {/* <LuCalendarSync className="nav-icon" /> */}
+                Follow-up Appointment
               </Link>
               <Link
                 title="Notification"

@@ -55,7 +55,7 @@
     }
 
     .setappointment-bot {
-      background-color: #fbe4d6;
+      background-color: #fff;
       width: 55%;
       height: 100%;
       padding: 80px 100px 10px 100px;
@@ -555,6 +555,21 @@
         }
       }
     }
+  }
+}
+.no-internet {
+  background-color: lightgrey;
+  position: fixed;
+  top: 90%;
+  left: 36%;
+  transform: translate(-50%, -50%);
+  z-index: 3333;
+  padding: 4px 10px;
+  border-radius: 3px;
+
+  span {
+    font-size: 12px;
+    color: #000;
   }
 }
 
@@ -1064,6 +1079,24 @@
           }
         }
       }
+    }
+  }
+
+  .no-internet {
+    background-color: lightgrey;
+    position: fixed;
+    top: 90%;
+    left: 15%;
+    transform: translate(-50%, -50%);
+    z-index: 3333;
+    padding: 4px 10px;
+    border-radius: 3px;
+    width: 70%;
+
+    span {
+      font-size: 12px;
+      color: #000;
+      text-align: center;
     }
   }
 }

@@ -2,20 +2,15 @@ import { useEffect, useState } from "react";
 import "./Veterinarian.scss";
 import { motion } from "framer-motion";
 import axiosIntance from "../../../../axios";
+import Swal from "sweetalert2";
 
 //ICONS
 import { FiSearch } from "react-icons/fi";
 import { RiRefreshLine } from "react-icons/ri";
-import Emptydata from "../../../components/emptydata/Emptydata";
 
 const NotActiveVeterinarian = () => {
-  const [showModalServices, setShowModalShowModalServcies] = useState(false);
   const [veterinarian, setVeterinarian] = useState([]);
-  const [veterinarianServices, setVeterinarianServices] = useState([]);
-  const [showLoader, setShowLoader] = useState(false);
-  const [servicesData, setServicesData] = useState([]);
 
-  const [activeFormModal, setActiveFormModal] = useState("");
   const [showDelForm, setShowDelForm] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -57,6 +52,7 @@ const NotActiveVeterinarian = () => {
         );
 
         setShowDelForm(null);
+        showSuccessAlert();
       } else {
         console.log("Delete failed:", res.data);
       }
@@ -72,6 +68,19 @@ const NotActiveVeterinarian = () => {
       item.specialization.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.address.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const showSuccessAlert = () => {
+    Swal.fire({
+      title: "Success!",
+      text: "Veterinarian Set as Active",
+      icon: "success",
+      confirmButtonText: "OK",
+      background: "rgba(0, 0, 0, 0.9)",
+      color: "lightgrey",
+      timer: 1200,
+      showConfirmButton: false,
+    });
+  };
 
   return (
     <>

@@ -37,8 +37,11 @@
         width: 100%;
 
         span {
-          font-size: 1rem;
+          font-size: 0.75rem;
           color: #0c0950;
+          background-color: rgb(255, 254, 254);
+          border-radius: 25px;
+          padding: 3px 10px;
         }
       }
       .bot {
@@ -49,6 +52,34 @@
         .list-icon {
           list-style: none;
           text-decoration: none;
+          color: #7b7e80;
+          font-size: 0.875rem;
+          font-weight: 500;
+          position: relative;
+          display: inline-block;
+          cursor: pointer;
+
+          &::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            left: 0;
+            bottom: -4px;
+            background-color: #7b7e80;
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.3s ease-in-out;
+          }
+
+          &:hover::after,
+          &.active::after {
+            transform: scaleX(1);
+          }
+
+          &.active {
+            color: #0a4b5e;
+          }
 
           .nav-icon {
             cursor: pointer;
@@ -113,7 +144,7 @@
 
   .dropdown-client {
     position: absolute;
-    top: 80px;
+    top: 83px;
     right: 5px;
     display: flex;
     flex-direction: column;

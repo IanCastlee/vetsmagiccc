@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $destination = '../../uploads/' . $unique_image_name;
 
         if (move_uploaded_file($fileTmpPath, $destination)) {
-            $stmt = $conn->prepare("INSERT INTO shop (specialization, category, med_name, stock, price, dosage, description, med_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssissss", $specialization, $category, $med_name, $stock, $price, $dosage, $description, $unique_image_name);
+            $stmt = $conn->prepare("INSERT INTO shop (specialization, category, med_name,orig_stock, stock, price, dosage, description, med_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssiissss", $specialization, $category, $med_name, $stock, $stock, $price, $dosage, $description, $unique_image_name);
 
             if ($stmt->execute()) {
                 echo json_encode(['success' => true, 'message' => 'Medicine added successfully']);

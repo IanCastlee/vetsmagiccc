@@ -18,7 +18,6 @@ import axiosIntance from "../../../../../axios";
 import Loader3 from "../../../../components/loader/Loader2";
 import Emptydata from "../../../../components/emptydata/Emptydata";
 import { uploadUrl } from "../../../../../fileurl";
-import Toaster from "../../../../components/toaster/Toaster";
 
 const Home = () => {
   const vetId = useParams();
@@ -27,6 +26,7 @@ const Home = () => {
   const [veterinarianInfo, setVeterinarianInfo] = useState([]);
   const [appointment, setAppointment] = useState([]);
   const [price, setPrice] = useState(null);
+  const [clickedDoneId, setClickedDoneId] = useState(null);
 
   useEffect(() => {
     const getClickedVeterinarian = async () => {
@@ -183,6 +183,31 @@ const Home = () => {
     });
   };
 
+  //handeSetAsDoneAppointment
+  const handeSetAsDoneAppointment = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axiosIntance.post(
+        `admin/appointment/setAppointmentDone.php?appointment_id=${clickedDoneId}`
+      );
+
+      if (res.data.success) {
+        console.log("RES : ", res.data.message);
+
+        // setVeterinarian((prevData) =>
+        //   prevData.filter((vet) => vet.user_id !== showDelForm)
+        // );
+        // showSuccessAlert_del_vet();
+        // setShowDelForm(null);
+      } else {
+        console.log("Delete failed:", res.data);
+      }
+    } catch (error) {
+      console.log("ERROR:", error);
+    }
+  };
+
   return (
     <>
       <div className="veterinarian-home">
@@ -284,7 +309,12 @@ const Home = () => {
                                     <FaRegCircleCheck className="icon" />
                                     Follow Up
                                   </button>
-                                  <button className="btn">
+                                  <button
+                                    onClick={() =>
+                                      setClickedDoneId(item.appointment_id)
+                                    }
+                                    className="btn"
+                                  >
                                     <FaRegCircleCheck className="icon" />
                                     Done
                                   </button>
@@ -304,6 +334,8 @@ const Home = () => {
                   })()
                 )}
               </div>
+
+              <div className="divider"></div>
 
               <div className="pending-appointment">
                 <h4>Pending Appointment</h4>
@@ -335,17 +367,19 @@ const Home = () => {
                               <div className="name">{item.pet_name}</div>
                               <p>{item.appointment_date}</p>
                               <p>{item.appointment_time}</p>
+
+                              <button onClick={() => clickedMoreInfo(item)}>
+                                Read More
+                              </button>
                             </div>
-                            <MdOutlineMoreHoriz
-                              onClick={() => clickedMenu(item.appointment_id)}
-                              className="more-icon"
-                            />
                           </div>
 
                           <div className="bot">
                             <div className="pet">
                               <span className="type">
-                                Pet : {item.pet_type}
+                                {item.is_followup === 1
+                                  ? "Follow-up Appointment"
+                                  : ""}
                               </span>
                             </div>
                           </div>
@@ -359,12 +393,26 @@ const Home = () => {
                                 />
                               </div>
                               <div className="menu">
-                                {" "}
-                                <button className="btn">
+                                <button
+                                  className="btn"
+                                  onClick={() =>
+                                    clickedToFollowUpItem(
+                                      item.appointment_id,
+                                      item.clientId,
+                                      item.drFullname,
+                                      item.dr_id
+                                    )
+                                  }
+                                >
                                   <FaRegCircleCheck className="icon" />
                                   Follow Up
                                 </button>
-                                <button className="btn">
+                                <button
+                                  onClick={() =>
+                                    setClickedDoneId(item.appointment_id)
+                                  }
+                                  className="btn"
+                                >
                                   <FaRegCircleCheck className="icon" />
                                   Done
                                 </button>
@@ -578,6 +626,32 @@ const Home = () => {
           </div>
         )}
       {/* modal follow up end  */}
+
+      {clickedDoneId !== null && (
+        <div className="delete-overlay">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="delete"
+          >
+            <div className="top">
+              <h6>Confirmation</h6>
+            </div>
+
+            <p>Is this appointment done?</p>
+
+            <div className="bot">
+              <button className="btn-yes" onClick={handeSetAsDoneAppointment}>
+                Yes
+              </button>
+              <button className="btn-no" onClick={() => setClickedDoneId(null)}>
+                Cancel
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </>
   );
 };

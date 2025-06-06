@@ -1,0 +1,29 @@
+<?php
+
+include("../header.php");
+include("../databaseConnection.php");
+
+$response = [];
+
+$pending = mysqli_query($conn, "SELECT COUNT(*) as count FROM appointments WHERE status= 0");
+$completed = mysqli_query($conn, "SELECT COUNT(*) as count FROM appointments WHERE status= 1");
+$followUp = mysqli_query($conn, "SELECT COUNT(*) as count FROM appointments WHERE status = 0 AND is_followup = 1");
+$completedFollowUp = mysqli_query($conn, "SELECT COUNT(*) as count FROM appointments WHERE status = 1 AND is_followup = 1");
+$meds = mysqli_query($conn, "SELECT COUNT(*) as count FROM shop");
+$soonToExpire = mysqli_query($conn, "SELECT COUNT(*) as count FROM shop");
+$bestSeller = mysqli_query($conn, "SELECT COUNT(*) as count FROM shop");
+
+$response['appointment'] = [
+    'pending' => mysqli_fetch_assoc($pending)['count'],
+    'completed' => mysqli_fetch_assoc($completed)['count'],
+    'followUp' => mysqli_fetch_assoc($followUp)['count'],
+    'completedFollowUp' => mysqli_fetch_assoc($completedFollowUp)['count'],
+];
+
+$response['shop'] = [
+    'all' => mysqli_fetch_assoc($meds)['count'],
+    'soonToExpire' => mysqli_fetch_assoc($soonToExpire)['count'],
+    'bestSeller' => mysqli_fetch_assoc($bestSeller)['count'],
+];
+
+echo json_encode($response);

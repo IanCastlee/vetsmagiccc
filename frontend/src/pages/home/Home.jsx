@@ -5,6 +5,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 //IMAGES
 import waveImage from "../../assets/imges/wavebg3.png";
 import dogImage from "../../assets/imges/dog.png";
+import ttt from "../../assets/imges/user5.jpg";
 import { Link } from "react-router-dom";
 import axiosIntance from "../../../axios";
 import { useContext, useEffect, useState } from "react";
@@ -89,12 +90,20 @@ const Home = () => {
               >
                 Trusted by pet parents. Loved by furry friends.
               </motion.h6>
-
-              {/* <CustomButton _bgcolor="primary" _label="Book Now" /> */}
             </div>
           </div>
           <div className="hero-right">
-            <img src={dogImage} alt="Dog" className="dog-img" />
+            <img src={dogImage} alt="Dog" className="dog-img" />{" "}
+            <div className="trusted-wrapper">
+              <span>Trusted by</span>
+              <div className="trusted">
+                <img src={ttt} alt="" /> <img src={ttt} alt="" />
+                <img src={ttt} alt="" />
+                <img src={ttt} alt="" />
+                <img src={ttt} alt="" />
+                <span>9+</span>
+              </div>
+            </div>
           </div>
         </div>
 

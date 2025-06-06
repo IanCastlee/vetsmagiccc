@@ -17,8 +17,6 @@ if (isset($input['email'], $input['password'])) {
     $status = 0;
     $verify_token = rand(1000, 9999);
 
-
-
     $stmt_check_email =  $conn->prepare("SELECT * FROM users WHERE email = ?");
     $stmt_check_email->bind_param("s", $email);
     $stmt_check_email->execute();

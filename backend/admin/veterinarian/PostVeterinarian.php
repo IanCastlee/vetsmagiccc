@@ -18,7 +18,8 @@ if (isset($_POST['fullname'], $_POST['specialization'], $_POST['age'], $_POST['g
     $about = $_POST['about'];
     $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
+    $accType = 1;
+    $status = 1;
 
     // Handle file upload
     $profile_name = $_FILES['profile']['name'];
@@ -36,8 +37,8 @@ if (isset($_POST['fullname'], $_POST['specialization'], $_POST['age'], $_POST['g
         if ($result->num_rows > 0) {
             echo json_encode(['success' => false, 'message' => "Email already exists"]);
         } else {
-            $insert_user = $conn->prepare("INSERT INTO users (fullname, address, phone, profile, email, password) VALUES (?,?,?,?,?,?)");
-            $insert_user->bind_param("ssssss", $fullname, $address, $phone, $unique_profile_name,  $email, $password);
+            $insert_user = $conn->prepare("INSERT INTO users (fullname, address, phone, profile, email, password, acc_type, status) VALUES (?,?,?,?,?,?,?,?)");
+            $insert_user->bind_param("ssssssii", $fullname, $address, $phone, $unique_profile_name,  $email, $password, $accType, $status);
             if ($insert_user->execute()) {
 
                 $user_id = $conn->insert_id;

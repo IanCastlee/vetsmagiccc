@@ -33,6 +33,7 @@ const FollowupAppointment = () => {
   const [appointmentID, setAppointmentID] = useState(null);
   const [fa_id, set_fa_id] = useState(null);
   const [payment, setPayment] = useState(null);
+  const [noInternetConn, setNoInternetConn] = useState(false);
 
   //get AppointmentData
   useEffect(() => {
@@ -42,7 +43,6 @@ const FollowupAppointment = () => {
         `client/appointment/GetFollowupAppintment.php?currentUser_id=${currentUser.user_id}`
       );
       if (res.data.success) {
-        console.log("NOTIFICATIOgvfgfgfN : ", res.data.data);
         setAppointmentData(res.data.data);
         setVisibleData(res.data.data.slice(0, MAX_VISIBLE));
       } else {
@@ -70,33 +70,32 @@ const FollowupAppointment = () => {
   });
 
   //get Appointment
-  useEffect(() => {
-    const activeAppointment = async () => {
-      setShowLoader(true);
-      try {
-        const res = await axiosIntance.post(
-          "client/appointment/GetAppointment.php",
-          {
-            currentUser: currentUser?.user_id,
-          }
-        );
-        if (res.data.success) {
-          setActiveAppointment(res.data.data);
-          console.log("DATA : ", res.data.data);
-          setShowLoader(false);
-        } else {
-          setShowLoader(false);
-
-          console.log("Error_ : ", res.data);
+  const handleActiveAppointment = async () => {
+    setShowLoader(true);
+    try {
+      const res = await axiosIntance.post(
+        "client/appointment/GetAppointment.php",
+        {
+          currentUser: currentUser?.user_id,
         }
-      } catch (error) {
+      );
+      if (res.data.success) {
+        setActiveAppointment(res.data.data);
+        console.log("DATA : ", res.data.data);
+        setShowLoader(false);
+      } else {
         setShowLoader(false);
 
-        console.log("Error : ", error);
+        console.log("Error_ : ", res.data);
       }
-    };
+    } catch (error) {
+      setShowLoader(false);
 
-    activeAppointment();
+      console.log("Error : ", error);
+    }
+  };
+  useEffect(() => {
+    handleActiveAppointment();
   }, []);
 
   // const handleClickedAppointment = (time, duration, id) => {
@@ -129,6 +128,19 @@ const FollowupAppointment = () => {
       appointment_date: date,
     }));
   };
+
+  useEffect(() => {
+    const handleOffline = () => console.log("You are offline");
+    const handleOnline = () => console.log("Back online");
+
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+    };
+  }, []);
 
   //timeslots to remove
   const handleTimeDateSlotToRemove = async () => {
@@ -240,6 +252,18 @@ const FollowupAppointment = () => {
   const handleSubmitUpdatedAppointment = async () => {
     setShowLoader3(true);
 
+    if (!navigator.onLine) {
+      console.log("No internet connection.");
+      setNoInternetConn(true);
+
+      setTimeout(() => {
+        setNoInternetConn(false);
+      }, 3000);
+      setShowLoader3(false);
+
+      return false;
+    }
+
     const formattedDate = new Date(
       appointmentForm.appointment_date
     ).toLocaleDateString("en-CA");
@@ -263,11 +287,13 @@ const FollowupAppointment = () => {
         setTimeout(() => {
           setAppointmentID(null);
         }, 7000);
+
         return true;
       } else {
         console.log("ERROR : ", res.data);
         return false;
       }
+      handleActiveAppointment();
     } catch (error) {
       console.log("Error : ", error);
       setShowLoader3(false);
@@ -402,7 +428,9 @@ const FollowupAppointment = () => {
                               ? "Appointment Set"
                               : " Follow Up"}
                           </button>
-                          <button className="btn-cancel">Ignore</button>
+                          {item.status == 0 && (
+                            <button className="btn-cancel">Ignore</button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -529,6 +557,20 @@ const FollowupAppointment = () => {
             </motion.div>
           </div>
         </div>
+      )}
+
+      {noInternetConn && (
+        <motion.div
+          className="no-internet"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <span>
+            Can't proceed with the request. Please check your internet
+            connection.
+          </span>
+        </motion.div>
       )}
     </>
   );

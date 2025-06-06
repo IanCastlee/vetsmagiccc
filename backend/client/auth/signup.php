@@ -18,8 +18,6 @@ if (isset($input['fullname'], $input['address'], $input['phone'], $input['email'
     $password = password_hash($input['password'], PASSWORD_DEFAULT);
     $verify_token = rand(1000, 9999);
 
-
-
     $stmt_check_email =  $conn->prepare("SELECT * FROM users WHERE email = ?");
     $stmt_check_email->bind_param("s", $email);
     $stmt_check_email->execute();

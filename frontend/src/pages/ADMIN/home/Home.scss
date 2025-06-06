@@ -10,21 +10,81 @@
     .top {
       width: 100%;
       display: flex;
-      justify-content: space-between;
-      height: 30%;
-      .card {
-        width: 250px;
-        border-radius: 5px;
-        height: 150px;
-        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-          rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+      flex-direction: column;
+
+      .appointment-section {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+          color: blue;
+          font-size: 16px;
+          font-weight: 500;
+          margin: 5px 0;
+        }
+
+        .appointment-wrapper {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          gap: 10px;
+          .card {
+            width: 100%;
+            border-radius: 5px;
+            height: 100px;
+            padding: 20px 0;
+            border: 1px solid rgb(168, 168, 221);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #acdbdf;
+
+            .left {
+              width: 30%;
+              height: 100%;
+              border-right: 2px solid rgb(255, 255, 255);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              span {
+                font-size: 35px;
+                font-weight: bold;
+                color: blue;
+              }
+            }
+
+            .right {
+              width: 70%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 20px;
+
+              span {
+                font-size: 14px;
+                color: blue;
+                font-weight: 500;
+              }
+            }
+          }
+        }
       }
     }
 
     .bot {
+      margin-top: 20px;
       display: flex;
       justify-content: space-between;
-      height: 58%;
+      flex-direction: column;
+
+      span {
+        font-size: 14px;
+        color: blue;
+        font-weight: 500;
+      }
       .left {
         width: 48%;
         height: 100%;

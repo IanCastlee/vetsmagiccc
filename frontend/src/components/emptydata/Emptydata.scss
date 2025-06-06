@@ -4,13 +4,36 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  padding: 80px 0;
 
-  .icon {
-    font-size: 25px;
-    color: gray;
+  img {
+    width: 70px;
+    height: 70px;
   }
 
   p {
+    font-size: 0.75rem;
     color: rgb(136, 132, 132);
+    text-align: center;
+    width: 80%;
+  }
+}
+
+@media (max-width: 786px) {
+  .emptydata {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    img {
+      width: 70px;
+      height: 70px;
+    }
+
+    p {
+      color: rgb(136, 132, 132);
+    }
   }
 }

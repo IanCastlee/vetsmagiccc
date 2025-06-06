@@ -14,15 +14,16 @@ import { MdAddBox } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 
 const ActiveVeterinarian = () => {
-  const [showModalServices, setShowModalShowModalServcies] = useState(false);
   const [veterinarian, setVeterinarian] = useState([]);
-  const [veterinarianServices, setVeterinarianServices] = useState([]);
   const [showLoader, setShowLoader] = useState(false);
   const [servicesData, setServicesData] = useState([]);
 
   const [activeFormModal, setActiveFormModal] = useState("");
   const [showDelForm, setShowDelForm] = useState(null);
+  const [showDelServiceId, setShowDelServiceId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [activeServiceModal, setActiveServicesModal] = useState("");
 
   const [veterinarianData, setVeterinarianData] = useState({
     user_id: "",
@@ -68,11 +69,42 @@ const ActiveVeterinarian = () => {
     }));
   };
 
-  //handle submmit
+  //handleClikedServices
+  const [clickedUserId, setClickedUserId] = useState(null);
+  const handleClikedServices = (user_id) => {
+    setClickedUserId(user_id);
+    if (user_id) {
+      setActiveServicesModal("add-service");
+    }
+  };
+
+  /////////////////////////FETCH DATA/////////////////////////////////
+
+  //get veterinarian
+  const getVeterinarian = async () => {
+    try {
+      const res = await axiosIntance.get(
+        "admin/veterinarian/GetVeterinarian.php"
+      );
+      if (res.data.success) {
+        setVeterinarian(res.data.data);
+        console.log("DATA : ", res.data.data);
+      } else {
+        console.log("Error : ", res.data.data);
+      }
+    } catch (error) {
+      console.log("Error : ", error);
+    }
+  };
+
+  useEffect(() => {
+    getVeterinarian();
+  }, []);
+
+  ///////////////////////////POST DATA/////////////////////////////
+  //handle PostVeterinarian
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log("first");
 
     const formData = new FormData();
     formData.append("fullname", veterinarianData.fullname);
@@ -112,36 +144,7 @@ const ActiveVeterinarian = () => {
     }
   };
 
-  //get veterinarian
-  useEffect(() => {
-    const veterinarian = async () => {
-      try {
-        const res = await axiosIntance.get(
-          "admin/veterinarian/GetVeterinarian.php"
-        );
-        if (res.data.success) {
-          setVeterinarian(res.data.data);
-          console.log("DATA : ", res.data.data);
-        } else {
-          console.log("Error : ", res.data.data);
-        }
-      } catch (error) {
-        console.log("Error : ", error);
-      }
-    };
-
-    veterinarian();
-  }, []);
-
-  //handleClikedServices
-  const [clickedUserId, setClickedUserId] = useState(null);
-  const handleClikedServices = (user_id) => {
-    setClickedUserId(user_id);
-    if (user_id) {
-      setShowModalShowModalServcies(true);
-      setActiveFormModal("add-service");
-    }
-  };
+  //handle PostVetServices
   const handleSubmitServices = async (e) => {
     e.preventDefault();
 
@@ -162,7 +165,6 @@ const ActiveVeterinarian = () => {
         });
 
         setShowLoader(false);
-        setShowModalShowModalServcies(false);
         showSuccessAlert_add_services();
       } else {
         setShowLoader(false);
@@ -173,71 +175,8 @@ const ActiveVeterinarian = () => {
       console.log("Error : ", error);
     }
   };
-  const getServices = async () => {
-    setShowLoader(true);
-    try {
-      const res = await axiosIntance.get("admin/veterinarian/GetServices.php");
-      if (res.data.data) {
-        setVeterinarianServices(res.data.data);
-        setShowLoader(false);
-      }
-    } catch (error) {
-      setShowLoader(false);
-      console.log("Error : ", error);
-    }
-  };
 
-  //get services
-  useEffect(() => {
-    getServices();
-  }, []);
-
-  const setShowEditModal = (item) => {
-    setVeterinarianData({
-      user_id: item.user_id || "",
-      fullname: item.fullname || "",
-      specialization: item.specialization || "",
-      age: item.age || "",
-      gender: item.gender || "",
-      time: item.time || "",
-      duration: item.duration || "",
-      experience: item.experience || "",
-      certificate: item.certification || "",
-      address: item.address || "",
-      phone: item.phone || "",
-      about: item.about || "",
-      profile: item.profile || "",
-      email: item.email || "",
-      password: "",
-      cpassword: "",
-    });
-
-    setServicesData(item.services);
-    setActiveFormModal("update");
-  };
-
-  //closeFormModal
-  const closeFormModal = () => {
-    setVeterinarianData({
-      fullname: "",
-      specialization: "",
-      age: "",
-      gender: "",
-      time: "",
-      duration: "",
-      experience: "",
-      certificate: "",
-      address: "",
-      phone: "",
-      about: "",
-      profile: "",
-      email: "",
-      password: "",
-      cpassword: "",
-    });
-
-    setActiveFormModal("");
-  };
+  ////////////////////////UPDATE DATA/////////////////////////////
 
   //handleUpdate Veterinarian Information
   const handleUpdateVeterinarianInof = async (e) => {
@@ -291,7 +230,42 @@ const ActiveVeterinarian = () => {
     }
   };
 
-  //handle Delete
+  //handleUpdate Services Information
+  const handleUpdateServices = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("service_id", servicesForm.service_id);
+    formData.append("service", servicesForm.service);
+    formData.append("price", servicesForm.price);
+
+    try {
+      const res = await axiosIntance.post(
+        "admin/veterinarian/UpdateVetSevices.php",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (res.data.success) {
+        console.log("Response : ", res.data.message);
+        showSuccessAlert_update_services();
+
+        getVeterinarian();
+        setActiveServicesModal("");
+        setActiveFormModal("");
+      } else {
+        console.log("Error : ", res.data);
+      }
+    } catch (error) {
+      console.log("Error : ", error);
+    }
+  };
+
+  /////////////////////////////////DELETE DATA///////////////////////
+  //handle Delete vet
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
@@ -315,6 +289,91 @@ const ActiveVeterinarian = () => {
     }
   };
 
+  //handleDeleteServices
+  const handleDeleteServices = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axiosIntance.post(
+        `admin/veterinarian/RemoveService.php?service_id=${showDelServiceId}`
+      );
+
+      if (res.data.success) {
+        console.log("RES : ", res.data.message);
+
+        getVeterinarian();
+        setShowDelServiceId(null);
+        setActiveFormModal(null);
+        showSuccessAlert_del_services();
+      } else {
+        console.log("Delete failed:", res.data);
+      }
+    } catch (error) {
+      console.log("ERROR:", error);
+    }
+  };
+
+  /////////////////////////OTHER FUNCTIONS//////////////////////////
+
+  //selectedServiceRow
+  const selectedServiceRow = (vservices_id, vservices, price) => {
+    setServicesForm({
+      service_id: vservices_id || "",
+      service: vservices || "",
+      price: price || "",
+    });
+
+    setActiveServicesModal("update-service");
+  };
+
+  const setShowEditModal = (item) => {
+    setVeterinarianData({
+      user_id: item.user_id || "",
+      fullname: item.fullname || "",
+      specialization: item.specialization || "",
+      age: item.age || "",
+      gender: item.gender || "",
+      time: item.time || "",
+      duration: item.duration || "",
+      experience: item.experience || "",
+      certificate: item.certification || "",
+      address: item.address || "",
+      phone: item.phone || "",
+      about: item.about || "",
+      profile: item.profile || "",
+      email: item.email || "",
+      password: "",
+      cpassword: "",
+    });
+
+    setServicesData(item.services);
+    setActiveFormModal("update");
+  };
+
+  //closeFormModal
+  const closeFormModal = () => {
+    setVeterinarianData({
+      fullname: "",
+      specialization: "",
+      age: "",
+      gender: "",
+      time: "",
+      duration: "",
+      experience: "",
+      certificate: "",
+      address: "",
+      phone: "",
+      about: "",
+      profile: "",
+      email: "",
+      password: "",
+      cpassword: "",
+    });
+
+    setActiveFormModal("");
+  };
+
+  ////////////////////HANDLE SEARCH AND PAGINATOR ////////////////////
+
   //filteredVeterinarians
   const filteredVeterinarians = veterinarian.filter(
     (item) =>
@@ -322,6 +381,31 @@ const ActiveVeterinarian = () => {
       item.specialization.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.address.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [vetsPerPage, setVetsPerPage] = useState(7);
+
+  // Pagination logic
+  const indexOfLastVet = currentPage * vetsPerPage;
+  const indexOfFirstVet = indexOfLastVet - vetsPerPage;
+  const currentVets = filteredVeterinarians.slice(
+    indexOfFirstVet,
+    indexOfLastVet
+  );
+  const totalPages = Math.ceil(filteredVeterinarians.length / vetsPerPage);
+
+  const goToPage = (pageNumber) => setCurrentPage(pageNumber);
+  const nextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+
+  // Handle change in rows per page
+  const handleVetsPerPageChange = (e) => {
+    setVetsPerPage(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
+  //////////////////////////////ALERT////////////////////////////////
 
   const showSuccessAlert_update = () => {
     Swal.fire({
@@ -371,7 +455,6 @@ const ActiveVeterinarian = () => {
       showConfirmButton: false,
     });
   };
-
   const showSuccessAlert_update_services = () => {
     Swal.fire({
       title: "Success!",
@@ -384,84 +467,17 @@ const ActiveVeterinarian = () => {
       showConfirmButton: false,
     });
   };
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [vetsPerPage, setVetsPerPage] = useState(7);
-
-  // Pagination logic
-  const indexOfLastVet = currentPage * vetsPerPage;
-  const indexOfFirstVet = indexOfLastVet - vetsPerPage;
-  const currentVets = filteredVeterinarians.slice(
-    indexOfFirstVet,
-    indexOfLastVet
-  );
-  const totalPages = Math.ceil(filteredVeterinarians.length / vetsPerPage);
-
-  const goToPage = (pageNumber) => setCurrentPage(pageNumber);
-  const nextPage = () =>
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-
-  // Handle change in rows per page
-  const handleVetsPerPageChange = (e) => {
-    setVetsPerPage(Number(e.target.value));
-    setCurrentPage(1);
-  };
-
-  //selectedServiceRow
-  const selectedServiceRow = (vservices_id, vservices, price) => {
-    setServicesForm({
-      service_id: vservices_id || "",
-      service: vservices || "",
-      price: price || "",
+  const showSuccessAlert_del_services = () => {
+    Swal.fire({
+      title: "Success!",
+      text: "Service Deleted",
+      icon: "success",
+      confirmButtonText: "OK",
+      background: "rgba(0, 0, 0, 0.9)",
+      color: "lightgrey",
+      timer: 1200,
+      showConfirmButton: false,
     });
-    setActiveFormModal("update-service");
-    setShowModalShowModalServcies(true);
-  };
-
-  //handleUpdate Veterinarian Information
-  const handleUpdateServices = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("service_id", servicesForm.service_id);
-    formData.append("service", servicesForm.service);
-    formData.append("price", servicesForm.price);
-
-    try {
-      const res = await axiosIntance.post(
-        "admin/veterinarian/UpdateVetSevices.php",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      if (res.data.success) {
-        console.log("Response : ", res.data.message);
-
-        // servicesData((prevData) =>
-        //   prevData.map((item) =>
-        //     Number(item.user_id) === Number(servicesForm.service_id)
-        //       ? { ...item, ...servicesData }
-        //       : item
-        //   )
-        // );
-        getServices();
-        setServicesForm({
-          service_id: "",
-          service: "",
-          price: "",
-        });
-        setActiveFormModal("");
-        showSuccessAlert_update_services();
-      } else {
-        console.log("Error : ", res.data);
-      }
-    } catch (error) {
-      console.log("Error : ", error);
-    }
   };
 
   return (
@@ -615,7 +631,7 @@ const ActiveVeterinarian = () => {
         </div>
       </div>
 
-      {activeFormModal !== "" && (
+      {(activeFormModal === "add" || activeFormModal === "update") && (
         <div className="overlay">
           <motion.div
             initial={{ opacity: 0, y: -200 }}
@@ -828,19 +844,29 @@ const ActiveVeterinarian = () => {
                     <div className="services-wrapper">
                       <table>
                         <thead>
-                          <th>Service </th>
-                          <th>Price </th>
-                          <th>Action </th>
+                          <tr>
+                            <th>Service</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                          </tr>
                         </thead>
 
                         <tbody>
                           {servicesData.length > 0 ? (
                             servicesData.map((item) => (
-                              <tr key={item.vsevice_id} className="service-row">
+                              <tr
+                                key={item.vservices_id}
+                                className="service-row"
+                              >
                                 <td>{item.vservices}</td>
                                 <td>{item.price}</td>
                                 <td>
-                                  <FaTrashAlt className="icon-del" />
+                                  <FaTrashAlt
+                                    className="icon-del"
+                                    onClick={() =>
+                                      setShowDelServiceId(item.vservices_id)
+                                    }
+                                  />
                                   <FaEdit
                                     className="icon-update"
                                     onClick={() =>
@@ -915,7 +941,7 @@ const ActiveVeterinarian = () => {
                       ? handleSubmit
                       : activeFormModal === "update"
                       ? handleUpdateVeterinarianInof
-                      : ""
+                      : () => {}
                   }
                 >
                   {showLoader ? (
@@ -934,84 +960,83 @@ const ActiveVeterinarian = () => {
         </div>
       )}
 
-      {activeFormModal === "add-service" ||
-        (activeFormModal === "update-service" && (
-          <div className="addservices">
-            <motion.div
-              initial={{ opacity: 0, y: -200 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="container"
-            >
-              <div className="top">
-                <div className="left">
-                  <h3>
-                    {activeFormModal === "add-service"
-                      ? "ADD SERVICE"
-                      : activeFormModal === "update-service"
-                      ? "UPDATE SERVICE"
-                      : ""}
-                  </h3>
-                </div>
-
-                <IoMdClose
-                  className="icon"
-                  onClick={() => setActiveFormModal("")}
-                />
+      {activeServiceModal !== "" && (
+        <div className="addservices">
+          <motion.div
+            initial={{ opacity: 0, y: -200 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="container"
+          >
+            <div className="top">
+              <div className="left">
+                <h3>
+                  {activeServiceModal === "add-service"
+                    ? "ADD SERVICE"
+                    : activeServiceModal === "update-service"
+                    ? "UPDATE SERVICE"
+                    : ""}
+                </h3>
               </div>
 
-              <div className="wrapper">
-                <div className="form">
-                  <div className="input-wrapper">
-                    <label htmlFor="service">Service</label>
-                    <input
-                      style={{ width: "100%" }}
-                      type="text"
-                      name="service"
-                      placeholder="Service"
-                      value={servicesForm.service}
-                      onChange={handleChangeServices}
-                    />
-                  </div>
-                  <div className="input-wrapper">
-                    <label htmlFor="price">Price</label>
-                    <input
-                      style={{ width: "100%" }}
-                      type="number"
-                      name="price"
-                      placeholder="Price"
-                      value={servicesForm.price}
-                      onChange={handleChangeServices}
-                    />
-                  </div>
+              <IoMdClose
+                className="icon"
+                onClick={() => setActiveServicesModal("")}
+              />
+            </div>
+
+            <div className="wrapper">
+              <div className="form">
+                <div className="input-wrapper">
+                  <label htmlFor="service">Service</label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="text"
+                    name="service"
+                    placeholder="Service"
+                    value={servicesForm.service}
+                    onChange={handleChangeServices}
+                  />
                 </div>
-
-                <button
-                  className="btn-add-service"
-                  onClick={
-                    activeFormModal === "add-service"
-                      ? handleSubmitServices
-                      : activeFormModal === "update-service"
-                      ? handleUpdateServices
-                      : ""
-                  }
-                >
-                  {showLoader ? (
-                    <Loader2 />
-                  ) : activeFormModal === "add-service" ? (
-                    "ADD"
-                  ) : activeFormModal === "update-service" ? (
-                    "UPDATE"
-                  ) : (
-                    ""
-                  )}
-                </button>
+                <div className="input-wrapper">
+                  <label htmlFor="price">Price</label>
+                  <input
+                    style={{ width: "100%" }}
+                    type="number"
+                    name="price"
+                    placeholder="Price"
+                    value={servicesForm.price}
+                    onChange={handleChangeServices}
+                  />
+                </div>
               </div>
-            </motion.div>
-          </div>
-        ))}
 
-      {showDelForm !== null && (
+              <button
+                className="btn-add-service"
+                onClick={
+                  activeServiceModal === "add-service"
+                    ? handleSubmitServices
+                    : activeServiceModal === "update-service"
+                    ? handleUpdateServices
+                    : ""
+                }
+              >
+                {showLoader ? (
+                  <Loader2 />
+                ) : activeServiceModal === "add-service" ? (
+                  "ADD"
+                ) : activeServiceModal === "update-service" ? (
+                  "UPDATE"
+                ) : (
+                  ""
+                )}
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {(showDelForm !== null || showDelServiceId !== null) && (
         <div className="delete-overlay">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -1023,13 +1048,34 @@ const ActiveVeterinarian = () => {
               <h6>Confirmation</h6>
             </div>
 
-            <p>Are you sure this veterinarian is not active?</p>
+            <p>
+              {showDelForm !== null
+                ? "Are you sure this veterinarian is not active?"
+                : showDelServiceId !== null
+                ? "Are you sure you want to remove this service?"
+                : ""}
+            </p>
 
             <div className="bot">
-              <button className="btn-yes" onClick={handleDelete}>
+              <button
+                className="btn-yes"
+                onClick={
+                  showDelForm !== null
+                    ? handleDelete
+                    : showDelServiceId !== null
+                    ? handleDeleteServices
+                    : () => {}
+                }
+              >
                 Yes
               </button>
-              <button className="btn-no" onClick={() => setShowDelForm(null)}>
+              <button
+                className="btn-no"
+                onClick={() => {
+                  setShowDelForm(null);
+                  setShowDelServiceId(null);
+                }}
+              >
                 Cancel
               </button>
             </div>

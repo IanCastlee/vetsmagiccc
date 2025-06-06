@@ -41,11 +41,44 @@
     }
     .hero-right {
       width: 25%;
-      padding-top: 80px;
+      padding-top: 85px;
 
       .dog-img {
-        width: 80%;
-        height: 90%;
+        width: 75%;
+        height: 85%;
+      }
+      .trusted-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 20px;
+        span {
+          font-size: 12px;
+          color: #4b4747;
+        }
+        .trusted {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+
+          img {
+            height: 35px;
+            width: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid gray;
+            margin-left: -10px;
+          }
+
+          span {
+            font-weight: 500;
+            font-size: 20px;
+            margin-left: 3px;
+            color: #181717;
+          }
+        }
       }
     }
   }
@@ -219,6 +252,12 @@
             cursor: pointer;
             border-radius: 5px;
             border: none;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+
+            &:hover {
+              background-color: #1b1694;
+              transform: scale(1);
+            }
           }
         }
       }
@@ -272,10 +311,48 @@
       .hero-right {
         width: 25%;
         padding-top: 80px;
+        position: relative;
 
         .dog-img {
           width: 80%;
           height: 70%;
+        }
+
+        .trusted-wrapper {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          border-radius: 20px;
+          position: absolute;
+          bottom: 0;
+          right: 10px;
+          span {
+            font-size: 12px;
+            color: #4b4747;
+          }
+          .trusted {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+
+            img {
+              height: 25px;
+              width: 25px;
+              border-radius: 50%;
+              object-fit: cover;
+              border: 1px solid gray;
+              margin-left: -10px;
+            }
+
+            span {
+              font-weight: 500;
+              font-size: 16px;
+              margin-left: 3px;
+              color: #181717;
+            }
+          }
         }
       }
     }

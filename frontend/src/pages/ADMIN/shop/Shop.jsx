@@ -317,6 +317,7 @@ const Shop = () => {
                   <th>Specialization</th>
                   <th>Category</th>
                   <th>Price</th>
+                  <th>Orig_Stock</th>
                   <th>Stock</th>
                   <th className="action-header">Action</th>
                 </tr>
@@ -341,6 +342,7 @@ const Shop = () => {
                       <td>{item.specialization}</td>
                       <td>{item.category}</td>
                       <td>{item.price}</td>
+                      <td>{item.orig_stock}</td>
                       <td>{item.stock}</td>
                       <td className="btns-wrapper">
                         <button title="Delete" className="btn">
