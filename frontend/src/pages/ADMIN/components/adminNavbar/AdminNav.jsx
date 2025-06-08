@@ -15,6 +15,7 @@ const AdminNav = () => {
   };
   return (
     <div className="admin-nav">
+      <h3>DASHBOARD</h3>
       <FaRegCircleUser className="admin-icon" />
       <RiMenuLine className="menu-icon" onClick={toggleSidebar} />
     </div>

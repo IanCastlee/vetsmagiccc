@@ -43,7 +43,8 @@ const Layout = () => {
 
   const shouldHideNavbar =
     location.pathname === "/" ||
-    location.pathname.startsWith("/view-veterinarian/");
+    location.pathname.startsWith("/view-veterinarian/") ||
+    location.pathname.startsWith("/set-appointment/");
   return (
     <>
       {!shouldHideNavbar && <Navbar isHome={isHome} />}

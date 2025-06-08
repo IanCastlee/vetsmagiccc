@@ -15,6 +15,7 @@ import { LuBadgeCheck } from "react-icons/lu";
 import { MdOutlineMail } from "react-icons/md";
 import { PiPhone } from "react-icons/pi";
 import { uploadUrl } from "../../../fileurl";
+import { FaArrowLeft } from "react-icons/fa6";
 
 const VeterinarianProfile = () => {
   const userId = useParams();
@@ -54,7 +55,7 @@ const VeterinarianProfile = () => {
           className="veterinarian-top"
         >
           <Link to="/home/" className="btn-backlink">
-            <BiLeftArrowAlt className="back-icon" />
+            <FaArrowLeft className="back-icon" />
           </Link>
           <div className="profile-wrapper">
             {

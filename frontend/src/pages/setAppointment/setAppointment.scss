@@ -23,6 +23,21 @@
       align-items: center;
       justify-content: center;
 
+      .top-image {
+        z-index: 3333;
+        width: 100%;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        padding-left: 50px;
+
+        .arrow-icon {
+          color: #fff;
+          cursor: pointer;
+          font-size: 20px;
+        }
+      }
+
       .profile-wrapper {
         width: 450px;
         height: 450px;
@@ -76,23 +91,85 @@
       .petinfo-form {
         width: 100%;
         background-color: transparent;
-        padding: 20px;
+        padding: 150px 20px 20px 20px;
         border-radius: 10px;
         display: flex;
         flex-direction: column;
+
         .note {
-          font-size: 1.125rem;
-          color: #0c0950;
-          align-self: center;
-          margin-bottom: 20px;
-          text-align: center;
+          width: 100%;
+          margin-bottom: 40px;
+
+          p {
+            font-size: 0.875rem;
+            color: gray;
+          }
+        }
+
+        .containerrr {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          margin: 0 0 40px 0;
+          box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+          padding: 10px;
+          border-radius: 10px;
+          background-color: rgb(247, 243, 243);
+          .title {
+            display: flex;
+            margin-bottom: 7px;
+            justify-content: center;
+            margin-bottom: 10px;
+
+            span {
+              font-size: 0.875rem;
+              color: black;
+            }
+          }
+
+          .content {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            .card {
+              display: flex;
+              flex-direction: column;
+              box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+              padding: 5px;
+              justify-content: center;
+              align-items: center;
+              border-radius: 5px;
+              cursor: pointer;
+              transition: all 0.3s ease;
+
+              &:hover {
+                box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 12px;
+                transform: translateY(-3px);
+              }
+
+              img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 1px solid lightgrey;
+              }
+
+              span {
+                font-size: 0.75rem;
+                margin-top: 5px;
+              }
+            }
+          }
         }
 
         .form {
           width: 100%;
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: 15px;
           .service-petname {
             width: 100%;
             display: flex;
@@ -104,7 +181,8 @@
               flex-direction: column;
               label {
                 font-size: 0.75rem;
-                color: #0c0950;
+                color: #000;
+                margin-bottom: 5px;
               }
 
               select {
@@ -112,7 +190,10 @@
                 width: 100%;
                 padding: 0 10px;
                 border-radius: 5px;
-                border: 1px solid #0c0950;
+                //  border: 1px solid #000;
+                border: none;
+                box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                  rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
               }
             }
 
@@ -122,7 +203,8 @@
               flex-direction: column;
               label {
                 font-size: 0.75rem;
-                color: #0c0950;
+                color: #000;
+                margin-bottom: 5px;
               }
 
               input {
@@ -130,7 +212,10 @@
                 width: 100%;
                 padding: 0 10px;
                 border-radius: 5px;
-                border: 1px solid #0c0950;
+                //  border: 1px solid #000;
+                border: none;
+                box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                  rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
               }
             }
           }
@@ -145,14 +230,18 @@
               flex-direction: column;
               label {
                 font-size: 0.75rem;
-                color: #0c0950;
+                color: #000;
+                margin-bottom: 5px;
               }
 
               select {
                 height: 38px;
                 width: 100%;
                 padding: 0 10px;
-                border-radius: 5px;
+                border-radius: 5px; //  border: 1px solid #000;
+                border: none;
+                box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                  rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
               }
             }
 
@@ -162,7 +251,8 @@
               flex-direction: column;
               label {
                 font-size: 0.75rem;
-                color: #0c0950;
+                color: #000;
+                margin-bottom: 5px;
               }
 
               input {
@@ -170,7 +260,10 @@
                 width: 100%;
                 padding: 0 10px;
                 border-radius: 5px;
-                border: 1px solid #0c0950;
+                //  border: 1px solid #000;
+                border: none;
+                box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                  rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
               }
             }
           }
@@ -184,7 +277,8 @@
               flex-direction: column;
               label {
                 font-size: 0.75rem;
-                color: #0c0950;
+                color: #000;
+                margin-bottom: 5px;
               }
 
               input {
@@ -192,7 +286,10 @@
                 width: 100%;
                 padding: 0 10px;
                 border-radius: 5px;
-                border: 1px solid #0c0950;
+                //  border: 1px solid #000;
+                border: none;
+                box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                  rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
               }
             }
           }
@@ -207,7 +304,7 @@
               width: 50%;
               label {
                 font-size: 0.75rem;
-                color: #0c0950;
+                color: #000;
                 margin-bottom: 5px;
               }
 
@@ -220,7 +317,7 @@
                   flex-direction: column;
 
                   input {
-                    border: 1px solid #0c0950;
+                    border: 1px solid #000;
                   }
                   label {
                     font-size: 0.625rem;
@@ -235,15 +332,20 @@
             flex-direction: column;
             label {
               font-size: 0.75rem;
-              color: #0c0950;
+              color: #000;
+              margin-bottom: 5px;
             }
             textarea {
               width: 100%;
               border: none;
-              border: 1px solid #0c0950;
+              //  border: 1px solid #000;
+              border: none;
+              box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
               border-radius: 5px;
               padding: 5px;
               font-size: 14px;
+              height: 100px;
             }
           }
 
@@ -255,7 +357,7 @@
             .next-icon {
               align-items: end;
               font-size: 1.25rem;
-              color: #0c0950;
+              color: #000;
               cursor: pointer;
             }
           }
@@ -270,14 +372,14 @@
 
         .note {
           font-size: 1.125rem;
-          color: #0c0950;
+          color: #000;
           text-align: center;
           margin-bottom: 20px;
         }
 
         h6 {
           font-size: 0.875rem;
-          color: #0c0950;
+          color: #000;
           margin-bottom: 10px;
           display: flex;
           align-items: center;
@@ -297,7 +399,7 @@
 
           span {
             font-size: 0.875rem;
-            color: #0c0950;
+            color: #000;
           }
           .date-input {
             height: 38px;
@@ -314,7 +416,7 @@
             input {
               width: 100%;
               font-size: 12px;
-              color: #0c0950;
+              color: #000;
               cursor: pointer;
               padding: 5px 8px;
               border-radius: 5px;
@@ -328,7 +430,7 @@
 
             .icon {
               font-size: 1.125rem;
-              color: #0c0950;
+              color: #000;
             }
           }
         }
@@ -343,7 +445,7 @@
 
         h6 {
           font-size: 0.875rem;
-          color: #0c0950;
+          color: #000;
           margin-bottom: 10px;
           display: flex;
           align-items: center;
@@ -376,7 +478,7 @@
             align-items: center;
 
             &.selected {
-              background-color: #0c0950;
+              background-color: #000;
               color: #fff;
             }
           }
@@ -422,7 +524,7 @@
           .back-icon {
             font-size: 1.25rem;
             cursor: pointer;
-            color: #0c0950;
+            color: #000;
           }
 
           .btn-setappointment {
@@ -586,7 +688,7 @@
 
       .setappointment-top {
         width: 100%;
-        height: 170px;
+        height: 150px;
         background-color: #0c0950;
         display: flex;
         justify-content: center;
@@ -594,6 +696,22 @@
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
         z-index: 1;
+
+        .top-image {
+          margin-top: -70px;
+          z-index: 3333;
+          width: 100%;
+          display: flex;
+          justify-content: start;
+          align-items: center;
+          padding-left: 30px;
+
+          .arrow-icon {
+            color: #fff;
+            cursor: pointer;
+            font-size: 20px;
+          }
+        }
 
         .profile-wrapper {
           display: none;
@@ -640,7 +758,7 @@
         }
 
         .dr-name2 {
-          color: #0c0950;
+          color: #000;
           display: flex;
           align-items: center;
 
@@ -654,17 +772,66 @@
           background-color: #fff;
           padding: 30px 20px 20px 20px;
           border-radius: 10px;
+          margin-top: 0;
+
           .note {
-            font-size: 1.125rem;
-            color: #0c0950;
-            text-align: center;
+            width: 100%;
+            margin-bottom: 30px;
+
+            p {
+              color: gray;
+              font-size: 0.75rem;
+            }
+          }
+
+          .containerrr {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin: 0 0 40px 0;
+            .title {
+              display: flex;
+
+              span {
+                font-size: 0.75rem;
+                color: black;
+              }
+            }
+
+            .content {
+              width: 100%;
+              display: flex;
+              flex-wrap: wrap;
+              gap: 5px;
+
+              .card {
+                display: flex;
+                flex-direction: column;
+                box-shadow: none;
+                padding: 5px 10px;
+                justify-content: center;
+                align-items: center;
+
+                img {
+                  width: 40px;
+                  height: 40px;
+                  border-radius: 50%;
+                  object-fit: cover;
+                  border: 1px solid lightgrey;
+                }
+
+                span {
+                  font-size: 0.625rem;
+                }
+              }
+            }
           }
 
           .form {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 15px;
 
             .service-petname {
               width: 100%;
@@ -677,7 +844,7 @@
                 flex-direction: column;
                 label {
                   font-size: 0.75rem;
-                  color: #0c0950;
+                  color: #000;
                 }
 
                 select {
@@ -685,7 +852,10 @@
                   width: 100%;
                   padding: 0 10px;
                   border-radius: 5px;
-                  border: 1px solid lightgray;
+                  //  border: 1px solid #000;
+                  border: none;
+                  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
                 }
               }
 
@@ -695,7 +865,7 @@
                 flex-direction: column;
                 label {
                   font-size: 0.75rem;
-                  color: #0c0950;
+                  color: #000;
                 }
 
                 input {
@@ -703,7 +873,10 @@
                   width: 100%;
                   padding: 0 10px;
                   border-radius: 5px;
-                  border: 1px solid lightgray;
+                  //  border: 1px solid #000;
+                  border: none;
+                  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
                 }
               }
             }
@@ -718,7 +891,7 @@
                 flex-direction: column;
                 label {
                   font-size: 0.75rem;
-                  color: #0c0950;
+                  color: #000;
                 }
 
                 select {
@@ -726,7 +899,10 @@
                   width: 100%;
                   padding: 0 10px;
                   border-radius: 5px;
-                  border: 1px solid lightgrey;
+                  //  border: 1px solid #000;
+                  border: none;
+                  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
                 }
               }
 
@@ -736,7 +912,7 @@
                 flex-direction: column;
                 label {
                   font-size: 0.75rem;
-                  color: #0c0950;
+                  color: #000;
                 }
 
                 input {
@@ -744,7 +920,10 @@
                   width: 100%;
                   padding: 0 10px;
                   border-radius: 5px;
-                  border: 1px solid lightgrey;
+                  //  border: 1px solid #000;
+                  border: none;
+                  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
                 }
               }
             }
@@ -758,7 +937,7 @@
                 flex-direction: column;
                 label {
                   font-size: 0.75rem;
-                  color: #0c0950;
+                  color: #000;
                 }
 
                 input {
@@ -766,7 +945,10 @@
                   width: 100%;
                   padding: 0 10px;
                   border-radius: 5px;
-                  border: 1px solid lightgrey;
+                  //  border: 1px solid #000;
+                  border: none;
+                  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
                 }
               }
             }
@@ -781,7 +963,7 @@
                 width: 50%;
                 label {
                   font-size: 0.75rem;
-                  color: #0c0950;
+                  color: #000;
                   margin-bottom: 5px;
                 }
 
@@ -794,7 +976,10 @@
                     flex-direction: column;
 
                     input {
-                      border: 1px solid #0c0950;
+                      //  border: 1px solid #000;
+                      border: none;
+                      box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                        rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
                     }
                     label {
                       font-size: 0.625rem;
@@ -808,11 +993,14 @@
               flex-direction: column;
               label {
                 font-size: 0.75rem;
-                color: #0c0950;
+                color: #000;
               }
               textarea {
                 width: 100%;
-                border: 1px solid lightgrey;
+                //  border: 1px solid #000;
+                border: none;
+                box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                  rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
                 border-radius: 5px;
                 padding: 5px;
                 font-size: 14px;
@@ -828,7 +1016,7 @@
               .next-icon {
                 align-items: end;
                 font-size: 1.25rem;
-                color: #0c0950;
+                color: #000;
                 cursor: pointer;
               }
             }
@@ -844,13 +1032,13 @@
 
           .note {
             font-size: 1.125rem;
-            color: #0c0950;
+            color: #000;
             text-align: center;
             margin-bottom: 15px;
           }
           h6 {
             font-size: 0.875rem;
-            color: #0c0950;
+            color: #000;
             margin-bottom: 10px;
           }
 
@@ -861,7 +1049,7 @@
 
             span {
               font-size: 0.875rem;
-              color: #0c0950;
+              color: #000;
             }
 
             .date-input {
@@ -876,12 +1064,15 @@
               input {
                 width: 100%;
                 font-size: 12px;
-                color: #0c0950;
+                color: #000;
                 cursor: pointer;
                 padding: 5px 8px;
                 border-radius: 5px;
                 border: none;
-                background-color: transparent;
+                background-color: transparent; //  border: 1px solid #000;
+                border: none;
+                box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+                  rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 
                 &:focus {
                   outline: none;
@@ -890,7 +1081,7 @@
 
               .icon {
                 font-size: 1.125rem;
-                color: #0c0950;
+                color: #000;
               }
             }
           }
@@ -905,7 +1096,7 @@
 
           h6 {
             font-size: 0.875rem;
-            color: #0c0950;
+            color: #000;
             margin-bottom: 10px;
           }
 
@@ -928,7 +1119,7 @@
               align-items: center;
 
               &.selected {
-                background-color: #0c0950;
+                background-color: #000;
                 color: #fff;
               }
             }
@@ -946,7 +1137,7 @@
             .back-icon {
               font-size: 1.25rem;
               cursor: pointer;
-              color: #0c0950;
+              color: #000;
             }
 
             .btn-setappointment {

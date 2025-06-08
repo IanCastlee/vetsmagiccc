@@ -1,11 +1,12 @@
 import "./setAppointment.scss";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axiosIntance from "../../../axios";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../contexts/AuthContext";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Loader2 from "../../components/loader/Loader2";
+import { uploadUrl } from "../../../fileurl";
 
 //IMAGES
 import cat from "../../assets/icons/mouth.png";
@@ -20,7 +21,7 @@ import { IoMdClose } from "react-icons/io";
 import { LuCalendarClock } from "react-icons/lu";
 import { MdOutlineMedicalServices } from "react-icons/md";
 import { AiOutlineSnippets } from "react-icons/ai";
-import { uploadUrl } from "../../../fileurl";
+import { RiImageAddFill } from "react-icons/ri";
 
 const SetAppointment = () => {
   const { currentUser } = useContext(AuthContext);
@@ -32,6 +33,12 @@ const SetAppointment = () => {
   const [showSummaryForm, setShowSummaryForm] = useState(false);
   const [showLoader3, setShowLoader3] = useState(false);
   const [noInternetConn, setNoInternetConn] = useState(false);
+
+  const [data, setData] = useState([]);
+  const [loader, setLoader] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
+
+  const navigate = useNavigate();
 
   //setAppointment
   const [appointmentForm, setAppointment] = useState({
@@ -82,6 +89,7 @@ const SetAppointment = () => {
     setEmptygender("");
     setEmptycurrent_health_issue("");
     setEmptyhistory_health_issue("");
+    setEmptyprofile(null);
 
     setAppointment((prev) => ({
       ...prev,
@@ -420,10 +428,8 @@ const SetAppointment = () => {
   const handleSendDataAndPayment = async (e) => {
     e.preventDefault();
 
-    // First submit appointment data
     const submitResult = await handleSubmitAppointment();
 
-    // If the appointment was submitted successfully, proceed to payment
     if (submitResult === true) {
       await handlePayment(e);
       setTimeout(() => {
@@ -439,6 +445,56 @@ const SetAppointment = () => {
     handleTimeDateSlotToRemove();
   }, [appointmentForm.appointment_date]);
 
+  //prev appointment
+
+  useEffect(() => {
+    if (!currentUser || !currentUser.user_id) {
+      return;
+    }
+
+    const getPrevAppointment = async () => {
+      setLoader(true);
+      let petType = veterinarianInfo?.specialization.split(" ")[0];
+
+      try {
+        const res = await axiosIntance.get(
+          `client/appointment/GetPrevAppointment.php?user_id=${currentUser.user_id}&petType=${petType}`
+        );
+        if (res.data.success) {
+          console.log("DATATATTATAT : ", res.data.data);
+          setData(res.data.data);
+          setLoader(false);
+        } else {
+          console.log("Err : ", res.data);
+          setLoader(false);
+        }
+      } catch (error) {
+        console.log("ERROR : ", error);
+        setLoader(false);
+      }
+    };
+
+    getPrevAppointment();
+  }, [currentUser, veterinarianInfo.specialization]);
+
+  const previousAppointment = (item) => {
+    setAppointment({
+      service: "",
+      pet_name: item.pet_name || "",
+      pet_type: item.pet_type || "",
+      breed: item.breed || "",
+      age: item.age || "",
+      weight: item.weight || "",
+      gender: item.gender || "",
+      current_health_issue: "",
+      history_health_issue: item.history_health_issue || "",
+      appointment_date: "",
+      appointment_time: "",
+      price: "",
+      image: null,
+    });
+  };
+
   return (
     <>
       <div className="setappointment">
@@ -449,6 +505,12 @@ const SetAppointment = () => {
             transition={{ duration: 0.7 }}
             className="setappointment-top"
           >
+            <div className="top-image">
+              <FaArrowLeft
+                className="arrow-icon"
+                onClick={() => navigate(-1)}
+              />
+            </div>
             <div className="profile-wrapper">
               <img
                 src={`${uploadUrl.uploadurl}/${veterinarianInfo?.profile}`}
@@ -481,10 +543,46 @@ const SetAppointment = () => {
 
             {showDateTime === "1" && (
               <div className="petinfo-form">
-                {/* <span className="note">
-                  Hey {currentUser?.fullname.split(" ")[0]}, please fill out the
-                  form for your pet's information.
-                </span> */}
+                <div className="note">
+                  <p>
+                    * Please make sure to fill out all required fields and
+                    upload a pet profile image before submitting.
+                  </p>
+                </div>
+
+                {/* previous appointment */}
+                {data.length > 0 && (
+                  <div className="containerrr">
+                    <div className="title">
+                      <span>Previous Pet Appointent</span>
+                    </div>
+
+                    <div className="content">
+                      {loader ? (
+                        <Loader2 />
+                      ) : data ? (
+                        data.map((item, index) => (
+                          <div
+                            className="card"
+                            key={index}
+                            onClick={() => previousAppointment(item)}
+                          >
+                            <img
+                              src={`${uploadUrl.uploadurl}/${item?.image}`}
+                              alt=""
+                            />
+
+                            <span>{item.pet_name}</span>
+                          </div>
+                        ))
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
+                )}
+                {/* previous appointment end */}
+
                 <div className="form">
                   <div className="service-petname">
                     <div className="input-wrapper-select-services">
@@ -667,6 +765,7 @@ const SetAppointment = () => {
                           <input
                             value="Male"
                             onChange={handleChange}
+                            checked={appointmentForm.gender === "Male"}
                             type="radio"
                             name="gender"
                           />
@@ -677,6 +776,7 @@ const SetAppointment = () => {
                             value="Female"
                             onChange={handleChange}
                             type="radio"
+                            checked={appointmentForm.gender === "Female"}
                             name="gender"
                           />
                           <label htmlFor="female">Female</label>
@@ -689,18 +789,49 @@ const SetAppointment = () => {
                         style={{
                           color: `${emptyprofile !== null ? "red" : ""}`,
                         }}
-                        htmlFor="type"
+                        htmlFor="file"
                       >
                         {emptyprofile !== null ? emptyprofile : "Pet Profile"}
+                        <br />
+
+                        {previewImage ? (
+                          <img
+                            src={previewImage}
+                            alt="Selected"
+                            style={{
+                              width: "50px",
+                              height: "50px",
+                              objectFit: "cover",
+                              marginTop: "10px",
+                              borderRadius: "8px",
+                              cursor: "pointer",
+                            }}
+                          />
+                        ) : (
+                          <RiImageAddFill
+                            style={{
+                              fontSize: "30px",
+                              cursor: "pointer",
+                              color: "green",
+                            }}
+                            className="add-image-icon"
+                          />
+                        )}
                       </label>
                       <input
+                        style={{ display: "none" }}
+                        id="file"
                         type="file"
-                        onChange={(e) =>
-                          setAppointment({
-                            ...appointmentForm,
-                            image: e.target.files[0],
-                          })
-                        }
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            setPreviewImage(URL.createObjectURL(file));
+                            setAppointment({
+                              ...appointmentForm,
+                              image: file,
+                            });
+                          }
+                        }}
                       />
                     </div>
                   </div>

@@ -7,10 +7,14 @@
   z-index: 999;
   border-bottom: 1px solid lightgrey;
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   align-items: center;
   padding: 0 15px;
   background-color: #fff;
+
+  h3 {
+    color: #0c0950;
+  }
 
   .admin-icon {
     font-size: 25px;
@@ -37,6 +41,7 @@
     align-items: center;
     padding: 0 20px;
     background-color: #fff;
+    justify-content: space-between;
 
     .admin-icon {
       display: none;

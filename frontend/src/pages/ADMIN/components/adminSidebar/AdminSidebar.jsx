@@ -41,7 +41,7 @@ const AdminSidebar = () => {
       >
         <div className="top">
           <div className="top-container">
-            <img src={logo} alt="" />
+            <h3 style={{ color: "#fff" }}>CDCN</h3>
           </div>
         </div>
 

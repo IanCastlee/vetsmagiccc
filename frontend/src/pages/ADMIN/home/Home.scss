@@ -6,6 +6,7 @@
   .content {
     width: 100%;
     height: 100%;
+    padding: 10px 20px;
 
     .top {
       width: 100%;
@@ -38,7 +39,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #acdbdf;
+            background-color: #afc3e7;
 
             .left {
               width: 30%;
@@ -79,26 +80,180 @@
       display: flex;
       justify-content: space-between;
       flex-direction: column;
+      margin-bottom: 50px;
 
       span {
         font-size: 14px;
         color: blue;
         font-weight: 500;
       }
-      .left {
-        width: 48%;
-        height: 100%;
-        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-          rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-        border-radius: 5px;
+
+      .header {
+        display: flex;
+        gap: 10px;
+        margin-top: 80px;
+        select {
+          width: fit-content;
+          margin-left: 50px;
+          border: 1px solid green;
+          border-radius: 4px;
+        }
+
+        button {
+          width: fit-content;
+          background-color: rgb(55, 36, 138);
+
+          color: #fff;
+          font-size: 12px;
+          padding: 4px 8px;
+          border-radius: 4px;
+          border: none;
+          cursor: pointer;
+
+          &:hover {
+            background-color: rgb(97, 109, 218);
+          }
+        }
       }
 
-      .right {
-        width: 50%;
-        height: 100%;
-        box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-          rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-        border-radius: 5px;
+      h4 {
+        border-bottom: 1px solid rgb(140, 176, 230);
+        padding-bottom: 20px;
+        align-self: end;
+        margin-top: 7px;
+        color: #0c0950;
+      }
+    }
+  }
+}
+
+@media (max-width: 786px) {
+  .home {
+    width: 100%;
+    height: 100%;
+    padding: 7px;
+
+    .content {
+      width: 100%;
+      height: 100%;
+      padding: 10px 20px;
+
+      .top {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .appointment-section {
+          display: flex;
+          flex-direction: column;
+
+          .title {
+            color: blue;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 5px 0;
+          }
+
+          .appointment-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-direction: column;
+            .card {
+              width: 100%;
+              border-radius: 5px;
+              height: 100px;
+              padding: 20px 0;
+              border: 1px solid rgb(168, 168, 221);
+
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: #afc3e7;
+
+              .left {
+                width: 30%;
+                height: 100%;
+                border-right: 2px solid rgb(255, 255, 255);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                span {
+                  font-size: 35px;
+                  font-weight: bold;
+                  color: blue;
+                }
+              }
+
+              .right {
+                width: 70%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+
+                span {
+                  font-size: 14px;
+                  color: blue;
+                  font-weight: 500;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .bot {
+        margin-top: 5px;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        margin-bottom: 50px;
+
+        span {
+          font-size: 14px;
+          color: blue;
+          font-weight: 500;
+        }
+
+        .header {
+          display: flex;
+          gap: 10px;
+          margin-top: 80px;
+          select {
+            width: fit-content;
+            margin-left: 50px;
+            border: 1px solid green;
+            border-radius: 4px;
+          }
+
+          button {
+            width: fit-content;
+            background-color: rgb(55, 36, 138);
+
+            color: #fff;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+
+            &:hover {
+              background-color: rgb(97, 109, 218);
+            }
+          }
+        }
+
+        h4 {
+          border-bottom: 1px solid rgb(140, 176, 230);
+          padding-bottom: 20px;
+          align-self: end;
+          margin-top: 7px;
+          color: #0c0950;
+        }
       }
     }
   }

@@ -15,10 +15,8 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { RiMenu3Line } from "react-icons/ri";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoMdLogOut } from "react-icons/io";
-import { AiOutlineMedicineBox } from "react-icons/ai";
 import Notification from "../notification/Notification";
 import { AiFillBell } from "react-icons/ai";
-import FollowupAppointment from "../../pages/followupAppointment/FollowupAppointment";
 
 const Navbar = ({ isHome }) => {
   const navigate = useNavigate();
@@ -69,7 +67,7 @@ const Navbar = ({ isHome }) => {
           <img src={logo} alt="logo" className="logo" />
           <div className="nav-buttons">
             {currentUser !== null && (
-              <div className="top">
+              <div className={`top ${isHome ? "homee" : ""}`}>
                 <span>Welcome, {currentUser?.fullname.split(" ")[0]}</span>
               </div>
             )}
