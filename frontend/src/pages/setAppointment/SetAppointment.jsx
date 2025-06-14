@@ -170,7 +170,7 @@ const SetAppointment = () => {
 
     try {
       const res = await axiosIntance.get(
-        "client/appointment/GetTimeDateToRemove.php",
+        "client/appointment/getTimeDateToRemove.php",
         {
           params: { choosenDate: formattedDate },
         }
@@ -317,16 +317,16 @@ const SetAppointment = () => {
 
   //handle submit
   const handleSubmitAppointment = async () => {
-    if (!navigator.onLine) {
-      console.log("No internet connection.");
-      setNoInternetConn(true);
+    // if (!navigator.onLine) {
+    //   console.log("No internet connection.");
+    //   setNoInternetConn(true);
 
-      setTimeout(() => {
-        setNoInternetConn(false);
-      }, 3000);
+    //   setTimeout(() => {
+    //     setNoInternetConn(false);
+    //   }, 3000);
 
-      return false;
-    }
+    //   return false;
+    // }
 
     if (!appointmentForm.appointment_date) {
       console.warn("Appointment date is required.");
@@ -361,13 +361,19 @@ const SetAppointment = () => {
     formData.append("appointment_time", selectedTimeSlot);
     formData.append("price", price);
 
+    formData.append("title_for_vet", "New Appointment Request");
+    formData.append(
+      "message_for_vet",
+      "You have received a new appointment request."
+    );
+
     if (appointmentForm.image) {
       formData.append("image", appointmentForm.image);
     }
 
     try {
       const res = await axiosIntance.post(
-        "client/appointment/SetAppointment.php",
+        "client/appointment/setAppointment.php",
         formData,
         {
           headers: {
@@ -458,7 +464,7 @@ const SetAppointment = () => {
 
       try {
         const res = await axiosIntance.get(
-          `client/appointment/GetPrevAppointment.php?user_id=${currentUser.user_id}&petType=${petType}`
+          `client/appointment/getPrevAppointment.php?user_id=${currentUser.user_id}&petType=${petType}`
         );
         if (res.data.success) {
           console.log("DATATATTATAT : ", res.data.data);
@@ -726,7 +732,7 @@ const SetAppointment = () => {
                         onChange={handleChange}
                         type="text"
                         name="age"
-                        placeholder="Age"
+                        placeholder="Age (e.g 2 months, 1 year)"
                       />
                     </div>
                     <div className="input-wrapper">
@@ -735,7 +741,7 @@ const SetAppointment = () => {
                         htmlFor="weight"
                       >
                         {" "}
-                        {emptyweight !== "" ? emptyweight : "Pet Weight"}
+                        {emptyweight !== "" ? emptyweight : "Pet Weight(kg)"}
                       </label>
                       <input
                         style={{
@@ -745,7 +751,7 @@ const SetAppointment = () => {
                         }}
                         value={appointmentForm.weight}
                         onChange={handleChange}
-                        type="text"
+                        type="number"
                         name="weight"
                         placeholder="Weight"
                       />
@@ -994,7 +1000,7 @@ const SetAppointment = () => {
                     className="btn-setappointment"
                     onClick={handleShowSummary}
                   >
-                    View Summary
+                    Continue
                   </button>
                 </div>
               </motion.div>
@@ -1059,7 +1065,7 @@ const SetAppointment = () => {
                 Cancel
               </button>
               <button className="btn-submit" onClick={handleSendDataAndPayment}>
-                {showLoader3 ? <Loader2 /> : " Procced to Payment"}
+                {showLoader3 ? <Loader2 /> : " Proceed to Payment"}
               </button>
             </div>
           </div>

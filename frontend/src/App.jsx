@@ -26,7 +26,6 @@ import AdminHome from "./pages/ADMIN/home/Home";
 import ActiveVeterinarian from "./pages/ADMIN/veterinarian/ActiveVeterinarian";
 import NotActiveVeterinarian from "./pages/ADMIN/veterinarian/NotActiveVeterinarian";
 import AdminSidebar from "./pages/ADMIN/components/adminSidebar/AdminSidebar";
-import AdminNav from "./pages/ADMIN/components/adminNavbar/AdminNav";
 import AdminAppointment from "./pages/ADMIN/appointment/Appointment";
 import Medicine from "./pages/medicine/Medicine";
 import Shop from "./pages/ADMIN/shop/Shop";
@@ -35,6 +34,10 @@ import DoneAppointment from "./pages/ADMIN/appointment/DoneAppointment";
 import FollowupAppointment from "./pages/ADMIN/appointment/FollowupAppointment";
 import CompletedFollowUpAppointment from "./pages/ADMIN/appointment/CompletedFollowUpAppointment";
 import SMSNotif from "./pages/SMSNotif";
+import User from "./pages/ADMIN/user/User";
+import Notactiveuser from "./pages/ADMIN/user/Notactiveuser";
+import AdminNav from "./pages/ADMIN/components/adminNavbar/AdminNav";
+import Service from "./pages/ADMIN/service/Service";
 
 const Layout = () => {
   const location = useLocation();
@@ -82,14 +85,15 @@ const Veterinarian = () => {
 
 const Admin = () => {
   const location = useLocation();
-  const isAdminHome = location.pathname === "/admin/home";
+  const normalizedPath = location.pathname.replace(/\/+$/, "");
+  const isAdminHome = normalizedPath === "/admin/home";
 
   return (
     <>
       <div className="admin-container">
         <AdminSidebar />
         <div className="admin-left">
-          {!isAdminHome && <AdminNav />}
+          <AdminNav isHome={isAdminHome} />
           <div className="admin-content">
             <Routes>
               <Route path="/home/" element={<AdminHome />} />
@@ -117,6 +121,11 @@ const Admin = () => {
               />
 
               <Route path="/shop/" element={<Shop />} />
+
+              <Route path="/active-user/" element={<User />} />
+              <Route path="/not-active-user/" element={<Notactiveuser />} />
+
+              <Route path="/service/" element={<Service />} />
             </Routes>
           </div>
         </div>

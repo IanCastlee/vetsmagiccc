@@ -20,7 +20,7 @@ const PrevAppointment = ({ specialization }) => {
       setLoader(true);
       try {
         const res = await axiosIntance.get(
-          `client/appointment/GetPrevAppointment.php?user_id=${currentUser.user_id}&petType=${petType}`
+          `client/appointment/getPrevAppointment.php?user_id=${currentUser.user_id}&petType=${petType}`
         );
         if (res.data.success) {
           console.log("DATATATTATAT : ", res.data.data);

@@ -39,7 +39,7 @@ const Medicine = () => {
     const getmedicine = async () => {
       setLoader(true);
       try {
-        const res = await axiosIntance.get("admin/shop/GetShop.php");
+        const res = await axiosIntance.get("admin/shop/getShop.php");
         if (res.data.success) {
           setMedicineData(res.data.data);
           setLoader(false);

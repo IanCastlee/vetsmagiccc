@@ -1,6 +1,7 @@
 import "./Signup.scss";
 import { motion } from "framer-motion";
 import { useContext, useState } from "react";
+import TermsAndCondations from "../termsAndCondations/TermsAndCondations";
 
 //IMAGE
 import catdog from "../../assets/imges/signinimaeg.png";
@@ -22,6 +23,10 @@ const Signup = () => {
   const [showSignInForm, setshowSignInForm] = useState(false);
   const [showLoader, setshowLoader] = useState(false);
   const [toasterMessage, setToasterMessage] = useState(null);
+
+  const [showTerms, setShowTerms] = useState(false);
+  const [agree, setAgree] = useState(false);
+  const [showTermsNote, setShowTermsNote] = useState(false);
 
   const [emptyFullname, setEmptyFullname] = useState("");
   const [emptyAddress, setEmptyAddress] = useState("");
@@ -128,6 +133,17 @@ const Signup = () => {
       return;
     }
 
+    if (!agree) {
+      setShowTermsNote(true);
+
+      setshowLoader(false);
+
+      setTimeout(() => {
+        setShowTermsNote(false);
+      }, 3000);
+      return;
+    }
+
     try {
       const res = await axiosIntance.post("client/auth/Signup.php", {
         fullname: signUpdata.fullname,
@@ -185,7 +201,9 @@ const Signup = () => {
               <div className="signin-label-wrapper">
                 <h3 className="h3">SIGN UP</h3>
                 <span>to VETCARE</span>
-                <strong>OR</strong>
+                <div className="div">
+                  <strong>OR</strong>
+                </div>
                 <span
                   className="sign-up-btn"
                   onClick={() => {
@@ -321,6 +339,23 @@ const Signup = () => {
                     value={signUpdata.cpassword}
                   />
                 </div>
+
+                <div className="iagree">
+                  <p>
+                    By using this website, you agree to these Terms and
+                    Conditions. If you don’t agree, please don’t use the site.
+                  </p>
+
+                  <div className="check-pharse">
+                    <input
+                      type="checkbox"
+                      onChange={(e) => setAgree(e.target.checked)}
+                    />
+                    <p onClick={() => setShowTerms(true)}>
+                      I agree to the terms and condations
+                    </p>
+                  </div>
+                </div>
                 <div className="button-wrapper">
                   <FaArrowCircleLeft
                     onClick={() => setformToShow("1")}
@@ -351,6 +386,12 @@ const Signup = () => {
           message={toasterMessage}
           _click={() => setToasterMessage(null)}
         />
+      )}
+      {showTerms && <TermsAndCondations close={() => setShowTerms(false)} />}
+      {showTermsNote && (
+        <div className="note-terms">
+          <p>To continue, You need to agree to the terms and condations</p>
+        </div>
       )}
     </>
   );

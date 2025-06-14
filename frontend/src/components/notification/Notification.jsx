@@ -10,6 +10,7 @@ import axiosIntance from "../../../axios";
 import Loader2 from "../loader/Loader3";
 import Emptydata from "../emptydata/Emptydata";
 import appointmentImg from "../../assets/icons/calendar.png";
+import { Link } from "react-router-dom";
 
 const Notification = ({ close }) => {
   const [loader, setLoader] = useState(false);
@@ -22,7 +23,7 @@ const Notification = ({ close }) => {
   useEffect(() => {
     const getNotification = async () => {
       setLoader(true);
-      const res = await axiosIntance.get("client/notif/GetNotification.php");
+      const res = await axiosIntance.get("client/notif/getNotification.php");
       if (res.data.success) {
         console.log("NOTIFICATION : ", res.data.data);
         setNotif(res.data.data);
@@ -41,6 +42,27 @@ const Notification = ({ close }) => {
     setVisibleNotif(notif);
   };
 
+  // /handleUpdateAsRead
+  const handleUpdateAsRead = async (notif_id) => {
+    console.log(": ", notif_id);
+    try {
+      const res = await axiosIntance.post(
+        `client/notif/updateasread.php?notifId=${notif_id}`
+      );
+      if (res.data.success) {
+        const updateAuto = visibleNotif.map((item) =>
+          item.notif_id == notif_id ? { ...item, status: 1 } : item
+        );
+
+        setVisibleNotif(updateAuto);
+      } else {
+        console.log("Error from be : ", res.data);
+      }
+    } catch (error) {
+      console.log("Error : ", error);
+    }
+  };
+
   return (
     <div className="notification-overlay">
       <motion.div
@@ -49,7 +71,7 @@ const Notification = ({ close }) => {
         transition={{ duration: 0.5 }}
         className="notification"
       >
-        <div className="top">
+        <div className="top-card">
           <h6>Notification</h6>{" "}
           <IoCloseOutline className="icon" onClick={close} />
         </div>
@@ -59,7 +81,11 @@ const Notification = ({ close }) => {
           ) : visibleNotif.length > 0 ? (
             <>
               {visibleNotif.map((item) => (
-                <div key={item.notif_id} className="card">
+                <div
+                  key={item.notif_id}
+                  className={`card ${item.status == 1 ? "clicked" : ""}`}
+                  onClick={() => handleUpdateAsRead(item.notif_id)}
+                >
                   <div className="left">
                     <img src={appointmentImg} alt="" />
                   </div>
@@ -70,7 +96,9 @@ const Notification = ({ close }) => {
                     </div>
                     <div className="bot">
                       <span>{item.sentDate}</span>
-                      <button>Button</button>
+                      <button>
+                        <Link to="/myappointment/">View</Link>
+                      </button>
                     </div>
                   </div>
                 </div>

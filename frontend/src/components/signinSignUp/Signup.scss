@@ -13,7 +13,6 @@
   .container {
     width: 750px;
     height: 80%;
-    border-radius: 10px;
     background-color: #fff;
     display: flex;
     border-radius: 10px;
@@ -53,10 +52,22 @@
             font-size: 16px;
             font-weight: 500;
           }
-          strong {
-            color: lightgray;
-            font-size: 0.75rem;
-            margin-top: 15px;
+          .div {
+            border-bottom: 1px solid gray;
+            width: 80%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+
+            strong {
+              color: lightgray;
+              font-size: 0.75rem;
+              margin-top: 15px;
+              text-align: center;
+              margin-bottom: -5px;
+              padding: 0 20px;
+              background-color: #0c0950;
+            }
           }
           .sign-up-btn {
             color: #fbe4d6;
@@ -86,7 +97,7 @@
       .active-form-label {
         align-self: center;
         margin-bottom: 30px;
-        color: #0c0950;
+        color: #000;
       }
       .form {
         width: 100%;
@@ -101,7 +112,7 @@
 
           label {
             font-size: 0.75rem;
-            color: #0c0950;
+            color: #000;
           }
 
           input {
@@ -133,7 +144,7 @@
             padding: 0 10px;
 
             &:hover {
-              background-color: #0c0950;
+              background-color: #000;
             }
           }
         }
@@ -152,7 +163,7 @@
 
           label {
             font-size: 0.75rem;
-            color: #0c0950;
+            color: #000;
           }
 
           input {
@@ -164,6 +175,34 @@
 
             &:focus {
               outline: none;
+            }
+          }
+        }
+
+        .iagree {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          p {
+            font-size: 0.75rem;
+            color: #404049;
+          }
+
+          .check-pharse {
+            display: flex;
+            align-items: center;
+
+            input {
+              border: 1px solid gray;
+              margin-right: 3px;
+            }
+
+            p {
+              font-size: 0.75rem;
+              color: blue;
+              cursor: pointer;
             }
           }
         }
@@ -188,7 +227,7 @@
             padding: 0 10px;
 
             &:hover {
-              background-color: #0c0950;
+              background-color: #000;
             }
           }
           .btn-signin {
@@ -205,7 +244,7 @@
             padding: 0 10px;
 
             &:hover {
-              background-color: #0c0950;
+              background-color: #000;
             }
           }
         }
@@ -240,10 +279,9 @@
     .container {
       width: 100%;
       height: 100%;
-      border-radius: 0;
-      background-color: #0c0950;
+      background-color: #000;
       display: flex;
-      border-radius: 10px;
+      border-radius: 0;
       overflow: hidden;
       flex-direction: column;
 
@@ -283,10 +321,23 @@
               font-size: 16px;
               font-weight: 500;
             }
-            strong {
-              color: lightgray;
-              font-size: 0.75rem;
-              margin-top: 15px;
+
+            .div {
+              border-bottom: 1px solid gray;
+              width: 80%;
+              display: flex;
+              justify-content: center;
+              margin-bottom: 20px;
+
+              strong {
+                color: lightgray;
+                font-size: 0.75rem;
+                margin-top: 15px;
+                text-align: center;
+                margin-bottom: -5px;
+                padding: 0 20px;
+                background-color: #0c0950;
+              }
             }
             .sign-up-btn {
               color: #fbe4d6;
@@ -313,6 +364,7 @@
         padding: 20px;
         justify-content: center;
         height: 65%;
+
         border-top-right-radius: 15px;
         border-top-left-radius: 15px;
         margin-top: -10px;
@@ -320,7 +372,7 @@
         .active-form-label {
           align-self: center;
           margin-bottom: 30px;
-          color: #0c0950;
+          color: #000;
         }
         .form {
           width: 100%;
@@ -335,7 +387,7 @@
 
             label {
               font-size: 0.75rem;
-              color: #0c0950;
+              color: #000;
             }
 
             input {
@@ -367,7 +419,7 @@
               padding: 0 10px;
 
               &:hover {
-                background-color: #0c0950;
+                background-color: #000;
               }
             }
           }
@@ -386,7 +438,7 @@
 
             label {
               font-size: 0.75rem;
-              color: #0c0950;
+              color: #000;
             }
 
             input {
@@ -422,7 +474,7 @@
               padding: 0 10px;
 
               &:hover {
-                background-color: #0c0950;
+                background-color: #000;
               }
             }
             .btn-signin {
@@ -439,7 +491,7 @@
               padding: 0 10px;
 
               &:hover {
-                background-color: #0c0950;
+                background-color: #000;
               }
             }
           }

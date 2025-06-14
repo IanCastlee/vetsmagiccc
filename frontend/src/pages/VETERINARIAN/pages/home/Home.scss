@@ -647,7 +647,7 @@
           .name-rule {
             width: auto;
             display: flex;
-            justify-content: center;
+            justify-content: start;
             align-items: start;
             flex-direction: column;
 
@@ -663,7 +663,7 @@
             }
 
             span {
-              font-size: 1.125rem;
+              font-size: 0.875rem;
               font-weight: 500;
               color: lightgrey;
               margin-left: 25px;

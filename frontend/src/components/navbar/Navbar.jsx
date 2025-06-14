@@ -92,33 +92,34 @@ const Navbar = ({ isHome }) => {
                   activeLink === "shop" ? "active" : ""
                 } `}
               >
-                {/* <AiOutlineMedicineBox className="nav-icon" /> */}
                 Shop
               </Link>
-              <Link
-                to="/myappointment/"
-                onClick={() => setActiveLink("appointment")}
-                title="Appointment"
-                className={`list-icon ${
-                  activeLink === "appointment" ? "active" : ""
-                } `}
-              >
-                {/* <RiCalendarScheduleLine className="nav-icon" /> */}
-                Appointment
-              </Link>
-              <Link
-                title="Follow-up Appointment"
-                onClick={() => {
-                  setModlToShow("follow-up");
-                  setActiveLink("fa-appointment");
-                }}
-                className={`list-icon ${
-                  activeLink === "fa-appointment" ? "active" : ""
-                } `}
-              >
-                {/* <LuCalendarSync className="nav-icon" /> */}
-                Follow-up Appointment
-              </Link>
+              {currentUser !== null && (
+                <Link
+                  to="/myappointment/"
+                  onClick={() => setActiveLink("appointment")}
+                  title="Appointment"
+                  className={`list-icon ${
+                    activeLink === "appointment" ? "active" : ""
+                  } `}
+                >
+                  Appointment
+                </Link>
+              )}
+              {currentUser !== null && (
+                <Link
+                  title="Follow-up Appointment"
+                  onClick={() => {
+                    setModlToShow("follow-up");
+                    setActiveLink("fa-appointment");
+                  }}
+                  className={`list-icon ${
+                    activeLink === "fa-appointment" ? "active" : ""
+                  } `}
+                >
+                  Follow-up Appointment
+                </Link>
+              )}
               <Link
                 title="Notification"
                 className="list-icon-notif"
@@ -130,12 +131,14 @@ const Navbar = ({ isHome }) => {
                   <span>9</span>
                 </div>
               </Link>
-              <Link
-                onClick={() => setShowDropdown(!showDropdown)}
-                className="list-icon"
-              >
-                <FaRegCircleUser className="nav-icon" />
-              </Link>
+              {currentUser !== null && (
+                <Link
+                  onClick={() => setShowDropdown(!showDropdown)}
+                  className="list-icon"
+                >
+                  <FaRegCircleUser className="nav-icon" />
+                </Link>
+              )}
 
               {currentUser === null && (
                 <button
@@ -151,7 +154,7 @@ const Navbar = ({ isHome }) => {
           <div className="menu-notif-wrapper">
             <div
               className="notification-icon"
-              onClick={() => setShowNotifModal(true)}
+              onClick={() => setShowActiveModal("notif")}
             >
               <AiFillBell className="bell-icon" />
               <div className="count">

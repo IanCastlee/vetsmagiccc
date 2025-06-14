@@ -10,9 +10,8 @@ if (isset($_GET['user_id'], $_GET['petType'])) {
     $user_id = $_GET['user_id'];
     $petType = $_GET['petType'];
     $status = 0;
+    $getPrevAppointment = $conn->prepare(" SELECT pet_name, pet_type, breed, age, weight, gender, current_health_issue, history_health_issue, image FROM appointments WHERE client_id = ? AND pet_type = ? AND is_followup = ? GROUP BY pet_name, breed, age, gender");
 
-    $getPrevAppointment = $conn->prepare("SELECT pet_name, pet_type, breed, age, weight, gender, current_health_issue, history_health_issue, image 
-  FROM appointments WHERE client_id = ? AND pet_type = ? AND is_followup = ?");
     $getPrevAppointment->bind_param("isi", $user_id, $petType, $status);
     $getPrevAppointment->execute();
     $result =  $getPrevAppointment->get_result();

@@ -18,28 +18,54 @@
       justify-content: center;
       align-items: center;
 
-      .title {
+      .main-title {
         color: #fbe4d6;
+        font-size: 30px;
+        border-bottom: 1px solid gray;
+        padding-bottom: 7px;
       }
     }
+    .title {
+      color: #000;
+      font-weight: 500;
+      font-size: 1.125rem;
+      display: flex;
+      align-items: center;
+      margin: 30px 0;
+      border-bottom: 1px solid lightgrey;
+      padding: 0 20px 20px 20px;
+      justify-content: space-between;
 
+      h3 {
+        font-size: 20px;
+      }
+      button {
+        background-color: #35168b;
+        color: #fff;
+        font-size: 12px;
+        border: none;
+        border-radius: 3px;
+        padding: 4px 8px;
+        transition: transform ease-in-out 0.3s;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #4f49bb;
+          transform: scale(1.02);
+        }
+      }
+    }
     .myappointment {
       display: flex;
       width: 100%;
 
       .current-appointment {
-        width: 50%;
+        width: 100%;
         padding: 10px;
         display: flex;
         flex-direction: column;
         gap: 10px;
         justify-content: start;
-
-        .title {
-          color: #0c0950;
-          font-weight: 500;
-          font-size: 1.125rem;
-        }
 
         .card {
           width: 100%;
@@ -71,14 +97,14 @@
 
               .dr {
                 font-size: 1.25rem;
-                color: #0c0950;
+                color: #000;
                 font-weight: 500;
                 display: flex;
                 align-items: center;
               }
               .rule {
                 font-size: 0.875rem;
-                color: #0c0950;
+                color: #000;
               }
 
               .date-time {
@@ -90,7 +116,7 @@
                 .date {
                   font-size: 14px;
                   font-weight: 500;
-                  color: #0c0950;
+                  color: #000;
                   display: flex;
                   align-items: center;
 
@@ -108,7 +134,7 @@
                   .time {
                     font-size: 14px;
                     font-weight: 500;
-                    color: #0c0950;
+                    color: #000;
                     display: flex;
                     align-items: center;
 
@@ -120,7 +146,7 @@
                   .price {
                     font-size: 1rem;
                     font-weight: 500;
-                    color: #0c0950;
+                    color: #000;
                     display: flex;
                     align-items: center;
                     margin-top: 8px;
@@ -133,7 +159,7 @@
             }
 
             .icon {
-              color: #0c0950;
+              color: #000;
               font-size: 1.25rem;
               cursor: pointer;
             }
@@ -160,18 +186,12 @@
       }
 
       .previous-appointment {
-        width: 50%;
+        width: 100%;
         padding: 10px;
         display: flex;
         flex-direction: column;
         gap: 10px;
         justify-content: start;
-
-        .title {
-          color: #0c0950;
-          font-weight: 500;
-          font-size: 1.125rem;
-        }
 
         .card {
           width: 100%;
@@ -179,9 +199,10 @@
           display: flex;
           padding: 20px;
           gap: 20px;
+          border-radius: 10px;
+
           box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
             rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-          border-radius: 10px;
 
           .profile {
             height: 120px;
@@ -198,18 +219,22 @@
             .top-card {
               display: flex;
               flex-direction: column;
+              width: 100%;
 
               .dr {
                 font-size: 1.25rem;
-                color: #0c0950;
+                color: #000;
                 font-weight: 500;
+                display: flex;
+                align-items: center;
               }
               .rule {
                 font-size: 0.875rem;
-                color: #0c0950;
+                color: #000;
               }
 
               .date-time {
+                width: 100%;
                 display: flex;
                 flex-direction: column;
                 margin-top: 20px;
@@ -217,7 +242,7 @@
                 .date {
                   font-size: 14px;
                   font-weight: 500;
-                  color: #0c0950;
+                  color: #000;
                   display: flex;
                   align-items: center;
 
@@ -225,26 +250,63 @@
                     margin-right: 5px;
                   }
                 }
-                .time {
-                  font-size: 14px;
-                  font-weight: 500;
-                  color: #0c0950;
+
+                .time-price {
+                  width: 100%;
                   display: flex;
+                  justify-content: space-between;
                   align-items: center;
 
-                  .iconn {
-                    margin-right: 5px;
+                  .time {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: #000;
+                    display: flex;
+                    align-items: center;
+
+                    .iconn {
+                      margin-right: 5px;
+                    }
+                  }
+
+                  .price {
+                    font-size: 1rem;
+                    font-weight: 500;
+                    color: #000;
+                    display: flex;
+                    align-items: center;
+                    margin-top: 8px;
+                    .iconn {
+                      margin-right: 5px;
+                    }
                   }
                 }
               }
             }
 
-            .icon-wrapper {
-              .icon {
-                font-size: 30px;
-                color: rgb(61, 55, 55);
-              }
+            .icon {
+              color: #000;
+              font-size: 1.25rem;
+              cursor: pointer;
             }
+          }
+        }
+
+        .empty-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          margin-top: 30px;
+
+          .icon {
+            font-size: 50px;
+            color: rgb(177, 174, 174);
+          }
+
+          p {
+            font-size: 1rem;
+            color: gray;
           }
         }
       }
@@ -282,14 +344,14 @@
 
       .note {
         font-size: 1.125rem;
-        color: #0c0950;
+        color: #000;
         text-align: center;
         margin-bottom: 20px;
       }
 
       h6 {
         font-size: 0.875rem;
-        color: #0c0950;
+        color: #000;
         margin-bottom: 10px;
         display: flex;
         align-items: center;
@@ -309,7 +371,7 @@
 
         span {
           font-size: 0.875rem;
-          color: #0c0950;
+          color: #000;
         }
         .date-input {
           height: 38px;
@@ -326,7 +388,7 @@
           input {
             width: 100%;
             font-size: 12px;
-            color: #0c0950;
+            color: #000;
             cursor: pointer;
             padding: 5px 8px;
             border-radius: 5px;
@@ -340,7 +402,7 @@
 
           .icon {
             font-size: 1.125rem;
-            color: #0c0950;
+            color: #000;
           }
         }
       }
@@ -355,7 +417,7 @@
 
       h6 {
         font-size: 0.875rem;
-        color: #0c0950;
+        color: #000;
         margin-bottom: 10px;
         display: flex;
         align-items: center;
@@ -388,7 +450,7 @@
           align-items: center;
 
           &.selected {
-            background-color: #0c0950;
+            background-color: #000;
             color: #fff;
           }
         }
@@ -434,7 +496,7 @@
         .back-icon {
           font-size: 1.25rem;
           cursor: pointer;
-          color: #0c0950;
+          color: #000;
         }
 
         .btn-setappointment {
@@ -484,9 +546,40 @@
         z-index: 1;
         padding-top: 70px;
 
-        .title {
+        .main-title {
           color: #fbe4d6;
-          font-size: 1.5rem;
+          font-size: 1.5625rem;
+        }
+      }
+
+      .title {
+        color: #000;
+        font-weight: 500;
+        font-size: 1.125rem;
+        display: flex;
+        align-items: center;
+        margin: 30px 0;
+        border-bottom: 1px solid lightgrey;
+        padding: 0 20px 20px 20px;
+        justify-content: space-between;
+
+        h3 {
+          font-size: 0.875rem;
+        }
+        button {
+          background-color: #5e44a7;
+          color: #fff;
+          font-size: 10px;
+          border: none;
+          border-radius: 3px;
+          padding: 3px 10px;
+          transition: transform ease-in-out 0.3s;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #4f49bb;
+            transform: scale(1.02);
+          }
         }
       }
 
@@ -508,12 +601,6 @@
           gap: 10px;
           justify-content: center;
 
-          .title {
-            color: #0c0950;
-            font-weight: 500;
-            font-size: 1.125rem;
-          }
-
           .card {
             width: 100%;
             background-color: #fff;
@@ -526,8 +613,8 @@
               rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 
             .profile {
-              height: 120px;
-              width: 120px;
+              height: 40px;
+              width: 40px;
               object-fit: cover;
             }
 
@@ -544,12 +631,12 @@
 
                 .dr {
                   font-size: 1.25rem;
-                  color: #0c0950;
+                  color: #000;
                   font-weight: 500;
                 }
                 .rule {
                   font-size: 0.875rem;
-                  color: #0c0950;
+                  color: #000;
                 }
 
                 .date-time {
@@ -560,7 +647,7 @@
                   .date {
                     font-size: 14px;
                     font-weight: 500;
-                    color: #0c0950;
+                    color: #000;
                     display: flex;
                     align-items: center;
 
@@ -571,7 +658,7 @@
                   .time {
                     font-size: 14px;
                     font-weight: 500;
-                    color: #0c0950;
+                    color: #000;
                     display: flex;
                     align-items: center;
 
@@ -590,7 +677,7 @@
                     .time {
                       font-size: 14px;
                       font-weight: 500;
-                      color: #0c0950;
+                      color: #000;
                       display: flex;
                       align-items: center;
 
@@ -602,7 +689,7 @@
                     .price {
                       font-size: 1rem;
                       font-weight: 500;
-                      color: #0c0950;
+                      color: #000;
                       display: flex;
                       align-items: center;
 
@@ -612,6 +699,11 @@
                     }
                   }
                 }
+              }
+
+              .icon {
+                align-self: end;
+                color: blue;
               }
 
               .icon-wrapper {
@@ -633,25 +725,20 @@
           gap: 10px;
           justify-content: center;
 
-          .title {
-            color: #0c0950;
-            font-weight: 500;
-            font-size: 1.125rem;
-          }
-
           .card {
             width: 100%;
             background-color: #fff;
             display: flex;
             padding: 20px;
             gap: 20px;
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-              rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
             border-radius: 10px;
 
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+              rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+
             .profile {
-              height: 120px;
-              width: 120px;
+              height: 40px;
+              width: 40px;
               object-fit: cover;
             }
 
@@ -660,6 +747,7 @@
               background-color: #fff;
               display: flex;
               justify-content: space-between;
+              flex-direction: column;
 
               .top-card {
                 display: flex;
@@ -667,12 +755,12 @@
 
                 .dr {
                   font-size: 1.25rem;
-                  color: #0c0950;
+                  color: #000;
                   font-weight: 500;
                 }
                 .rule {
                   font-size: 0.875rem;
-                  color: #0c0950;
+                  color: #000;
                 }
 
                 .date-time {
@@ -683,7 +771,7 @@
                   .date {
                     font-size: 14px;
                     font-weight: 500;
-                    color: #0c0950;
+                    color: #000;
                     display: flex;
                     align-items: center;
 
@@ -694,7 +782,7 @@
                   .time {
                     font-size: 14px;
                     font-weight: 500;
-                    color: #0c0950;
+                    color: #000;
                     display: flex;
                     align-items: center;
 
@@ -702,15 +790,51 @@
                       margin-right: 5px;
                     }
                   }
+
+                  .time-price {
+                    width: 100%;
+                    display: flex;
+                    justify-content: start;
+                    align-items: start;
+                    flex-direction: column;
+
+                    .time {
+                      font-size: 14px;
+                      font-weight: 500;
+                      color: #000;
+                      display: flex;
+                      align-items: center;
+
+                      .iconn {
+                        margin-right: 5px;
+                      }
+                    }
+
+                    .price {
+                      font-size: 1rem;
+                      font-weight: 500;
+                      color: #000;
+                      display: flex;
+                      align-items: center;
+
+                      .iconn {
+                        margin-right: 5px;
+                      }
+                    }
+                  }
                 }
+              }
+
+              .icon {
+                align-self: end;
+                color: blue;
               }
 
               .icon-wrapper {
                 display: none;
-
                 .icon {
                   font-size: 40px;
-                  color: rgb(61, 55, 55);
+                  color: green;
                 }
               }
             }
@@ -737,11 +861,11 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      width: 100%;
+      width: 95%;
       padding: 10px;
       border-radius: 5px;
       background-color: #fff;
-      height: 100%;
+      height: 95%;
       .top {
         width: 100%;
       }
@@ -754,14 +878,15 @@
         margin-top: 20px;
 
         .note {
-          font-size: 1.125rem;
-          color: #0c0950;
+          font-size: 0.875rem;
+          color: gray;
           text-align: center;
-          margin-bottom: 15px;
+          margin-bottom: 25px;
+          width: 70%;
         }
         h6 {
           font-size: 0.875rem;
-          color: #0c0950;
+          color: #000;
           margin-bottom: 10px;
         }
 
@@ -772,7 +897,7 @@
 
           span {
             font-size: 0.875rem;
-            color: #0c0950;
+            color: #000;
           }
 
           .date-input {
@@ -787,7 +912,7 @@
             input {
               width: 100%;
               font-size: 12px;
-              color: #0c0950;
+              color: #000;
               cursor: pointer;
               padding: 5px 8px;
               border-radius: 5px;
@@ -801,7 +926,7 @@
 
             .icon {
               font-size: 1.125rem;
-              color: #0c0950;
+              color: #000;
             }
           }
         }
@@ -816,7 +941,7 @@
 
         h6 {
           font-size: 0.875rem;
-          color: #0c0950;
+          color: #000;
           margin-bottom: 10px;
         }
 
@@ -839,7 +964,7 @@
             align-items: center;
 
             &.selected {
-              background-color: #0c0950;
+              background-color: #000;
               color: #fff;
             }
           }
@@ -857,7 +982,7 @@
           .back-icon {
             font-size: 1.25rem;
             cursor: pointer;
-            color: #0c0950;
+            color: #000;
           }
 
           .btn-setappointment {

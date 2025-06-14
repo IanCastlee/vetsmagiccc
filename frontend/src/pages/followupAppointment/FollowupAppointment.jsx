@@ -40,7 +40,7 @@ const FollowupAppointment = () => {
     const getNotification = async () => {
       setLoader(true);
       const res = await axiosIntance.get(
-        `client/appointment/GetFollowupAppintment.php?currentUser_id=${currentUser.user_id}`
+        `client/appointment/getFollowupAppintment.php?currentUser_id=${currentUser.user_id}`
       );
       if (res.data.success) {
         setAppointmentData(res.data.data);
@@ -74,7 +74,7 @@ const FollowupAppointment = () => {
     setShowLoader(true);
     try {
       const res = await axiosIntance.post(
-        "client/appointment/GetAppointment.php",
+        "client/appointment/getAppointment.php",
         {
           currentUser: currentUser?.user_id,
         }
@@ -155,7 +155,7 @@ const FollowupAppointment = () => {
 
     try {
       const res = await axiosIntance.get(
-        "client/appointment/GetTimeDateToRemove.php",
+        "client/appointment/getTimeDateToRemove.php",
         {
           params: { choosenDate: formattedDate },
         }
@@ -270,7 +270,7 @@ const FollowupAppointment = () => {
 
     try {
       const res = await axiosIntance.post(
-        "client/appointment/PostFollowUpAppointment.php",
+        "client/appointment/postFollowUpAppointment.php",
         {
           appointment_id: appointmentID,
           date: formattedDate,
@@ -339,15 +339,11 @@ const FollowupAppointment = () => {
   const handleSendDataAndPayment = async (e) => {
     e.preventDefault();
 
-    // First submit appointment data
     const submitResult = await handleSubmitUpdatedAppointment();
 
-    // ✅ This now works correctly
     if (submitResult === true) {
       await handlePayment(e);
-      setTimeout(() => {
-        // setShowSummaryForm(false);
-      }, 7000);
+      setTimeout(() => {}, 7000);
     } else {
       console.log("Appointment submission failed. Payment cancelled.");
     }
@@ -386,7 +382,7 @@ const FollowupAppointment = () => {
           initial={{ opacity: 0, x: 200 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="notification"
+          className="fa-appointment"
         >
           <div className="top">
             <h6>Follow-up Appointment</h6>{" "}

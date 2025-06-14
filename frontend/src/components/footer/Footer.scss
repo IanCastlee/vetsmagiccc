@@ -1,0 +1,153 @@
+.footer {
+  width: 100%;
+  height: auto;
+  background-color: #0c0950;
+  margin-top: 250px;
+  padding: 40px 50px;
+  display: flex;
+  justify-content: start;
+  gap: 70px;
+
+  .logo {
+    display: flex;
+    flex-direction: column;
+
+    width: 200px;
+
+    img {
+      height: auto;
+      width: auto;
+      margin-bottom: 5px;
+    }
+
+    p {
+      font-size: 14px;
+      color: lightgray;
+    }
+  }
+
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    span {
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .qlinks {
+      font-size: 12px;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      .icon {
+        font-size: 16px;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .links-soc {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    span {
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .soc-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      .soc-icon {
+        font-size: 25px;
+        color: #fff;
+      }
+    }
+  }
+}
+
+@media (max-width: 786px) {
+  .footer {
+    width: 100%;
+    height: auto;
+    background-color: #0c0950;
+    margin-top: 50px;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: start;
+    gap: 30px;
+    flex-wrap: wrap;
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      img {
+        height: 60px;
+        width: 140px;
+        margin-bottom: 5px;
+      }
+
+      p {
+        font-size: 14px;
+        color: lightgray;
+      }
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      span {
+        font-size: 14px;
+        font-weight: 500;
+        color: #fff;
+      }
+
+      .qlinks {
+        font-size: 12px;
+        color: #fff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+
+        .icon {
+          font-size: 16px;
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .links-soc {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      span {
+        font-size: 14px;
+        font-weight: 500;
+        color: #fff;
+      }
+
+      .soc-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        .soc-icon {
+          font-size: 25px;
+          color: #fff;
+        }
+      }
+    }
+  }
+}

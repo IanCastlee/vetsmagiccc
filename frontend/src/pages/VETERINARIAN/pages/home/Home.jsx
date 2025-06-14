@@ -32,7 +32,7 @@ const Home = () => {
     const getClickedVeterinarian = async () => {
       try {
         const res = await axiosIntance.post(
-          "admin/veterinarian/GetClickedVeterinarian.php",
+          "admin/veterinarian/getClickedVeterinarian.php",
           { user_id: vetId.vetId }
         );
         if (res.data.success) {
@@ -56,7 +56,7 @@ const Home = () => {
       setLoader(true);
       try {
         const res = await axiosIntance.post(
-          "veterinarian/GetAppointmentForSpecificVet.php",
+          "veterinarian/getAppointmentForSpecificVet.php",
           {
             currentVet_id: vetId.vetId,
           }
@@ -139,7 +139,7 @@ const Home = () => {
 
     try {
       const res = await axiosIntance.post(
-        "veterinarian/PostFollowUpAppointment.php",
+        "veterinarian/postFollowUpAppointment.php",
         {
           appointment_id: clickedToFollowUp.appointment_id,
           client_id: clickedToFollowUp.client_id,
@@ -155,6 +155,11 @@ const Home = () => {
       );
       if (res.data.success) {
         console.log(res.data.message);
+
+        const handleUpdateAut = appointment.filter(
+          (item) => item.appointment_id !== clickedToFollowUp.appointment_id
+        );
+        setAppointment(handleUpdateAut);
         showSuccessAlert();
         setClickedToFollowUp({
           appointment_id: "",
@@ -175,7 +180,17 @@ const Home = () => {
   const showSuccessAlert = () => {
     Swal.fire({
       title: "Success!",
-      text: "Follow-up appointment sent succesfully",
+      text: "Follow-up appointment sent succesfully. Appointment Done",
+      icon: "success",
+      confirmButtonText: "OK",
+      background: "rgba(0, 0, 0, 0.9)",
+      color: "lightgrey",
+    });
+  };
+  const showSuccessAlert_done = () => {
+    Swal.fire({
+      title: "Success!",
+      text: "Appointment Done",
       icon: "success",
       confirmButtonText: "OK",
       background: "rgba(0, 0, 0, 0.9)",
@@ -195,11 +210,13 @@ const Home = () => {
       if (res.data.success) {
         console.log("RES : ", res.data.message);
 
-        // setVeterinarian((prevData) =>
-        //   prevData.filter((vet) => vet.user_id !== showDelForm)
-        // );
-        // showSuccessAlert_del_vet();
-        // setShowDelForm(null);
+        const handleUpdateAut = appointment.filter(
+          (item) => item.appointment_id !== clickedDoneId
+        );
+        setAppointment(handleUpdateAut);
+        setClickedDoneId(null);
+        showSuccessAlert_done();
+        appoi;
       } else {
         console.log("Delete failed:", res.data);
       }

@@ -12,7 +12,6 @@ import { FiSearch } from "react-icons/fi";
 import { IoIosAdd } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import { FaEdit } from "react-icons/fa";
-import Emptydata from "../../../components/emptydata/Emptydata";
 import { uploadUrl } from "../../../../fileurl";
 
 const Shop = () => {
@@ -22,6 +21,7 @@ const Shop = () => {
   const [activeFormModal, setActiveFormModal] = useState("");
   const [showDelForm, setShowDelForm] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [addExpnsForm, setAddExpncsForm] = useState("");
 
   const [formData, setFormData] = useState({
     medicine_id: "",
@@ -32,6 +32,7 @@ const Shop = () => {
     price: "",
     dosage: "",
     description: "",
+    capital: "",
     image: "",
   });
 
@@ -57,6 +58,7 @@ const Shop = () => {
     formDataAppend.append("price", formData.price);
     formDataAppend.append("dosage", formData.dosage);
     formDataAppend.append("description", formData.description);
+    formDataAppend.append("capital", formData.capital);
     formDataAppend.append("image", formData.image);
 
     try {
@@ -111,6 +113,7 @@ const Shop = () => {
       price: item.price || "",
       dosage: item.dosage || "",
       description: item.description || "",
+      capital: item.capital || "",
     });
 
     setActiveFormModal("update");
@@ -262,6 +265,16 @@ const Shop = () => {
     setCurrentPage(1);
   };
 
+  const handleAddExpense = () => {
+    const additional = parseFloat(addExpnsForm);
+    if (!isNaN(additional)) {
+      setFormData((prev) => ({
+        ...prev,
+        capital: parseFloat(prev.capital) + additional,
+      }));
+      setAddExpncsForm("");
+    }
+  };
   return (
     <>
       <div className="admin-shop">
@@ -324,8 +337,8 @@ const Shop = () => {
               </thead>
               <tbody>
                 {currentData.length > 0 ? (
-                  currentData.map((item) => (
-                    <tr key={item.user_id}>
+                  currentData.map((item, index) => (
+                    <tr key={index}>
                       <td style={{ fontWeight: "700" }}>{item.medicine_id}</td>
                       <td>
                         <img
@@ -548,6 +561,65 @@ const Shop = () => {
                       id="description"
                       required
                     ></textarea>
+                  </div>
+
+                  <div className="input-label-wrapper">
+                    <label htmlFor="capital">Expences</label>
+                    <input
+                      type="number"
+                      className="input"
+                      name="capital"
+                      id="capital"
+                      placeholder="Expences"
+                      value={formData.capital}
+                      onChange={handleChange}
+                      required
+                    />
+
+                    <div className="subtract">
+                      <span
+                        style={{
+                          fontSize: "10px",
+                        }}
+                      >
+                        Add Expences
+                      </span>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "3px",
+                        }}
+                        className="inpt-wrapper"
+                      >
+                        <input
+                          type="number"
+                          style={{
+                            border: "1px solid lightgrey",
+                            height: "30px",
+                            borderRadius: "4px",
+                            textAlign: "center",
+                          }}
+                          onChange={(e) => setAddExpncsForm(e.target.value)}
+                        />
+                        <button
+                          style={{
+                            border: "none",
+                            height: "30px",
+                            borderRadius: "4px",
+                            textAlign: "center",
+                            backgroundColor: "green",
+                            fontSize: "10px",
+                            color: "#fff",
+                            padding: "0 6px",
+                          }}
+                          type="button"
+                          onClick={handleAddExpense}
+                        >
+                          Add Expense
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

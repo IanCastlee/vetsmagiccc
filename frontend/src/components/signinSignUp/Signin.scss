@@ -53,10 +53,22 @@
             font-size: 16px;
             font-weight: 500;
           }
-          strong {
-            color: lightgray;
-            font-size: 0.75rem;
-            margin-top: 15px;
+          .div {
+            border-bottom: 1px solid gray;
+            width: 80%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+
+            strong {
+              color: lightgray;
+              font-size: 0.75rem;
+              margin-top: 15px;
+              text-align: center;
+              margin-bottom: -5px;
+              padding: 0 20px;
+              background-color: #0c0950;
+            }
           }
           .sign-up-btn {
             color: #fbe4d6;
@@ -102,7 +114,7 @@
 
           label {
             font-size: 0.75rem;
-            color: #0c0950;
+            color: #000;
           }
 
           input {
@@ -132,7 +144,7 @@
           border-radius: 5px;
 
           &:hover {
-            background-color: #0c0950;
+            background-color: #000;
           }
         }
 
@@ -142,12 +154,12 @@
           margin-top: -8px;
 
           input {
-            border: 1px solid #0c0950;
+            border: 1px solid #000;
           }
 
           span {
             font-size: 12px;
-            color: #0c0950;
+            color: #000;
             margin-left: 5px;
           }
         }
@@ -175,7 +187,21 @@
     color: gray;
   }
 }
+.note-terms {
+  z-index: 3555;
+  background-color: #fff;
+  padding: 5px 10px;
+  position: fixed;
+  top: 95%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 5px;
 
+  p {
+    color: #000000;
+    font-size: 12px;
+  }
+}
 //MOBILE
 @media (max-width: 786px) {
   .signin {
@@ -194,7 +220,7 @@
       width: 100%;
       height: 100%;
       border-radius: 0;
-      background-color: #0c0950;
+      background-color: #000;
       display: flex;
       border-radius: 10px;
       overflow: hidden;
@@ -236,10 +262,22 @@
               font-size: 16px;
               font-weight: 500;
             }
-            strong {
-              color: lightgray;
-              font-size: 0.75rem;
-              margin-top: 15px;
+            .div {
+              border-bottom: 1px solid gray;
+              width: 80%;
+              display: flex;
+              justify-content: center;
+              margin-bottom: 20px;
+
+              strong {
+                color: lightgray;
+                font-size: 0.75rem;
+                margin-top: 15px;
+                text-align: center;
+                margin-bottom: -5px;
+                padding: 0 20px;
+                background-color: #0c0950;
+              }
             }
             .sign-up-btn {
               color: #fbe4d6;
@@ -283,7 +321,7 @@
 
             label {
               font-size: 0.75rem;
-              color: #0c0950;
+              color: #000;
             }
 
             input {
@@ -313,7 +351,7 @@
             border-radius: 5px;
 
             &:hover {
-              background-color: #0c0950;
+              background-color: #000;
             }
           }
         }

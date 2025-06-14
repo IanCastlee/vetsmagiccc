@@ -22,7 +22,9 @@ if (
         $_POST['history_health_issue'],
         $_POST['appointment_date'],
         $_POST['appointment_time'],
-        $_POST['price']
+        $_POST['price'],
+        $_POST['title_for_vet'],
+        $_POST['message_for_vet'],
     )
 ) {
     // Sanitize and assign form fields
@@ -40,6 +42,12 @@ if (
     $appointment_date = $_POST['appointment_date'];
     $appointment_time = $_POST['appointment_time'];
     $price = $_POST['price'];
+    $title_for_vet = $_POST['title_for_vet'];
+    $message_for_vet = $_POST['message_for_vet'];
+
+    date_default_timezone_set("Asia/Manila");
+    $sentDate = date("Y-m-d");
+
 
     // Handle image upload if it exists
     $image_name = null;
@@ -90,6 +98,10 @@ if (
     );
 
     if ($stmt->execute()) {
+
+        $insertNotification = $conn->prepare("INSERT INTO notifications (sender_id, reciever_id, title, description, sentDate)VALUES(?,?,?,?,?)");
+        $insertNotification->bind_param("iisss", $client_id, $dr_id, $title_for_vet, $message_for_vet, $sentDate);
+        $insertNotification->execute();
         echo json_encode(['success' => true, 'message' => "Appointment sent successfully"]);
     } else {
         echo json_encode(['success' => false, 'message' => "Database error: " . $conn->error]);

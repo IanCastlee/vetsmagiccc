@@ -41,7 +41,7 @@ const AdminSidebar = () => {
       >
         <div className="top">
           <div className="top-container">
-            <h3 style={{ color: "#fff" }}>CDCN</h3>
+            <h3 style={{ color: "#fff" }}>VETCARE</h3>
           </div>
         </div>
 
@@ -120,8 +120,12 @@ const AdminSidebar = () => {
 
           {activeDropdown === "user" && (
             <div className="dropdown">
-              <button className="btn-li">Active</button>
-              <button className="btn-li">Not Active</button>
+              <Link to="/admin/active-user/" className="btn-li">
+                Active
+              </Link>
+              <Link to="/admin/not-active-user/" className="btn-li">
+                Not Active
+              </Link>
             </div>
           )}
 
@@ -140,8 +144,10 @@ const AdminSidebar = () => {
           )}
 
           <li className="item">
-            <MdOutlineMedicalServices className="link-icon" />
-            Services
+            <Link className="btn-li" to="/admin/service/">
+              <MdOutlineMedicalServices className="link-icon" />
+              Services
+            </Link>
           </li>
           <li className="item">
             <MdOutlineEventNote className="link-icon" />

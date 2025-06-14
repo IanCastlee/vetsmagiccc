@@ -1,6 +1,6 @@
 import "./Signin.scss";
 import { motion } from "framer-motion";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import ConfirmationForm from "./ConfirmationForm";
 import { AuthContext } from "../../contexts/AuthContext";
 import axiosIntance from "../../../axios";
@@ -105,7 +105,9 @@ const Signin = () => {
               <div className="signin-label-wrapper">
                 <h3 className="h3">SIGN IN</h3>
                 <span>to your VETCARE account</span>
-                <strong>OR</strong>
+                <div className="div">
+                  <strong>OR</strong>
+                </div>{" "}
                 <span
                   className="sign-up-btn"
                   onClick={() => {
@@ -159,7 +161,6 @@ const Signin = () => {
               <button className="btn-signin" onClick={handleSignIn}>
                 SIGN IN
               </button>
-
               <div className="showpass-wrapper">
                 <input
                   type="checkbox"

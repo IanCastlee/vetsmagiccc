@@ -39,7 +39,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #afc3e7;
+            background: linear-gradient(135deg, #afc3e7, #d6e8fa);
+            border-left: 5px solid #170fb1;
 
             .left {
               width: 30%;
@@ -52,7 +53,7 @@
               span {
                 font-size: 35px;
                 font-weight: bold;
-                color: blue;
+                color: #0c0950;
               }
             }
 

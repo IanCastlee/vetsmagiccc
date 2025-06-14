@@ -21,6 +21,7 @@ import deworm from "../../assets/icons/deworm (1).png";
 import dental from "../../assets/icons/veterinary.png";
 import Loader3 from "../../components/loader/Loader3";
 import { uploadUrl } from "../../../fileurl";
+import Footer from "../../components/footer/Footer";
 
 const Home = () => {
   const { setFormToShow, currentUser } = useContext(AuthContext);
@@ -34,7 +35,7 @@ const Home = () => {
     const getVeterinarian = async () => {
       try {
         const res = await axiosIntance(
-          "admin/veterinarian/GetVeterinarian.php"
+          "admin/veterinarian/getVeterinarian.php"
         );
         if (res.data.success) {
           setVeterinarian(res.data.data);
@@ -51,7 +52,6 @@ const Home = () => {
     getVeterinarian();
   }, []);
 
-  // helper function to highlight search matches
   const highlightMatch = (text, query) => {
     if (!query) return text;
 
@@ -204,6 +204,8 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      <Footer />
     </>
   );
 };
