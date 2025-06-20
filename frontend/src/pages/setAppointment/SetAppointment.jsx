@@ -7,7 +7,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Loader2 from "../../components/loader/Loader2";
 import { uploadUrl } from "../../../fileurl";
-
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 //IMAGES
 import cat from "../../assets/icons/mouth.png";
 
@@ -186,6 +187,7 @@ const SetAppointment = () => {
     }
   };
 
+  //getClickedVeterinarian and services
   useEffect(() => {
     const getClickedVeterinarian = async () => {
       try {
@@ -193,11 +195,12 @@ const SetAppointment = () => {
           "admin/veterinarian/GetClickedVeterinarian.php",
           { user_id: userId.userId }
         );
+
         if (res.data.success) {
           setVeterinarianInfo(res.data.data.veterinarianInfo);
           setVeterinarianServices(res.data.data.services);
         } else {
-          console.log(res.data.message);
+          console.log("Error from DB : ", res.data);
         }
       } catch (error) {
         console.log("Error : ", error);
@@ -317,16 +320,20 @@ const SetAppointment = () => {
 
   //handle submit
   const handleSubmitAppointment = async () => {
-    // if (!navigator.onLine) {
-    //   console.log("No internet connection.");
-    //   setNoInternetConn(true);
+    setShowLoader3(true);
 
-    //   setTimeout(() => {
-    //     setNoInternetConn(false);
-    //   }, 3000);
+    if (!navigator.onLine) {
+      console.log("No internet connection.");
+      setNoInternetConn(true);
+      setShowLoader3(true);
 
-    //   return false;
-    // }
+      setTimeout(() => {
+        setNoInternetConn(false);
+        setShowLoader3(true);
+      }, 3000);
+
+      return false;
+    }
 
     if (!appointmentForm.appointment_date) {
       console.warn("Appointment date is required.");
@@ -384,14 +391,19 @@ const SetAppointment = () => {
 
       if (res.data.success) {
         console.log("RESPONSE : ", res.data.message);
+        setShowLoader3(true);
         handleTimeDateSlotToRemove();
         return true;
       } else {
         console.log("ERROR : ", res.data);
+        setShowLoader3(true);
+
         return false;
       }
     } catch (error) {
       console.log("Error : ", error);
+      setShowLoader3(true);
+
       return false;
     }
   };
@@ -452,7 +464,6 @@ const SetAppointment = () => {
   }, [appointmentForm.appointment_date]);
 
   //prev appointment
-
   useEffect(() => {
     if (!currentUser || !currentUser.user_id) {
       return;
@@ -466,12 +477,16 @@ const SetAppointment = () => {
         const res = await axiosIntance.get(
           `client/appointment/getPrevAppointment.php?user_id=${currentUser.user_id}&petType=${petType}`
         );
+
+        // const res = await axios.get(
+        //   `https://vetcare002.kesug.com/backend/client/appointment/getprevAppointment.php?user_id=${currentUser.user_id}&petType=${petType}`
+        // );
         if (res.data.success) {
           console.log("DATATATTATAT : ", res.data.data);
           setData(res.data.data);
           setLoader(false);
         } else {
-          console.log("Err : ", res.data);
+          console.log("Err getPrevAppointment : ", res.data);
           setLoader(false);
         }
       } catch (error) {
@@ -482,7 +497,6 @@ const SetAppointment = () => {
 
     getPrevAppointment();
   }, [currentUser, veterinarianInfo.specialization]);
-
   const previousAppointment = (item) => {
     setAppointment({
       service: "",
@@ -500,7 +514,6 @@ const SetAppointment = () => {
       image: null,
     });
   };
-
   return (
     <>
       <div className="setappointment">
@@ -518,9 +531,10 @@ const SetAppointment = () => {
               />
             </div>
             <div className="profile-wrapper">
-              <img
-                src={`${uploadUrl.uploadurl}/${veterinarianInfo?.profile}`}
+              <LazyLoadImage
                 alt="profile"
+                src={`${uploadUrl.uploadurl}/${veterinarianInfo?.profile}`}
+                effect="blur"
                 className="profile"
               />
             </div>
@@ -534,13 +548,14 @@ const SetAppointment = () => {
 
           <div className="setappointment-bot">
             <div className="profile-wrapper">
-              <img
-                src={`${uploadUrl.uploadurl}/${veterinarianInfo?.profile}`}
+              <LazyLoadImage
                 alt="profile"
+                src={`${uploadUrl.uploadurl}/${veterinarianInfo?.profile}`}
+                effect="blur"
                 className="profile"
               />
             </div>
-            <span className="dr-name2">
+            <span className="dr-name1">
               <CiStethoscope className="icon" /> {veterinarianInfo?.fullname}
             </span>
             <small className="dr-name2">
@@ -569,13 +584,15 @@ const SetAppointment = () => {
                       ) : data ? (
                         data.map((item, index) => (
                           <div
-                            className="card"
                             key={index}
                             onClick={() => previousAppointment(item)}
+                            className="card"
                           >
-                            <img
+                            <LazyLoadImage
+                              alt="Pet Image"
                               src={`${uploadUrl.uploadurl}/${item?.image}`}
-                              alt=""
+                              effect="blur"
+                              className="card-img"
                             />
 
                             <span>{item.pet_name}</span>
@@ -769,6 +786,7 @@ const SetAppointment = () => {
                       <div className="male-female">
                         <div className="gender-wrapper">
                           <input
+                            style={{ border: "none" }}
                             value="Male"
                             onChange={handleChange}
                             checked={appointmentForm.gender === "Male"}

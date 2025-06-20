@@ -45,7 +45,7 @@ const AdminSidebar = () => {
           </div>
         </div>
 
-        <ul>
+        <ul onClick={toggleSidebar}>
           <Link to="/admin/home/" className="item">
             <RiHomeLine className="link-icon" />
             Homie

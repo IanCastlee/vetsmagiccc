@@ -1,6 +1,8 @@
 import "./Home.scss";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../contexts/AuthContext";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 //IMAGES
 import waveImage from "../../assets/imges/wavebg3.png";
@@ -16,9 +18,7 @@ import { LuView } from "react-icons/lu";
 import { CiStethoscope } from "react-icons/ci";
 
 //IMAGES (services)
-import vaccine from "../../assets/icons/animals.png";
-import deworm from "../../assets/icons/deworm (1).png";
-import dental from "../../assets/icons/veterinary.png";
+
 import Loader3 from "../../components/loader/Loader3";
 import { uploadUrl } from "../../../fileurl";
 import Footer from "../../components/footer/Footer";
@@ -27,7 +27,9 @@ const Home = () => {
   const { setFormToShow, currentUser } = useContext(AuthContext);
   const [showLoader2, setShowLoader2] = useState(false);
   const [veterinarian, setVeterinarian] = useState([]);
+  const [services, setServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
   // get veterinarian data
   useEffect(() => {
@@ -35,13 +37,16 @@ const Home = () => {
     const getVeterinarian = async () => {
       try {
         const res = await axiosIntance(
-          "admin/veterinarian/getVeterinarian.php"
+          "admin/veterinarian/getveterinarian.php"
         );
+        // const res = await axios.get(
+        //   `https://vetcare002.kesug.com/backend/admin/veterinarian/getveterinarian.php`
+        // );
         if (res.data.success) {
           setVeterinarian(res.data.data);
           setShowLoader2(false);
         } else {
-          console.log("Error:", res.data.data);
+          console.log("Error from server:", res.data.data);
         }
       } catch (error) {
         setShowLoader2(false);
@@ -67,6 +72,25 @@ const Home = () => {
     );
   };
 
+  //get services
+  useEffect(() => {
+    const getGetservices = async () => {
+      try {
+        const res = await axiosIntance.get("client/service/getGetservices.php");
+        if (res.data.success) {
+          console.log("services : ", res.data.data);
+          setServices(res.data.data);
+        } else {
+          console.log("Error from db  : ", res.data);
+        }
+      } catch (error) {
+        console.log("Error from fetching services : ", error);
+      }
+    };
+
+    getGetservices();
+  }, []);
+
   return (
     <>
       <div className="client-home">
@@ -90,10 +114,20 @@ const Home = () => {
               >
                 Trusted by pet parents. Loved by furry friends.
               </motion.h6>
+
+              <div className="buttons">
+                <button>Book Now</button>
+              </div>
             </div>
           </div>
           <div className="hero-right">
-            <img src={dogImage} alt="Dog" className="dog-img" />{" "}
+            <LazyLoadImage
+              alt="Dog Image"
+              src={dogImage}
+              effect="none"
+              className="dog-img"
+            />
+
             <div className="trusted-wrapper">
               <span>Trusted by</span>
               <div className="trusted">
@@ -110,20 +144,17 @@ const Home = () => {
         <div className="services">
           <h2>Our Services</h2>
           <div className="servives-container">
-            <div className="services-card">
-              <img src={vaccine} alt="" />
-              <span>Vaccination</span>
-            </div>
-
-            <div className="services-card">
-              <img src={deworm} alt="" />
-              <span>Deworming</span>
-            </div>
-
-            <div className="services-card">
-              <img src={dental} alt="" />
-              <span>Dental</span>
-            </div>
+            {showLoader2 ? (
+              <Loader3 />
+            ) : (
+              services &&
+              services.map((item, index) => (
+                <div className="services-card" key={index}>
+                  <img src={`${uploadUrl.uploadurl}/${item.image}`} alt="" />
+                  <span>{item.name}</span>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
@@ -159,9 +190,10 @@ const Home = () => {
                     transition={{ duration: 0.7 }}
                     className="veterinarian-wrapper"
                   >
-                    <img
-                      src={`${uploadUrl.uploadurl}/${item?.profile}`}
+                    <LazyLoadImage
                       alt="veterinarian-profile"
+                      src={`${uploadUrl.uploadurl}/${item?.profile}`}
+                      effect="blur"
                       className="veterinarian-profile"
                     />
 

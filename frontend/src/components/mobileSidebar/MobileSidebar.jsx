@@ -64,11 +64,11 @@ const MobileSidebar = ({ close }) => {
       >
         <div className="top-wrapper">
           {currentUser !== null && (
-            <div className="user-profile">
+            <Link to="/profile/" className="user-profile">
               <FaUserCircle className="profile" />
               <div className="name">{currentUser?.fullname}</div>
               <p>{currentUser?.email}</p>
-            </div>
+            </Link>
           )}
 
           {currentUser === null && (

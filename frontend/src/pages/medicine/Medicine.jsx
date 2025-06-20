@@ -1,5 +1,7 @@
 import "./Medicine.scss";
 import { motion } from "framer-motion";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 // IMAGES
 import bgImage from "../../assets/imges/signinimaeg.png";
 import dog from "../../assets/imges/pets (1).png";
@@ -12,8 +14,9 @@ import { IoCloseOutline } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import axiosIntance from "../../../axios";
 import Loader3 from "../../components/loader/Loader3";
-import Emptydata from "../../components/emptydata/Emptydata";
 import { uploadUrl } from "../../../fileurl";
+import axios from "axios";
+import Emptydata from "../../components/emptydata/Emptydata";
 
 const Medicine = () => {
   const [showModal, setShowModal] = useState(false);
@@ -40,10 +43,12 @@ const Medicine = () => {
       setLoader(true);
       try {
         const res = await axiosIntance.get("admin/shop/getShop.php");
+
         if (res.data.success) {
           setMedicineData(res.data.data);
           setLoader(false);
         } else {
+          console.log("Error from  DB : ", res.data);
           setLoader(false);
         }
       } catch (error) {
@@ -169,9 +174,11 @@ const Medicine = () => {
                           <div className="med-items">
                             <div className="item-card">
                               <div className="left">
-                                <img
+                                <LazyLoadImage
                                   src={`${uploadUrl.uploadurl}/${item.med_image}`}
-                                  alt=""
+                                  alt="Medicine Image"
+                                  effect="blur"
+                                  className="med-img"
                                 />
                               </div>
                               <div className="right">
@@ -330,9 +337,11 @@ const Medicine = () => {
 
             <div className="content">
               <div className="image-wraper">
-                <img
+                <LazyLoadImage
                   src={`${uploadUrl.uploadurl}/${clickeMedicineData.med_image}`}
                   alt={clickeMedicineData.med_name}
+                  effect="blur"
+                  className="view-medimg"
                 />
               </div>
 

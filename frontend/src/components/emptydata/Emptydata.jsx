@@ -5,7 +5,10 @@ const Emptydata = () => {
   return (
     <div className="emptydata">
       <img src={sleepingDog} alt="Sleeping dog illustration" />
-      <p style={{ fontWeight: 700, margin: "7px 0" }} className="title">
+      <p
+        style={{ fontWeight: 700, margin: "7px 0" }}
+        className="title-empty-data"
+      >
         No Data Available
       </p>
       <p className="description">

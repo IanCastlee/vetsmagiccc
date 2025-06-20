@@ -163,15 +163,16 @@
       gap: 5px;
       justify-content: start;
 
-      span {
-        color: #0c0950;
-        font-size: 1rem;
+      a {
+        color: #000000;
+        font-size: 0.875rem;
         display: flex;
         align-items: center;
         cursor: pointer;
 
         .icon {
           margin-right: 5px;
+          color: #052630;
         }
       }
     }

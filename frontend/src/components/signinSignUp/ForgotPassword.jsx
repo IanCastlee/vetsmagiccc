@@ -10,6 +10,7 @@ import logo from "../../assets/icons/logo.png";
 //ICONS
 import axiosIntance from "../../../axios";
 import Loader from "../loader/Loader";
+import { AiOutlineClose } from "react-icons/ai";
 
 const ForgotPassword = () => {
   const { setFormToShow, setMessageFromMail } = useContext(AuthContext);
@@ -202,6 +203,11 @@ const ForgotPassword = () => {
         </motion.div>
       </div>
       {showLoader && <Loader _label="Please wait..." />}
+
+      <AiOutlineClose
+        className="close-iconn"
+        onClick={() => setFormToShow(null)}
+      />
     </>
   );
 };

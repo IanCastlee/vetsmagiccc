@@ -20,7 +20,6 @@ import { CiStethoscope } from "react-icons/ci";
 import { CiClock2 } from "react-icons/ci";
 import { CiCalendarDate } from "react-icons/ci";
 import { PiPawPrintLight } from "react-icons/pi";
-import { ImFilesEmpty } from "react-icons/im";
 import { IoPricetagsOutline } from "react-icons/io5";
 import { FaRegEdit } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa6";
@@ -38,6 +37,8 @@ const Appointment = () => {
     duration: "",
     id: "",
   });
+
+  console.log("activeAppointment", activeAppointment);
 
   //get Appointment
   useEffect(() => {
@@ -258,8 +259,6 @@ const Appointment = () => {
     });
   };
 
-  console.log("DKJD: ", activeAppointment);
-
   return (
     <>
       <div className="appointment">
@@ -288,71 +287,75 @@ const Appointment = () => {
               <div className="current-appointment">
                 {showLoader ? (
                   <Loader3 />
-                ) : activeAppointment.length > 0 ? (
-                  activeAppointment
-                    .filter((item) => item.status === 1)
-                    .map((item) => (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7 }}
-                        className="card"
-                        key={item.appointment_id}
-                      >
-                        <img
-                          src={appointmentImage}
-                          alt=""
-                          className="profile"
-                        />
-                        <div className="right-card">
-                          <div className="top-card">
-                            <h3 className="dr">
-                              <PiPawPrintLight className="iconn" />
-                              {item.pet_name}
-                            </h3>
-                            <span className="rule">{item.pet_type}</span>
-                            <div className="date-time">
-                              <span className="date">
-                                <CiStethoscope className="iconn" />
-                                {item.drFullname}
-                              </span>
-                              <span className="date">
-                                <CiCalendarDate className="iconn" />
-                                {item.appointment_date}
-                              </span>
+                ) : (
+                  (() => {
+                    const filteredAppointment = activeAppointment.filter(
+                      (item) => item.status === 1
+                    );
 
-                              <div className="time-price">
-                                <span className="time">
-                                  <CiClock2 className="iconn" />
-                                  {item.appointment_time}
+                    return filteredAppointment.length > 0 ? (
+                      filteredAppointment.map((item) => (
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.7 }}
+                          className="card"
+                          key={item.appointment_id}
+                        >
+                          <img
+                            src={appointmentImage}
+                            alt=""
+                            className="profile"
+                          />
+                          <div className="right-card">
+                            <div className="top-card">
+                              <h3 className="dr">
+                                <PiPawPrintLight className="iconn" />
+                                {item.pet_name}
+                              </h3>
+                              <span className="rule">{item.pet_type}</span>
+                              <div className="date-time">
+                                <span className="date">
+                                  <CiStethoscope className="iconn" />
+                                  {item.drFullname}
+                                </span>
+                                <span className="date">
+                                  <CiCalendarDate className="iconn" />
+                                  {item.appointment_date}
                                 </span>
 
-                                <span className="price">
-                                  <IoPricetagsOutline className="iconn" />₱
-                                  {item.paid_payment}
-                                </span>
+                                <div className="time-price">
+                                  <span className="time">
+                                    <CiClock2 className="iconn" />
+                                    {item.appointment_time}
+                                  </span>
+
+                                  <span className="price">
+                                    <IoPricetagsOutline className="iconn" />₱
+                                    {item.paid_payment}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
 
-                          <FaRegEdit
-                            title="Change Schedule"
-                            className="icon"
-                            onClick={() =>
-                              handleClickedAppointment(
-                                item.time,
-                                item.duration,
-                                item.appointment_id
-                              )
-                            }
-                          />
-                        </div>
-                      </motion.div>
-                    ))
-                ) : (
-                  <div className="empty-container">
-                    <Emptydata />
-                  </div>
+                            <FaRegEdit
+                              title="Change Schedule"
+                              className="icon"
+                              onClick={() =>
+                                handleClickedAppointment(
+                                  item.time,
+                                  item.duration,
+                                  item.appointment_id
+                                )
+                              }
+                            />
+                          </div>
+                        </motion.div>
+                      ))
+                    ) : (
+                      <Emptydata />
+                    );
+                  })()
                 )}
               </div>
             )}

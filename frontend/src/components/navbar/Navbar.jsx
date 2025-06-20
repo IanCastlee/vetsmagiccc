@@ -171,12 +171,12 @@ const Navbar = ({ isHome }) => {
         {showDropdown && (
           <div className="dropdown-client">
             <div className="container">
-              <span>
-                <IoSettingsOutline className="icon" /> Setting
-              </span>
-              <span onClick={handleLogout}>
+              <Link to="/profile/">
+                <IoSettingsOutline className="icon" /> Profile
+              </Link>
+              <Link onClick={handleLogout}>
                 <IoMdLogOut className="icon" /> Logout
-              </span>
+              </Link>
             </div>
           </div>
         )}

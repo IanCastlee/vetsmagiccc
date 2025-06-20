@@ -1,13 +1,14 @@
 import "./VeterinarianProfile.scss";
 import axiosIntance from "../../../axios";
 import { motion } from "framer-motion";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 //IMAGES
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 //IC0NS
-import { BiLeftArrowAlt } from "react-icons/bi";
 import { CiStethoscope } from "react-icons/ci";
 import { IoMdTime } from "react-icons/io";
 import { PiCertificateBold } from "react-icons/pi";
@@ -29,6 +30,7 @@ const VeterinarianProfile = () => {
           "admin/veterinarian/GetClickedVeterinarian.php",
           { user_id: userId.userId }
         );
+
         if (res.data.success) {
           setVeterinarianInfo(res.data.data.veterinarianInfo);
           console.log(res.data.data.veterinarianInfo);
@@ -76,9 +78,10 @@ const VeterinarianProfile = () => {
         </motion.div>
         <div className="veterinarian-bottom">
           <div className="profile-wrapper">
-            <img
-              src={`${uploadUrl.uploadurl}/${veterinarianInfo?.profile}`}
+            <LazyLoadImage
               alt="profile"
+              src={`${uploadUrl.uploadurl}/${veterinarianInfo?.profile}`}
+              effect="blur"
               className="profile"
             />
           </div>

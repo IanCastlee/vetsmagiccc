@@ -38,6 +38,7 @@ import User from "./pages/ADMIN/user/User";
 import Notactiveuser from "./pages/ADMIN/user/Notactiveuser";
 import AdminNav from "./pages/ADMIN/components/adminNavbar/AdminNav";
 import Service from "./pages/ADMIN/service/Service";
+import Profile from "./pages/profile/Profile";
 
 const Layout = () => {
   const location = useLocation();
@@ -47,7 +48,8 @@ const Layout = () => {
   const shouldHideNavbar =
     location.pathname === "/" ||
     location.pathname.startsWith("/view-veterinarian/") ||
-    location.pathname.startsWith("/set-appointment/");
+    location.pathname.startsWith("/set-appointment/") ||
+    location.pathname.startsWith("/profile/");
   return (
     <>
       {!shouldHideNavbar && <Navbar isHome={isHome} />}
@@ -67,6 +69,7 @@ const Layout = () => {
         <Route path="/signup/" element={<Signup />} />
         <Route path="/confirm/" element={<ConfirmationForm />} />
         <Route path="/sms/" element={<SMSNotif />} />
+        <Route path="/profile/" element={<Profile />} />
       </Routes>
     </>
   );

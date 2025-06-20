@@ -25,8 +25,9 @@ const Home = () => {
   const [loader, setLoader] = useState(false);
   const [veterinarianInfo, setVeterinarianInfo] = useState([]);
   const [appointment, setAppointment] = useState([]);
-  const [price, setPrice] = useState(null);
+  const [price, setPrice] = useState("");
   const [clickedDoneId, setClickedDoneId] = useState(null);
+  const [clickedCancelId, setClickedCancelId] = useState(null);
 
   useEffect(() => {
     const getClickedVeterinarian = async () => {
@@ -198,6 +199,17 @@ const Home = () => {
     });
   };
 
+  const showSuccessAlert_cancel = () => {
+    Swal.fire({
+      title: "Success!",
+      text: "Appointment Cancelled",
+      icon: "success",
+      confirmButtonText: "OK",
+      background: "rgba(0, 0, 0, 0.9)",
+      color: "lightgrey",
+    });
+  };
+
   //handeSetAsDoneAppointment
   const handeSetAsDoneAppointment = async (e) => {
     e.preventDefault();
@@ -225,6 +237,38 @@ const Home = () => {
     }
   };
 
+  useEffect(() => {
+    if (manualMessage !== "") {
+      setSelectedFollowUpMessage(null);
+    }
+  }, [manualMessage]);
+
+  //setClickedCancelId
+
+  const handleCancelAppointment = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axiosIntance.post(
+        `admin/appointment/setAppointmentCanceled.php?appointment_id=${clickedCancelId}`
+      );
+
+      if (res.data.success) {
+        console.log("RES : ", res.data.message);
+
+        const handleUpdateAut = appointment.filter(
+          (item) => item.appointment_id !== clickedCancelId
+        );
+        setAppointment(handleUpdateAut);
+        setClickedCancelId(null);
+        showSuccessAlert_cancel();
+      } else {
+        console.log("Delete failed:", res.data);
+      }
+    } catch (error) {
+      console.log("ERROR:", error);
+    }
+  };
   return (
     <>
       <div className="veterinarian-home">
@@ -292,13 +336,20 @@ const Home = () => {
                               <MdOutlineMoreHoriz
                                 onClick={() => clickedMenu(item.appointment_id)}
                                 className="more-icon"
+                                style={{ cursor: "pointer" }}
                               />
                             </div>
 
                             <div className="bot">
                               <div className="pet">
-                                <span className="type">
-                                  Pet : {item.pet_type}
+                                <span
+                                  style={{
+                                    fontSize: "10px",
+                                    fontWeight: "300",
+                                  }}
+                                  className="type"
+                                >
+                                  Owner : {item.petOwner}
                                 </span>
                               </div>
                             </div>
@@ -335,7 +386,12 @@ const Home = () => {
                                     <FaRegCircleCheck className="icon" />
                                     Done
                                   </button>
-                                  <button className="btn">
+                                  <button
+                                    className="btn"
+                                    onClick={() =>
+                                      setClickedCancelId(item.appointment_id)
+                                    }
+                                  >
                                     <TbCancel className="icon" />
                                     Cancel
                                   </button>
@@ -354,97 +410,112 @@ const Home = () => {
 
               <div className="divider"></div>
 
-              <div className="pending-appointment">
+              <div className="today-appointment">
                 <h4>Pending Appointment</h4>
 
                 {loader ? (
                   <Loader3 />
-                ) : appointment.length > 0 ? (
-                  appointment
-                    .filter((item) => item.appointment_date !== formattedDate)
-                    .map((item) => (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7 }}
-                        className="card"
-                        key={item.appointment_id}
-                      >
-                        <div className="left-card">
-                          <img
-                            src={`${uploadUrl.uploadurl}/${item?.image}`}
-                            alt="profile"
-                            className="profile-card"
-                          />
-                        </div>
-
-                        <div className="right-card">
-                          <div className="top">
-                            <div className="name-info">
-                              <div className="name">{item.pet_name}</div>
-                              <p>{item.appointment_date}</p>
-                              <p>{item.appointment_time}</p>
-
-                              <button onClick={() => clickedMoreInfo(item)}>
-                                Read More
-                              </button>
-                            </div>
-                          </div>
-
-                          <div className="bot">
-                            <div className="pet">
-                              <span className="type">
-                                {item.is_followup === 1
-                                  ? "Follow-up Appointment"
-                                  : ""}
-                              </span>
-                            </div>
-                          </div>
-
-                          {clickedID === item.appointment_id && (
-                            <div className="modal-menu">
-                              <div className="top">
-                                <VscClose
-                                  className="back-icon"
-                                  onClick={() => setClickedID(null)}
-                                />
-                              </div>
-                              <div className="menu">
-                                <button
-                                  className="btn"
-                                  onClick={() =>
-                                    clickedToFollowUpItem(
-                                      item.appointment_id,
-                                      item.clientId,
-                                      item.drFullname,
-                                      item.dr_id
-                                    )
-                                  }
-                                >
-                                  <FaRegCircleCheck className="icon" />
-                                  Follow Up
-                                </button>
-                                <button
-                                  onClick={() =>
-                                    setClickedDoneId(item.appointment_id)
-                                  }
-                                  className="btn"
-                                >
-                                  <FaRegCircleCheck className="icon" />
-                                  Done
-                                </button>
-                                <button className="btn">
-                                  <TbCancel className="icon" />
-                                  Cancel
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ))
                 ) : (
-                  <Emptydata />
+                  (() => {
+                    const todayAppointments = appointment.filter(
+                      (item) => item.appointment_date !== formattedDate
+                    );
+
+                    return todayAppointments.length > 0 ? (
+                      todayAppointments.map((item) => (
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.7 }}
+                          className="card"
+                          key={item.appointment_id}
+                        >
+                          <div className="left-card">
+                            <img
+                              src={`${uploadUrl.uploadurl}/${item?.image}`}
+                              alt="profile"
+                              className="profile-card"
+                            />
+                          </div>
+
+                          <div className="right-card">
+                            <div className="top">
+                              <div className="name-info">
+                                <div className="name">{item.pet_name}</div>
+                                <p>{item.appointment_date}</p>
+                                <p>{item.appointment_time}</p>
+
+                                <button onClick={() => clickedMoreInfo(item)}>
+                                  Read More
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="bot">
+                              <div className="pet">
+                                <span
+                                  style={{
+                                    fontSize: "10px",
+                                    fontWeight: "300",
+                                  }}
+                                  className="type"
+                                >
+                                  Owner : {item.petOwner}
+                                </span>
+                              </div>
+                            </div>
+
+                            {clickedID === item.appointment_id && (
+                              <div className="modal-menu">
+                                <div className="top">
+                                  <VscClose
+                                    className="back-icon"
+                                    onClick={() => setClickedID(null)}
+                                  />
+                                </div>
+                                <div className="menu">
+                                  <button
+                                    className="btn"
+                                    onClick={() =>
+                                      clickedToFollowUpItem(
+                                        item.appointment_id,
+                                        item.clientId,
+                                        item.drFullname,
+                                        item.dr_id
+                                      )
+                                    }
+                                  >
+                                    <FaRegCircleCheck className="icon" />
+                                    Follow Up
+                                  </button>
+                                  <button
+                                    onClick={() =>
+                                      setClickedDoneId(item.appointment_id)
+                                    }
+                                    className="btn"
+                                  >
+                                    <FaRegCircleCheck className="icon" />
+                                    Done
+                                  </button>
+                                  <button
+                                    className="btn"
+                                    onClick={() =>
+                                      setClickedCancelId(item.appointment_id)
+                                    }
+                                  >
+                                    <TbCancel className="icon" />
+                                    Cancel
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </motion.div>
+                      ))
+                    ) : (
+                      <Emptydata />
+                    );
+                  })()
                 )}
               </div>
             </div>
@@ -563,7 +634,9 @@ const Home = () => {
           <div className="modal-followup-overlay">
             <div className="followup">
               <div className="top">
-                <div className="left">Schedule Follow-Up</div>
+                <div className="left">
+                  <h3>Schedule Follow-Up</h3>
+                </div>
 
                 <IoMdClose
                   onClick={() =>
@@ -603,6 +676,7 @@ const Home = () => {
                     id="inpt-other-concern"
                     className="inpt-other-concern"
                     type="text"
+                    style={{ border: "none" }}
                     value={manualMessage}
                     onChange={(e) => {
                       setManualMessage(e.target.value);
@@ -621,18 +695,24 @@ const Home = () => {
                   <label htmlFor="inpt-other-concern">Payment</label>
 
                   <div className="payment-wrapper">
-                    <h1>₱</h1>{" "}
+                    <h1 style={{ color: "gray" }}>₱</h1>
                     <input
+                      style={{ border: "none" }}
                       id="inpt-other-concern"
                       className="inpt-other-concern"
                       type="number"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
+                      placeholder="Appointment Price"
                     />
                   </div>
                 </div>
                 <button
-                  disabled={!price || !selectedFollowUpMessage || loader}
+                  disabled={
+                    !price ||
+                    (!selectedFollowUpMessage && manualMessage === "".trim()) ||
+                    loader
+                  }
                   onClick={handleSubmitFollowUpAppoinment}
                   className="btn-submit"
                 >
@@ -644,31 +724,53 @@ const Home = () => {
         )}
       {/* modal follow up end  */}
 
-      {clickedDoneId !== null && (
-        <div className="delete-overlay">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="delete"
-          >
-            <div className="top">
-              <h6>Confirmation</h6>
-            </div>
+      {clickedDoneId !== null ||
+        (clickedCancelId !== null && (
+          <div className="delete-overlay">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="delete"
+            >
+              <div className="top">
+                <h6>Confirmation</h6>
+              </div>
 
-            <p>Is this appointment done?</p>
+              <p>
+                {clickedDoneId !== null
+                  ? "Has this appointment been completed?"
+                  : clickedCancelId !== null
+                  ? "Has this appointment been cancelled?"
+                  : ""}
+              </p>
 
-            <div className="bot">
-              <button className="btn-yes" onClick={handeSetAsDoneAppointment}>
-                Yes
-              </button>
-              <button className="btn-no" onClick={() => setClickedDoneId(null)}>
-                Cancel
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
+              <div className="bot">
+                <button
+                  className="btn-yes"
+                  onClick={
+                    clickedCancelId
+                      ? handleCancelAppointment
+                      : clickedDoneId
+                      ? handeSetAsDoneAppointment
+                      : ""
+                  }
+                >
+                  Yes
+                </button>
+                <button
+                  className="btn-no"
+                  onClick={() => {
+                    setClickedDoneId(null);
+                    setClickedCancelId(null);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        ))}
     </>
   );
 };
