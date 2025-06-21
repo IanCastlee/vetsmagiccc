@@ -7,7 +7,8 @@ import { AuthContext } from "../../contexts/AuthContext";
 import Loader2 from "../../components/loader/Loader3";
 import Emptydata from "../../components/emptydata/Emptydata";
 import { uploadUrl } from "../../../fileurl";
-
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import Loader3 from "../../components/loader/Loader2";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -399,9 +400,11 @@ const FollowupAppointment = () => {
                 {visibleData.map((item) => (
                   <div key={item.fa_id} className="card">
                     <div className="left">
-                      <img
+                      <LazyLoadImage
                         src={`${uploadUrl.uploadurl}/${item?.image}`}
                         alt="Pet Profile"
+                        effect="blur"
+                        className="pet-image"
                       />
                     </div>
                     <div className="right">
@@ -421,7 +424,7 @@ const FollowupAppointment = () => {
                             onClick={() => handleClickedTOFollowUp(item)}
                           >
                             {item.status == 1
-                              ? "Appointment Set"
+                              ? "Appointment Scheduled"
                               : " Follow Up"}
                           </button>
                           {item.status == 0 && (

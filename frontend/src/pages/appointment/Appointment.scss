@@ -40,17 +40,17 @@
         font-size: 20px;
       }
       button {
-        background-color: #0c0950;
+        background-color: #007bff;
         color: #fff;
         font-size: 12px;
         border: none;
         border-radius: 3px;
-        padding: 4px 8px;
+        padding: 7px 8px;
         transition: transform ease-in-out 0.3s;
         cursor: pointer;
 
         &:hover {
-          background-color: #4f49bb;
+          background-color: #0069d9;
           transform: scale(1.02);
         }
       }
@@ -331,6 +331,7 @@
     padding: 10px;
     border-radius: 5px;
     background-color: #fff;
+    border-top: 12px solid #007bff;
 
     .top {
       width: 100%;
@@ -572,17 +573,17 @@
           font-size: 0.875rem;
         }
         button {
-          background-color: #5e44a7;
+          background-color: #007bff;
           color: #fff;
           font-size: 10px;
           border: none;
-          border-radius: 3px;
-          padding: 3px 10px;
+          border-radius: 25px;
+          padding: 5px 10px;
           transition: transform ease-in-out 0.3s;
           cursor: pointer;
 
           &:hover {
-            background-color: #4f49bb;
+            background-color: #0069d9;
             transform: scale(1.02);
           }
         }
@@ -871,7 +872,7 @@
       border-radius: 5px;
       background-color: #fff;
       height: 95%;
-      border-top: 12px solid #0c0950;
+      border-top: 12px solid #007bff;
 
       .top {
         width: 100%;

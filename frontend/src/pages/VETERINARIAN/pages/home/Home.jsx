@@ -33,7 +33,7 @@ const Home = () => {
     const getClickedVeterinarian = async () => {
       try {
         const res = await axiosIntance.post(
-          "admin/veterinarian/getClickedVeterinarian.php",
+          "admin/veterinarian/GetClickedVeterinarian.php",
           { user_id: vetId.vetId }
         );
         if (res.data.success) {
@@ -145,7 +145,7 @@ const Home = () => {
           appointment_id: clickedToFollowUp.appointment_id,
           client_id: clickedToFollowUp.client_id,
           title:
-            "Follow-Up Appointment for Dr. " + clickedToFollowUp.dr_fullname,
+            "Follow-Up Appointment with Br. " + clickedToFollowUp.dr_fullname,
           desc:
             selectedFollowUpMessage !== null
               ? selectedFollowUpMessage

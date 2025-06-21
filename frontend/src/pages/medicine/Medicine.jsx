@@ -15,10 +15,12 @@ import { useEffect, useState } from "react";
 import axiosIntance from "../../../axios";
 import Loader3 from "../../components/loader/Loader3";
 import { uploadUrl } from "../../../fileurl";
-import axios from "axios";
+import { FaArrowLeft } from "react-icons/fa6";
 import Emptydata from "../../components/emptydata/Emptydata";
+import { useNavigate } from "react-router-dom";
 
 const Medicine = () => {
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [medicineData, setMedicineData] = useState([]);
   const [loader, setLoader] = useState(false);
@@ -87,16 +89,8 @@ const Medicine = () => {
       <div className="medicine-client">
         <div className="containerr">
           <div className="top">
-            <div className="left">
-              <h1>VETCARE SHOP</h1>
-            </div>
-            <div className="right">
-              <img src={bgImage} alt="" />
-            </div>
-          </div>
-
-          <div className="content">
             <div className="search-container">
+              <FaArrowLeft className="back-icon" onClick={() => navigate(-1)} />
               <div className="search-input-icon">
                 <input
                   type="text"
@@ -107,6 +101,19 @@ const Medicine = () => {
                 <CiSearch className="search-icon" />
               </div>
             </div>
+
+            <div className="title-image">
+              <div className="left">
+                <h1>VETCARE SHOP</h1>
+              </div>
+              <div className="right">
+                <img src={bgImage} alt="" />
+              </div>
+            </div>
+          </div>
+
+          <div className="content">
+            {/* jhsjdfhjs */}
             <div className="category">
               <div className="top-med">
                 <span className="title-med">Categories</span>
@@ -232,9 +239,11 @@ const Medicine = () => {
                           <div className="med-items">
                             <div className="item-card">
                               <div className="left">
-                                <img
+                                <LazyLoadImage
                                   src={`${uploadUrl.uploadurl}/${item.med_image}`}
-                                  alt=""
+                                  alt="Medicine Image"
+                                  effect="blur"
+                                  className="med-img"
                                 />
                               </div>
                               <div className="right">
@@ -288,9 +297,11 @@ const Medicine = () => {
                           <div className="med-items">
                             <div className="item-card">
                               <div className="left">
-                                <img
+                                <LazyLoadImage
                                   src={`${uploadUrl.uploadurl}/${item.med_image}`}
-                                  alt=""
+                                  alt="Medicine Image"
+                                  effect="blur"
+                                  className="med-img"
                                 />
                               </div>
                               <div className="right">

@@ -281,7 +281,7 @@ const Signup = () => {
                     style={{
                       fontSize: "1.875rem",
                       cursor: "pointer",
-                      color: "#0C0950",
+                      color: "#007bff",
                     }}
                   />
                 </div>

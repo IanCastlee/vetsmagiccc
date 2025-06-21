@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import axiosIntance from "../../../axios";
 import Loader from "../loader/Loader";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 //ICONS
 import { RiHomeLine } from "react-icons/ri";
@@ -15,6 +17,9 @@ import { FaUserCircle } from "react-icons/fa";
 import { PiShoppingBagBold } from "react-icons/pi";
 import { LuCalendarSync } from "react-icons/lu";
 import { HiOutlineChatBubbleOvalLeft } from "react-icons/hi2";
+import { uploadUrl } from "../../../fileurl";
+
+import noProfile from "../../assets/imges/profile-user.png";
 
 const MobileSidebar = ({ close }) => {
   const {
@@ -65,7 +70,15 @@ const MobileSidebar = ({ close }) => {
         <div className="top-wrapper">
           {currentUser !== null && (
             <Link to="/profile/" className="user-profile">
-              <FaUserCircle className="profile" />
+              <LazyLoadImage
+                className="profile-image"
+                effect="blur"
+                src={
+                  currentUser.profile
+                    ? `${uploadUrl.uploadurl}/${currentUser.profile}`
+                    : noProfile
+                }
+              />
               <div className="name">{currentUser?.fullname}</div>
               <p>{currentUser?.email}</p>
             </Link>

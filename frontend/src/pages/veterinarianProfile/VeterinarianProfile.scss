@@ -222,7 +222,7 @@
 
       .btn-sent-appointment {
         width: 100%;
-        background-color: #261fb3;
+        background-color: #007bff;
         color: #fff;
         font-size: 14px;
         font-weight: 500;
@@ -232,6 +232,10 @@
         padding: 10px 0;
         border-radius: 7px;
         border: none;
+
+        &:hover {
+          background-color: #0069d9;
+        }
       }
     }
   }
@@ -459,7 +463,7 @@
 
         .btn-sent-appointment {
           width: 100%;
-          background-color: #261fb3;
+          background-color: #007bff;
           color: #fff;
           font-size: 14px;
           font-weight: 500;
@@ -469,6 +473,10 @@
           padding: 10px 0;
           border-radius: 7px;
           border: none;
+
+          &:hover {
+            background-color: #0069d9;
+          }
         }
       }
     }

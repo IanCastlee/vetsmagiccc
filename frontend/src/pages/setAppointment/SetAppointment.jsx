@@ -322,18 +322,18 @@ const SetAppointment = () => {
   const handleSubmitAppointment = async () => {
     setShowLoader3(true);
 
-    if (!navigator.onLine) {
-      console.log("No internet connection.");
-      setNoInternetConn(true);
-      setShowLoader3(true);
+    // if (!navigator.onLine) {
+    //   console.log("No internet connection.");
+    //   setNoInternetConn(true);
+    //   setShowLoader3(true);
 
-      setTimeout(() => {
-        setNoInternetConn(false);
-        setShowLoader3(true);
-      }, 3000);
+    //   setTimeout(() => {
+    //     setNoInternetConn(false);
+    //     setShowLoader3(true);
+    //   }, 3000);
 
-      return false;
-    }
+    //   return false;
+    // }
 
     if (!appointmentForm.appointment_date) {
       console.warn("Appointment date is required.");
@@ -556,7 +556,8 @@ const SetAppointment = () => {
               />
             </div>
             <span className="dr-name1">
-              <CiStethoscope className="icon" /> {veterinarianInfo?.fullname}
+              <CiStethoscope className="icon" />
+              {veterinarianInfo?.fullname}
             </span>
             <small className="dr-name2">
               {veterinarianInfo?.specialization}
@@ -621,6 +622,7 @@ const SetAppointment = () => {
                           border: `${
                             emptyService !== "" ? "2px solid red" : ""
                           }`,
+                          backgroundColor: "#fff",
                         }}
                         name="service"
                         value={appointmentForm.service}
@@ -689,6 +691,7 @@ const SetAppointment = () => {
                       <select
                         style={{
                           border: emptypet_type !== "" ? "2px solid red" : "",
+                          backgroundColor: "#fff",
                         }}
                         value={
                           (appointmentForm.pet_type =
@@ -836,7 +839,7 @@ const SetAppointment = () => {
                             style={{
                               fontSize: "30px",
                               cursor: "pointer",
-                              color: "green",
+                              color: "#007bff",
                             }}
                             className="add-image-icon"
                           />
@@ -929,7 +932,7 @@ const SetAppointment = () => {
                 className="date-available"
               >
                 <span className="note">
-                  Choose your appointment date and time.{" "}
+                  *Choose your appointment date and time.{" "}
                 </span>
                 <h6>Select Your Preferred Date</h6>
 
@@ -1062,7 +1065,7 @@ const SetAppointment = () => {
               </span>
               <span>
                 <AiOutlineSnippets className="icon" /> Pet Weight :{" "}
-                {appointmentForm.breed}
+                {appointmentForm.weight}
               </span>
               <span>
                 Health Issue : <br /> {appointmentForm.current_health_issue}
@@ -1083,7 +1086,11 @@ const SetAppointment = () => {
                 Cancel
               </button>
               <button className="btn-submit" onClick={handleSendDataAndPayment}>
-                {showLoader3 ? <Loader2 /> : " Proceed to Payment"}
+                {showLoader3 ? (
+                  <div className="loader"></div>
+                ) : (
+                  " Proceed to Payment"
+                )}
               </button>
             </div>
           </div>

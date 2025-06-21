@@ -211,7 +211,7 @@ const Home = () => {
 
                         <Link to={`/view-veterinarian/${item.user_id}`}>
                           <button>
-                            <LuView />
+                            <LuView className="icon-view" />
                           </button>
                         </Link>
                       </div>

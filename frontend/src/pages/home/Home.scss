@@ -1,11 +1,12 @@
 .client-home {
   width: 100%;
+  background-color: #f5f5f5;
 
   .hero {
     width: 100%;
     display: flex;
     height: 633px;
-    background-color: #fbe4d6;
+    background-color: #f5f5f5;
 
     .hero-left {
       width: 75%;
@@ -44,11 +45,11 @@
           margin-top: 15px;
           button {
             background-color: green;
-            padding: 8px 18px;
+            padding: 8px 25px;
             font-size: 0.875rem;
             font-weight: 500;
             color: #fff;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
             border: none;
 
@@ -57,10 +58,10 @@
             }
 
             &:first-child {
-              background-color: blue;
+              background-color: #007bff;
 
               &:hover {
-                background-color: #1b1694;
+                background-color: #0069d9;
               }
             }
           }
@@ -131,6 +132,7 @@
       &::-webkit-scrollbar {
         display: none;
       }
+      padding: 10px 0;
 
       .services-card {
         background-color: #fff;
@@ -143,6 +145,13 @@
         align-items: center;
         justify-content: center;
         z-index: 100;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+        margin-bottom: 5px;
+        transition: all ease 0.3s;
+        &:hover {
+          transform: translateY(-5px);
+        }
+
         img {
           height: 60px;
           width: 60px;
@@ -171,8 +180,8 @@
       border-radius: 25px;
       padding: 15px;
       background-color: #fff;
-      box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
-        rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+      box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+
       align-items: center;
 
       input {
@@ -217,9 +226,10 @@
         width: 48%;
         display: flex;
         gap: 10px;
-        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-          rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+        background-color: #fff;
         padding: 10px;
+        border-radius: 10px;
 
         .veterinarian-profile {
           height: 140px;
@@ -269,21 +279,25 @@
               background-color: #fff;
               font-size: 1.375rem;
               color: #000;
+
+              .icon-view {
+                color: #007bff;
+              }
             }
           }
 
           .btn-set-appointment {
-            background-color: #261fb3;
-            padding: 8px 0;
+            background-color: #007bff;
+            padding: 10px 0;
             color: #fff;
             font-size: 0.75rem;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 25px;
             border: none;
             transition: background-color 0.2s ease, transform 0.2s ease;
 
             &:hover {
-              background-color: #1b1694;
+              background-color: #0069d9;
               transform: scale(1);
             }
           }
@@ -346,7 +360,7 @@
               font-size: 0.875rem;
               font-weight: 500;
               color: #fff;
-              border-radius: 5px;
+              border-radius: 25px;
               cursor: pointer;
               border: none;
 
@@ -355,10 +369,10 @@
               }
 
               &:first-child {
-                background-color: blue;
+                background-color: #007bff;
 
                 &:hover {
-                  background-color: #1b1694;
+                  background-color: #0069d9;
                 }
               }
             }
@@ -440,7 +454,6 @@
           flex-shrink: 0;
           align-items: center;
           justify-content: center;
-          border: 1px solid rgb(236, 232, 232);
 
           img {
             height: 50px;
@@ -466,8 +479,7 @@
         padding: 15px;
         background-color: #fff;
         align-items: center;
-        box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
-          rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+
         input {
           width: 100%;
           border: none;
@@ -482,7 +494,7 @@
         .search-icon {
           font-size: 1.625rem;
           cursor: pointer;
-          color: #000;
+          color: #007bff;
         }
       }
     }
@@ -512,8 +524,7 @@
           height: 100px;
           gap: 10px;
           background-color: #fff;
-          box-shadow: none;
-          border: 1px solid rgb(236, 232, 232);
+
           .veterinarian-profile {
             height: 100%;
             width: 100px;
@@ -537,12 +548,12 @@
                 flex-direction: column;
 
                 .name {
-                  font-size: 1rem;
-                  font-weight: 500;
-                  color: #000;
+                  font-size: 0.875rem;
+                  font-weight: 700;
+                  color: #292222;
                 }
                 .rule {
-                  font-size: 0.75rem;
+                  font-size: 0.625rem;
                   color: gray;
                 }
               }
@@ -554,19 +565,25 @@
                 cursor: pointer;
                 color: #000;
                 background-color: #fff;
+
+                .icon-view {
+                  color: #007bff;
+                  font-size: 1rem;
+                }
               }
             }
 
             .btn-set-appointment {
-              background-color: #261fb3;
-              padding: 8px 0;
+              background-color: #007bff;
+              padding: 6px 12px;
               color: #fff;
               font-size: 0.75rem;
               cursor: pointer;
-              border-radius: 5px;
+              border-radius: 25px;
               border: none;
               align-self: end;
               width: 100%;
+              max-width: fit-content;
             }
           }
         }

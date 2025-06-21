@@ -49,7 +49,8 @@ const Layout = () => {
     location.pathname === "/" ||
     location.pathname.startsWith("/view-veterinarian/") ||
     location.pathname.startsWith("/set-appointment/") ||
-    location.pathname.startsWith("/profile/");
+    location.pathname.startsWith("/profile/") ||
+    location.pathname.startsWith("/medicine/");
   return (
     <>
       {!shouldHideNavbar && <Navbar isHome={isHome} />}

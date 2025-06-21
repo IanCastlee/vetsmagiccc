@@ -27,9 +27,12 @@
       flex-direction: column;
       gap: 5px;
 
-      .profile {
-        font-size: 50px;
-        color: #fff;
+      .profile-image {
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid gray;
       }
       .name {
         font-size: 1rem;

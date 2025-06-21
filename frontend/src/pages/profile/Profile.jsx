@@ -139,7 +139,7 @@ const Profile = () => {
                     : noProfile
                 }
                 alt="User Profile"
-                effect="none"
+                effect="blur"
                 className="profile-img"
               />
             </label>

@@ -6,13 +6,10 @@ import { motion } from "framer-motion";
 import Loader2 from "../../../../components/loader/Loader3";
 import Emptydata from "../../../../components/emptydata/Emptydata";
 //ICONS
-import { GoHomeFill } from "react-icons/go";
 import { LiaBell } from "react-icons/lia";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BiSolidMessageRoundedDetail } from "react-icons/bi";
 import { IoIosLogOut } from "react-icons/io";
-
 import { IoCloseOutline } from "react-icons/io5";
 import appointmentImg from "../../../../assets/icons/calendar.png";
 

@@ -70,7 +70,6 @@
     }
 
     .setappointment-bot {
-      background-color: #fff;
       width: 55%;
       height: 100%;
       padding: 180px 100px 10px 100px;
@@ -80,12 +79,15 @@
       justify-content: center;
       z-index: 1;
       overflow-y: auto;
-      background-color: rgb(243, 238, 238);
+      background-color: #f5f5f5;
 
       .profile-wrapper {
         display: none;
       }
 
+      .dr-name1 {
+        display: none;
+      }
       .dr-name2 {
         display: none;
       }
@@ -113,20 +115,24 @@
           display: flex;
           flex-direction: column;
           margin: 0 0 40px 0;
-          box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
           padding: 10px;
           border-radius: 10px;
           background-color: #fff;
+          box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
 
           .title {
             display: flex;
             margin-bottom: 7px;
             justify-content: center;
             margin-bottom: 10px;
+            border-bottom: 1px solid #becedf;
 
             span {
               font-size: 0.875rem;
               color: black;
+              margin-bottom: -8px;
+              background-color: #fff;
+              padding: 0 10px;
             }
           }
 
@@ -215,7 +221,6 @@
                 width: 100%;
                 padding: 0 10px;
                 border-radius: 5px;
-                //  border: 1px solid #000;
                 border: none;
                 box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
                   rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
@@ -264,7 +269,6 @@
                 width: 100%;
                 padding: 0 10px;
                 border-radius: 5px;
-                //  border: 1px solid #000;
                 border: none;
                 box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
                   rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
@@ -362,7 +366,7 @@
             .next-icon {
               align-items: end;
               font-size: 1.25rem;
-              color: #000;
+              color: #007bff;
               cursor: pointer;
             }
           }
@@ -376,8 +380,8 @@
         align-items: center;
 
         .note {
-          font-size: 1.125rem;
-          color: #000;
+          font-size: 0.875rem;
+          color: gray;
           text-align: center;
           margin-bottom: 20px;
         }
@@ -417,6 +421,7 @@
             width: 200px;
             justify-content: space-between;
             padding: 0 10px;
+            background-color: #fff;
 
             input {
               width: 100%;
@@ -481,6 +486,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #fff;
 
             &.selected {
               background-color: #0c0950;
@@ -536,7 +542,7 @@
             width: 100%;
             padding: 7px 0;
             font-size: 0.75rem;
-            background-color: #261fb3;
+            background-color: #007bff;
             cursor: pointer;
             border: none;
             border-radius: 5px;
@@ -544,7 +550,7 @@
             height: 37px;
 
             &:hover {
-              background-color: #161179;
+              background-color: #0069d9;
             }
           }
         }
@@ -571,7 +577,7 @@
     background-color: #fff;
     padding: 15px;
     border-radius: 7px;
-    border-top: 12px solid #0c0950;
+    border-top: 12px solid #007bff;
 
     .top {
       display: flex;
@@ -642,7 +648,7 @@
         border: none;
         border-radius: 3px;
         color: #fff;
-        padding: 5px 10px;
+        padding: 7px 10px;
 
         &:hover {
           background-color: rgb(37, 34, 34);
@@ -659,9 +665,29 @@
         color: #fff;
         padding: 5px 10px;
         width: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         &:hover {
           background-color: rgb(28, 78, 5);
+        }
+
+        .loader {
+          width: fit-content;
+          font-weight: bold;
+          font-family: monospace;
+          font-size: 0.875rem;
+          clip-path: inset(0 3ch 0 0);
+          animation: l4 1s steps(4) infinite;
+        }
+        .loader:before {
+          content: "Hulat lang ahh...";
+        }
+        @keyframes l4 {
+          to {
+            clip-path: inset(0 -1ch 0 0);
+          }
         }
       }
     }
@@ -754,7 +780,7 @@
         padding: 50px 10px 10px 10px;
         z-index: 2;
         overflow-y: visible;
-        background-color: rgb(243, 238, 238);
+        background-color: #f5f5f5;
 
         .profile-wrapper {
           display: flex;
@@ -1043,7 +1069,7 @@
               .next-icon {
                 align-items: end;
                 font-size: 1.25rem;
-                color: #000;
+                color: #007bff;
                 cursor: pointer;
               }
             }
@@ -1058,14 +1084,14 @@
           margin-top: 20px;
 
           .note {
-            font-size: 1.125rem;
-            color: #000;
+            font-size: 0.75rem;
+            color: gray;
             text-align: center;
             margin-bottom: 15px;
           }
           h6 {
             font-size: 0.875rem;
-            color: #000;
+            color: #4b4848;
             margin-bottom: 10px;
           }
 
@@ -1096,7 +1122,7 @@
                 padding: 5px 8px;
                 border-radius: 5px;
                 border: none;
-                background-color: transparent; //  border: 1px solid #000;
+                background-color: transparent;
                 border: none;
                 box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
                   rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
@@ -1123,7 +1149,7 @@
 
           h6 {
             font-size: 0.875rem;
-            color: #000;
+            color: #4b4848;
             margin-bottom: 10px;
           }
 
@@ -1171,7 +1197,7 @@
               width: 100%;
               padding: 7px 0;
               font-size: 0.75rem;
-              background-color: #261fb3;
+              background-color: #007bff;
               cursor: pointer;
               border: none;
               border-radius: 5px;
@@ -1179,7 +1205,7 @@
               height: 37px;
 
               &:hover {
-                background-color: #161179;
+                background-color: #0069d9;
               }
             }
           }
@@ -1206,7 +1232,7 @@
       background-color: #fff;
       padding: 15px;
       border-radius: 7px;
-      border-top: 12px solid #0c0950;
+      border-top: 12px solid #007bff;
 
       .top {
         display: flex;
@@ -1290,7 +1316,7 @@
           border: none;
           border-radius: 3px;
           color: #fff;
-          padding: 5px 10px;
+          padding: 7px 10px;
           width: 180px;
 
           &:hover {

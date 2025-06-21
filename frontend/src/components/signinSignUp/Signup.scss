@@ -299,8 +299,8 @@
           align-items: space-between;
           align-items: center;
           .logo {
-            height: 50px;
-            width: 150px;
+            height: 30px;
+            width: auto;
             margin-bottom: 30px;
             align-self: start;
           }
@@ -447,6 +447,7 @@
               border-radius: 5px;
               border: 1px solid #161179;
               padding: 0 10px;
+              font-size: 0.875rem;
 
               &:focus {
                 outline: none;
@@ -480,7 +481,7 @@
             .btn-signin {
               max-width: fit-content;
               height: 30px;
-              background-color: #261fb3;
+              background-color: #007bff;
               color: #fbe4d6;
               cursor: pointer;
               font-size: 0.875rem;
@@ -489,9 +490,10 @@
               align-items: center;
               border-radius: 5px;
               padding: 0 10px;
+              border: none;
 
               &:hover {
-                background-color: #000;
+                background-color: #0069d9;
               }
             }
           }
@@ -500,12 +502,12 @@
     }
 
     .close-icon {
-      font-size: 1.875rem;
+      font-size: 1.125rem;
       cursor: pointer;
       position: fixed;
       top: 30px;
       right: 10px;
-      color: gray;
+      color: rgb(255, 255, 255);
     }
   }
 }
