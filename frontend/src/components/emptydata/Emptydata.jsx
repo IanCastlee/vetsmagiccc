@@ -1,5 +1,5 @@
 import "./Emptydata.scss";
-import sleepingDog from "../../assets/icons/dog.png";
+import sleepingDog from "../../assets/icons/empty-box (1).png";
 
 const Emptydata = () => {
   return (

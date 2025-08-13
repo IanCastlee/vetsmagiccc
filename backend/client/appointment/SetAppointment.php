@@ -6,7 +6,6 @@ include("../../databaseConnection.php");
 
 header("Content-Type: application/json");
 
-// Ensure all required POST fields are set
 if (
     isset(
         $_POST['client_id'],
@@ -22,12 +21,14 @@ if (
         $_POST['history_health_issue'],
         $_POST['appointment_date'],
         $_POST['appointment_time'],
+        $_POST['payment_method'],
         $_POST['price'],
         $_POST['title_for_vet'],
         $_POST['message_for_vet'],
+        $_POST['title_for_client'],
+        $_POST['desc_for_client'],
     )
 ) {
-    // Sanitize and assign form fields
     $client_id = $_POST['client_id'];
     $dr_id = $_POST['dr_id'];
     $service = $_POST['service'];
@@ -41,15 +42,18 @@ if (
     $history_health_issue = $_POST['history_health_issue'];
     $appointment_date = $_POST['appointment_date'];
     $appointment_time = $_POST['appointment_time'];
+    $payment_method = $_POST['payment_method'];
     $price = $_POST['price'];
     $title_for_vet = $_POST['title_for_vet'];
     $message_for_vet = $_POST['message_for_vet'];
+
+    $title_for_client = $_POST['title_for_client'];
+    $desc_for_client = $_POST['desc_for_client'];
 
     date_default_timezone_set("Asia/Manila");
     $sentDate = date("Y-m-d");
 
 
-    // Handle image upload if it exists
     $image_name = null;
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $uploadDir = '../../uploads/';
@@ -71,15 +75,14 @@ if (
         }
     }
 
-    // Insert into DB
     $stmt = $conn->prepare("INSERT INTO appointments (
         client_id, dr_id, service, pet_name, pet_type, breed, age, weight, gender,
         current_health_issue, history_health_issue, appointment_date, appointment_time,
-        paid_payment, image
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        payment_method, paid_payment, image
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->bind_param(
-        "iissssissssssss",
+        "iissssisssssssss",
         $client_id,
         $dr_id,
         $service,
@@ -93,6 +96,7 @@ if (
         $history_health_issue,
         $appointment_date,
         $appointment_time,
+        $payment_method,
         $price,
         $image_name
     );
@@ -101,8 +105,14 @@ if (
 
         $insertNotification = $conn->prepare("INSERT INTO notifications (sender_id, reciever_id, title, description, sentDate)VALUES(?,?,?,?,?)");
         $insertNotification->bind_param("iisss", $client_id, $dr_id, $title_for_vet, $message_for_vet, $sentDate);
-        $insertNotification->execute();
-        echo json_encode(['success' => true, 'message' => "Appointment sent successfully"]);
+
+
+        if ($insertNotification->execute()) {
+            $insertNotif = $conn->prepare("INSERT INTO notifications ( reciever_id, title, description, sentDate) VALUES (?, ?, ?, ?)");
+            $insertNotif->bind_param("isss", $client_id, $title_for_client, $desc_for_client, $sentDate);
+            $insertNotif->execute();
+            echo json_encode(['success' => true, 'message' => "Appointment sent successfully"]);
+        }
     } else {
         echo json_encode(['success' => false, 'message' => "Database error: " . $conn->error]);
     }

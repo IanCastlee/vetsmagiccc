@@ -13,6 +13,7 @@ import { IoIosAdd } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import { FaEdit } from "react-icons/fa";
 import { uploadUrl } from "../../../../fileurl";
+import { MdOutlineMedicalServices } from "react-icons/md";
 
 const Service = () => {
   const [data, setData] = useState([]);
@@ -233,7 +234,9 @@ const Service = () => {
       <div className="admin-shop">
         <div className="top">
           <div className="left">
-            <h3>SERVICES</h3>
+            <h3>
+              <MdOutlineMedicalServices /> VETSMAGIC SERVICES
+            </h3>
           </div>
           <div className="right">
             <div className="search-input">

@@ -1,3 +1,64 @@
+.receipt {
+  background-color: #fff;
+  width: 300px;
+  padding: 20px;
+
+  .top {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    span {
+      font-size: 20px;
+      font-weight: 500;
+      color: #000;
+    }
+
+    p {
+      font-size: 12px;
+      color: gray;
+    }
+  }
+
+  .border {
+    border: 1px dotted #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+
+    span {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #000;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 15px;
+
+    section {
+      display: flex;
+      flex-direction: column;
+
+      strong {
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+
+      span {
+        font-size: 0.75rem;
+        color: rgb(97, 95, 95);
+      }
+    }
+  }
+}
+
 .appointment {
   width: 100%;
   height: 100%;
@@ -19,10 +80,13 @@
       align-items: center;
 
       .main-title {
-        color: #fbe4d6;
         font-size: 30px;
-        border-bottom: 1px solid gray;
-        padding-bottom: 7px;
+        background: linear-gradient(to right, #fff, #007bff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        text-transform: capitalize;
       }
     }
     .title {
@@ -128,8 +192,8 @@
                 .time-price {
                   width: 100%;
                   display: flex;
-                  justify-content: space-between;
-                  align-items: center;
+                  align-items: start;
+                  flex-direction: column;
 
                   .time {
                     font-size: 14px;
@@ -158,10 +222,17 @@
               }
             }
 
-            .icon {
-              color: #000;
-              font-size: 1.25rem;
-              cursor: pointer;
+            .icon-buttons {
+              display: flex;
+              gap: 7px;
+              .icon {
+                color: #000;
+                font-size: 29px;
+                cursor: pointer;
+                border-radius: 50%;
+                padding: 4px;
+                border: 1px solid gray;
+              }
             }
           }
         }
@@ -331,7 +402,7 @@
     padding: 10px;
     border-radius: 5px;
     background-color: #fff;
-    border-top: 12px solid #007bff;
+    border-top: 5px solid #007bff;
 
     .top {
       width: 100%;
@@ -343,11 +414,16 @@
       flex-direction: column;
       align-items: center;
 
-      .note {
-        font-size: 1.125rem;
-        color: #000;
+      .note2 {
+        color: 12px;
+        color: gray;
+        width: 100%;
+        margin-bottom: 40px;
+        border: 1px solid lightgrey;
+        border-radius: 10px;
+        padding: 7px 15px;
+        background-color: rgb(241, 241, 209);
         text-align: center;
-        margin-bottom: 20px;
       }
 
       h6 {
@@ -553,8 +629,12 @@
         background-size: cover;
 
         .main-title {
-          color: #fbe4d6;
-          font-size: 1.5625rem;
+          font-size: 1.625rem;
+          background: linear-gradient(to right, #fff, #007bff);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          color: transparent;
         }
       }
 
@@ -717,6 +797,17 @@
                 .icon {
                   font-size: 40px;
                   color: green;
+                }
+              }
+
+              .icon-buttons {
+                display: flex;
+                justify-content: end;
+                gap: 7px;
+                .icon {
+                  color: #000;
+                  font-size: 1.25rem;
+                  cursor: pointer;
                 }
               }
             }
@@ -885,12 +976,16 @@
         align-items: center;
         margin-top: 20px;
 
-        .note {
-          font-size: 0.875rem;
+        .note2 {
+          color: 12px;
           color: gray;
+          width: 100%;
+          margin-bottom: 40px;
+          border: 1px solid lightgrey;
+          border-radius: 10px;
+          padding: 7px 15px;
+          background-color: rgb(241, 241, 209);
           text-align: center;
-          margin-bottom: 25px;
-          width: 70%;
         }
         h6 {
           font-size: 0.875rem;

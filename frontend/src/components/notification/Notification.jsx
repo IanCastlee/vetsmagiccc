@@ -5,14 +5,16 @@ import { motion } from "framer-motion";
 import { IoCloseOutline } from "react-icons/io5";
 
 //IMAGES
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axiosIntance from "../../../axios";
 import Loader2 from "../loader/Loader3";
 import Emptydata from "../emptydata/Emptydata";
 import appointmentImg from "../../assets/icons/calendar.png";
 import { Link } from "react-router-dom";
+import { NotifContext } from "../../contexts/NotificationContext";
 
 const Notification = ({ close }) => {
+  const { fetchNotifCount, setActiveNotifCount } = useContext(NotifContext);
   const [loader, setLoader] = useState(false);
   const [notif, setNotif] = useState([]);
   const [visibleNotif, setVisibleNotif] = useState([]);
@@ -53,7 +55,7 @@ const Notification = ({ close }) => {
         const updateAuto = visibleNotif.map((item) =>
           item.notif_id == notif_id ? { ...item, status: 1 } : item
         );
-
+        setActiveNotifCount();
         setVisibleNotif(updateAuto);
       } else {
         console.log("Error from be : ", res.data);
@@ -63,8 +65,12 @@ const Notification = ({ close }) => {
     }
   };
 
+  useEffect(() => {
+    fetchNotifCount();
+  }, []);
+
   return (
-    <div className="notification-overlay">
+    <div className="notificationnn-overlay">
       <motion.div
         initial={{ opacity: 0, x: 200 }}
         whileInView={{ opacity: 1, x: 0 }}
@@ -75,6 +81,12 @@ const Notification = ({ close }) => {
           <h6>Notification</h6>{" "}
           <IoCloseOutline className="icon" onClick={close} />
         </div>
+
+        {notif.length > 0 && (
+          <p className="p-note">
+            Note : Once you click the notification, it will be marked as read.
+          </p>
+        )}
         <div className="notification-content">
           {loader ? (
             <Loader2 />
@@ -96,9 +108,13 @@ const Notification = ({ close }) => {
                     </div>
                     <div className="bot">
                       <span>{item.sentDate}</span>
-                      <button>
-                        <Link to="/myappointment/">View</Link>
-                      </button>
+                      {item.title === "Appointment reminder" && (
+                        <button className="btn-view">
+                          <Link to="/myappointment/" onClick={close}>
+                            View
+                          </Link>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -1,5 +1,5 @@
 import "./setAppointment.scss";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosIntance from "../../../axios";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -9,11 +9,13 @@ import Loader2 from "../../components/loader/Loader2";
 import { uploadUrl } from "../../../fileurl";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import html2pdf from "html2pdf.js";
+
 //IMAGES
 import cat from "../../assets/icons/mouth.png";
 
 //ICONS
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FaArrowRight } from "react-icons/fa6";
 import { FaArrowLeft } from "react-icons/fa6";
 import { CiStethoscope } from "react-icons/ci";
@@ -25,6 +27,8 @@ import { AiOutlineSnippets } from "react-icons/ai";
 import { RiImageAddFill } from "react-icons/ri";
 
 const SetAppointment = () => {
+  const receiptRef = useRef();
+
   const { currentUser } = useContext(AuthContext);
 
   const userId = useParams();
@@ -33,6 +37,7 @@ const SetAppointment = () => {
   const [showDateTime, setshowDateTime] = useState("1");
   const [showSummaryForm, setShowSummaryForm] = useState(false);
   const [showLoader3, setShowLoader3] = useState(false);
+  const [showLoader4, setShowLoader4] = useState(false);
   const [noInternetConn, setNoInternetConn] = useState(false);
 
   const [data, setData] = useState([]);
@@ -63,6 +68,8 @@ const SetAppointment = () => {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [notAvailableTimeSlot, setNotAvailableTimeSlot] = useState([]);
   const [formattedDate_, setformattedDate] = useState(null);
+  const [showAppointmentsentModal, setshowAppointmentsentModal] =
+    useState(false);
 
   const [emptyService, setEmptyService] = useState("");
   const [emptypet_name, setEmptypet_name] = useState("");
@@ -173,7 +180,7 @@ const SetAppointment = () => {
       const res = await axiosIntance.get(
         "client/appointment/getTimeDateToRemove.php",
         {
-          params: { choosenDate: formattedDate },
+          params: { choosenDate: formattedDate, vetId: userId.userId },
         }
       );
       if (res.data.success) {
@@ -322,19 +329,6 @@ const SetAppointment = () => {
   const handleSubmitAppointment = async () => {
     setShowLoader3(true);
 
-    // if (!navigator.onLine) {
-    //   console.log("No internet connection.");
-    //   setNoInternetConn(true);
-    //   setShowLoader3(true);
-
-    //   setTimeout(() => {
-    //     setNoInternetConn(false);
-    //     setShowLoader3(true);
-    //   }, 3000);
-
-    //   return false;
-    // }
-
     if (!appointmentForm.appointment_date) {
       console.warn("Appointment date is required.");
       return false;
@@ -366,12 +360,21 @@ const SetAppointment = () => {
     );
     formData.append("appointment_date", formattedDate);
     formData.append("appointment_time", selectedTimeSlot);
+    formData.append("payment_method", "Online Payment");
+
     formData.append("price", price);
 
     formData.append("title_for_vet", "New Appointment Request");
     formData.append(
       "message_for_vet",
-      "You have received a new appointment request."
+      `You have received a new appointment request for a ${appointmentForm.pet_type}, requesting the ${appointmentForm.service} service.`
+    );
+
+    // client notification
+    formData.append("title_for_client", "Appointment reminder");
+    formData.append(
+      "desc_for_client",
+      `Your appointment has been sent to your chosen vet. Please prepare for your selected date and time slot (${formattedDate} - ${selectedTimeSlot}).`
     );
 
     if (appointmentForm.image) {
@@ -408,6 +411,95 @@ const SetAppointment = () => {
     }
   };
 
+  const handlePayOnClinick = async () => {
+    setShowLoader4(true);
+
+    if (!appointmentForm.appointment_date) {
+      console.warn("Appointment date is required.");
+      return false;
+    }
+
+    const formattedDate = new Date(
+      appointmentForm.appointment_date
+    ).toLocaleDateString("en-CA");
+
+    setformattedDate(formattedDate);
+
+    const formData = new FormData();
+    formData.append("client_id", currentUser?.user_id);
+    formData.append("dr_id", userId.userId);
+    formData.append("service", appointmentForm.service);
+    formData.append("pet_name", appointmentForm.pet_name);
+    formData.append("pet_type", appointmentForm.pet_type);
+    formData.append("breed", appointmentForm.breed);
+    formData.append("age", appointmentForm.age);
+    formData.append("weight", appointmentForm.weight);
+    formData.append("gender", appointmentForm.gender);
+    formData.append(
+      "current_health_issue",
+      appointmentForm.current_health_issue
+    );
+    formData.append(
+      "history_health_issue",
+      appointmentForm.history_health_issue
+    );
+    formData.append("appointment_date", formattedDate);
+    formData.append("appointment_time", selectedTimeSlot);
+    formData.append("payment_method", "Pay at Clinic");
+    formData.append("price", price);
+
+    formData.append("title_for_vet", "New Appointment Request");
+    formData.append(
+      "message_for_vet",
+      `You have received a new appointment request for a ${appointmentForm.pet_type}, requesting the ${appointmentForm.service} service.`
+    );
+
+    // client notification
+    formData.append("title_for_client", "Appointment reminder");
+    formData.append(
+      "desc_for_client",
+      `Your appointment has been sent to your chosen vet. Please prepare for your selected date and time slot (${formattedDate} - ${selectedTimeSlot}).`
+    );
+
+    if (appointmentForm.image) {
+      formData.append("image", appointmentForm.image);
+    }
+
+    try {
+      const res = await axiosIntance.post(
+        "client/appointment/setAppointment.php",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (res.data.success) {
+        console.log("RESPONSE : ", res.data.message);
+
+        setTimeout(() => {
+          setShowSummaryForm(false);
+        }, 1000);
+        setShowLoader4(false);
+        setshowAppointmentsentModal(true);
+        handleTimeDateSlotToRemove();
+        return true;
+      } else {
+        console.log("ERROR : ", res.data);
+        setShowLoader4(false);
+
+        return false;
+      }
+    } catch (error) {
+      console.log("Error : ", error);
+      setShowLoader4(false);
+
+      return false;
+    }
+  };
+
   const handlePayment = async (e) => {
     e.preventDefault();
 
@@ -430,8 +522,8 @@ const SetAppointment = () => {
       if (response.data.checkout_url) {
         setTimeout(() => {
           setShowLoader3(false);
+          window.open(response.data.checkout_url, "_blank");
         }, 2000);
-        window.location.href = response.data.checkout_url;
       } else {
         setShowLoader3(false);
         console.log("Error: Unable to fetch the checkout URL.");
@@ -465,38 +557,37 @@ const SetAppointment = () => {
 
   //prev appointment
   useEffect(() => {
-    if (!currentUser || !currentUser.user_id) {
-      return;
-    }
+    if (!currentUser || !currentUser.user_id) return;
 
     const getPrevAppointment = async () => {
       setLoader(true);
-      let petType = veterinarianInfo?.specialization.split(" ")[0];
+
+      let petType = veterinarianInfo?.specialization?.split(" ")[0];
+      if (!petType) petType = "General";
+
+      console.log("PET TYPE : ", petType);
 
       try {
         const res = await axiosIntance.get(
           `client/appointment/getPrevAppointment.php?user_id=${currentUser.user_id}&petType=${petType}`
         );
 
-        // const res = await axios.get(
-        //   `https://vetcare002.kesug.com/backend/client/appointment/getprevAppointment.php?user_id=${currentUser.user_id}&petType=${petType}`
-        // );
         if (res.data.success) {
-          console.log("DATATATTATAT : ", res.data.data);
           setData(res.data.data);
-          setLoader(false);
+          console.log(":DTAA : ", res.data.data);
         } else {
           console.log("Err getPrevAppointment : ", res.data);
-          setLoader(false);
         }
       } catch (error) {
         console.log("ERROR : ", error);
+      } finally {
         setLoader(false);
       }
     };
 
     getPrevAppointment();
   }, [currentUser, veterinarianInfo.specialization]);
+
   const previousAppointment = (item) => {
     setAppointment({
       service: "",
@@ -507,13 +598,32 @@ const SetAppointment = () => {
       weight: item.weight || "",
       gender: item.gender || "",
       current_health_issue: "",
-      history_health_issue: item.history_health_issue || "",
+      history_health_issue: item.services || "",
       appointment_date: "",
       appointment_time: "",
       price: "",
       image: null,
     });
   };
+
+  const handleDownload = () => {
+    const element = receiptRef.current;
+    if (!element) {
+      console.error("Receipt element not found");
+      return;
+    }
+
+    const opt = {
+      margin: 10,
+      filename: "vetcare-receipt.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    };
+
+    html2pdf().set(opt).from(element).save();
+  };
+
   return (
     <>
       <div className="setappointment">
@@ -567,7 +677,7 @@ const SetAppointment = () => {
               <div className="petinfo-form">
                 <div className="note">
                   <p>
-                    * Please make sure to fill out all required fields and
+                    Note : Please make sure to fill out all required fields and
                     upload a pet profile image before submitting.
                   </p>
                 </div>
@@ -614,7 +724,7 @@ const SetAppointment = () => {
                         style={{ color: `${emptyService !== "" ? "red" : ""}` }}
                         htmlFor="type"
                       >
-                        {emptyService !== "" ? emptyService : "Choose Services"}
+                        {emptyService !== "" ? emptyService : "Choose Service"}
                       </label>
 
                       <select
@@ -640,7 +750,7 @@ const SetAppointment = () => {
                         }}
                         id="service"
                       >
-                        <option value="">Choose Services</option>
+                        <option value="">Services</option>
 
                         {veterinarianServices &&
                           veterinarianServices.map((item) => (
@@ -671,7 +781,6 @@ const SetAppointment = () => {
                         }}
                         type="text"
                         name="pet_name"
-                        placeholder="Pet Name"
                         value={appointmentForm.pet_name}
                         onChange={handleChange}
                       />
@@ -694,27 +803,56 @@ const SetAppointment = () => {
                           backgroundColor: "#fff",
                         }}
                         value={
-                          (appointmentForm.pet_type =
-                            veterinarianInfo?.specialization
-                              ? veterinarianInfo.specialization.split(" ")[0]
-                              : "")
+                          veterinarianInfo.petType || appointmentForm.pet_type
                         }
                         onChange={handleChange}
                         name="pet_type"
                         id="pet_type"
                       >
-                        <option
-                          id="pet_type"
-                          value={
-                            veterinarianInfo?.specialization
-                              ? veterinarianInfo.specialization.split(" ")[0]
-                              : ""
-                          }
-                        >
-                          {veterinarianInfo?.specialization
-                            ? veterinarianInfo.specialization.split(" ")[0]
-                            : ""}
-                        </option>
+                        <option value="">Select Animal</option>
+                        <option value="Bat">Bat</option>
+                        <option value="Bird">Bird</option>
+                        <option value="Buffalo">Buffalo</option>
+                        <option value="Camel">Camel</option>
+                        <option value="Cat">Cat</option>
+                        <option value="Chicken">Chicken</option>
+                        <option value="Chinchilla">Chinchilla</option>
+                        <option value="Cow">Cow</option>
+                        <option value="Deer">Deer</option>
+                        <option value="Dog">Dog</option>
+                        <option value="Donkey">Donkey</option>
+                        <option value="Duck">Duck</option>
+                        <option value="Ferret">Ferret</option>
+                        <option value="Fish">Fish</option>
+                        <option value="Fox">Fox</option>
+                        <option value="Frog">Frog</option>
+                        <option value="Goat">Goat</option>
+                        <option value="Goose">Goose</option>
+                        <option value="Guinea Pig">Guinea Pig</option>
+                        <option value="Hamster">Hamster</option>
+                        <option value="Hedgehog">Hedgehog</option>
+                        <option value="Horse">Horse</option>
+                        <option value="Iguana">Iguana</option>
+                        <option value="Lizard">Lizard</option>
+                        <option value="Mouse">Mouse</option>
+                        <option value="Mule">Mule</option>
+                        <option value="Ostrich">Ostrich</option>
+                        <option value="Parrot">Parrot</option>
+                        <option value="Peacock">Peacock</option>
+                        <option value="Pig">Pig</option>
+                        <option value="Pigeon">Pigeon</option>
+                        <option value="Quail">Quail</option>
+                        <option value="Rabbit">Rabbit</option>
+                        <option value="Rat">Rat</option>
+                        <option value="Rooster">Rooster</option>
+                        <option value="Sheep">Sheep</option>
+                        <option value="Snake">Snake</option>
+                        <option value="Squirrel">Squirrel</option>
+                        <option value="Tortoise">Tortoise</option>
+                        <option value="Turtle">Turtle</option>
+                        <option value="Turkey">Turkey</option>
+                        <option value="Zebra">Zebra</option>
+                        <option value="Other">Other</option>
                       </select>
                     </div>
                     <div className="input-wrapper">
@@ -732,7 +870,6 @@ const SetAppointment = () => {
                         onChange={handleChange}
                         type="text"
                         name="breed"
-                        placeholder="Breed"
                       />
                     </div>
                   </div>
@@ -742,7 +879,9 @@ const SetAppointment = () => {
                         style={{ color: `${emptyage !== "" ? "red" : ""}` }}
                         htmlFor="age"
                       >
-                        {emptyage !== "" ? emptyage : "Pet Age"}
+                        {emptyage !== ""
+                          ? emptyage
+                          : "Pet Age (e.g 1 month, 1 year)"}
                       </label>
                       <input
                         style={{
@@ -752,7 +891,6 @@ const SetAppointment = () => {
                         onChange={handleChange}
                         type="text"
                         name="age"
-                        placeholder="Age (e.g 2 months, 1 year)"
                       />
                     </div>
                     <div className="input-wrapper">
@@ -773,7 +911,6 @@ const SetAppointment = () => {
                         onChange={handleChange}
                         type="number"
                         name="weight"
-                        placeholder="Weight"
                       />
                     </div>
                   </div>
@@ -818,7 +955,9 @@ const SetAppointment = () => {
                         }}
                         htmlFor="file"
                       >
-                        {emptyprofile !== null ? emptyprofile : "Pet Profile"}
+                        {emptyprofile !== null
+                          ? emptyprofile
+                          : "Latest Pet Picture"}
                         <br />
 
                         {previewImage ? (
@@ -873,7 +1012,7 @@ const SetAppointment = () => {
                     >
                       {emptycurrent_health_issue !== ""
                         ? emptycurrent_health_issue
-                        : "Current Pet Health Concerns or Conditions"}{" "}
+                        : "Pet Health Concerns or Conditions"}{" "}
                     </label>
                     <textarea
                       style={{
@@ -887,7 +1026,6 @@ const SetAppointment = () => {
                       onChange={handleChange}
                       name="current_health_issue"
                       id="concern"
-                      placeholder="Current Pet Health Concerns or Conditions"
                     ></textarea>
                   </div>
                   <div className="text-area-wrapper">
@@ -901,7 +1039,7 @@ const SetAppointment = () => {
                     >
                       {emptyhistory_health_issue !== ""
                         ? emptyhistory_health_issue
-                        : "Pet's vaccination history, allergies, medical history, and past treatments."}{" "}
+                        : "Medical History"}{" "}
                     </label>
                     <textarea
                       style={{
@@ -915,7 +1053,6 @@ const SetAppointment = () => {
                       onChange={handleChange}
                       name="history_health_issue"
                       id="history"
-                      placeholder="Pet's vaccination history, allergies, medical history, and past treatments."
                     ></textarea>
                   </div>
                   <div className="button">
@@ -932,7 +1069,7 @@ const SetAppointment = () => {
                 className="date-available"
               >
                 <span className="note">
-                  *Choose your appointment date and time.{" "}
+                  Note : Choose your appointment date and time.{" "}
                 </span>
                 <h6>Select Your Preferred Date</h6>
 
@@ -1029,13 +1166,15 @@ const SetAppointment = () => {
           </div>
         </div>
       </div>
-
       {showSummaryForm && (
         <div className="payment-summary">
           <div className="container">
             <div className="top">
               <h4>Appointment Summary</h4>
-              <IoMdClose className="icon" />
+              <IoMdClose
+                className="icon"
+                onClick={() => setShowSummaryForm(false)}
+              />
             </div>
 
             <div className="content">
@@ -1079,24 +1218,23 @@ const SetAppointment = () => {
             </div>
 
             <div className="buttons">
+              <button className="btn-submit" onClick={handlePayOnClinick}>
+                {showLoader4 ? <div className="loader"></div> : "Pay at Clinic"}
+              </button>{" "}
               <button
-                className="btn-cancel"
-                onClick={() => setShowSummaryForm(false)}
+                className="btn-submit2"
+                onClick={handleSendDataAndPayment}
               >
-                Cancel
-              </button>
-              <button className="btn-submit" onClick={handleSendDataAndPayment}>
                 {showLoader3 ? (
                   <div className="loader"></div>
                 ) : (
-                  " Proceed to Payment"
+                  "Proceed to Online Payment"
                 )}
-              </button>
+              </button>{" "}
             </div>
           </div>
         </div>
       )}
-
       {noInternetConn && (
         <motion.div
           className="no-internet"
@@ -1109,6 +1247,34 @@ const SetAppointment = () => {
             connection.
           </span>
         </motion.div>
+      )}
+
+      {showAppointmentsentModal && !showLoader4 && (
+        <div className="appointment-sent-backdrop">
+          <div className="appointment-sent-modal">
+            <div className="top">
+              <span>Appointment Sent Succesfully</span>
+            </div>
+
+            <div className="content">
+              <p>
+                <span>Pay at Clinic: ₱</span> {price}
+              </p>
+            </div>
+
+            <div className="bot">
+              <Link className="btn-view" to="/myappointment/">
+                Go to Apppointment
+              </Link>
+              <button
+                className="btn-close"
+                onClick={() => setshowAppointmentsentModal(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

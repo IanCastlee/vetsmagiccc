@@ -5,7 +5,7 @@
   .hero {
     width: 100%;
     display: flex;
-    height: 633px;
+    height: 100vh;
     background-color: #f5f5f5;
 
     .hero-left {
@@ -23,19 +23,22 @@
         left: 50%;
         transform: translate(-50%, -50%);
         width: 100%;
-        padding: 0 200px 100px 100px;
+        padding: 100px 200px 100px 100px;
 
         h1 {
           color: #fbe4d6;
-          font-size: 42px;
+          font-size: 45px;
           line-height: 2.3125rem;
-          letter-spacing: 0.5px;
+          letter-spacing: 1px;
+          word-spacing: 3px;
+          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+          line-height: 40px;
           margin-bottom: 15px;
         }
 
         h6 {
-          font-size: 0.875rem;
-          color: lightgrey;
+          font-size: 20px;
+          color: #fff;
           margin-bottom: 7px;
         }
 
@@ -43,8 +46,9 @@
           display: flex;
           gap: 5px;
           margin-top: 15px;
+
           button {
-            background-color: green;
+            background: linear-gradient(to right, #1b1694, #007bff);
             padding: 8px 25px;
             font-size: 0.875rem;
             font-weight: 500;
@@ -54,7 +58,7 @@
             border: none;
 
             &:hover {
-              background-color: #1b1694;
+              background: linear-gradient(to right, #007bff, #1b1694);
             }
 
             &:first-child {
@@ -67,10 +71,45 @@
           }
         }
       }
+
+      #typing-effect {
+        background: linear-gradient(to right, #fff, #007bff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        font-weight: bold;
+      }
+
+      #typing-effect strong {
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        border-right: 2px solid #fff;
+        display: inline-block;
+        width: 0;
+        animation: typing 2s steps(8) forwards, blink 0.7s infinite;
+      }
+
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 8ch;
+        }
+      }
+
+      @keyframes blink {
+        50% {
+          border-color: transparent;
+        }
+      }
     }
     .hero-right {
       width: 25%;
       padding-top: 85px;
+      position: relative;
 
       .dog-img {
         width: 75%;
@@ -92,13 +131,32 @@
           display: flex;
           justify-content: center;
 
-          img {
-            height: 35px;
-            width: 35px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid gray;
+          .img-card {
+            height: 40px;
+            width: 40px;
             margin-left: -10px;
+
+            .client-profile {
+              height: 100%;
+              width: 100%;
+              border-radius: 50%;
+              object-fit: cover;
+              border: 1px solid gray;
+            }
+          }
+
+          .initial-fallback {
+            height: 40px;
+            width: 40px;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: 500;
+            text-transform: uppercase;
           }
 
           span {
@@ -151,6 +209,7 @@
         &:hover {
           transform: translateY(-5px);
         }
+        background: linear-gradient(to right, #dee5ec, #fff);
 
         img {
           height: 60px;
@@ -230,12 +289,18 @@
         background-color: #fff;
         padding: 10px;
         border-radius: 10px;
+        // background: linear-gradient(to right, #d4dee9, #fff);
 
         .veterinarian-profile {
           height: 140px;
           width: 140px;
           border-radius: 6px;
           object-fit: cover;
+          transition: all ease 0.5s;
+
+          &:hover {
+            transform: translateY(-5px);
+          }
         }
 
         .veterinarian-info {
@@ -295,10 +360,23 @@
             border-radius: 25px;
             border: none;
             transition: background-color 0.2s ease, transform 0.2s ease;
+            background: linear-gradient(to right, #0069d9, #007bff);
 
             &:hover {
               background-color: #0069d9;
               transform: scale(1);
+              background: linear-gradient(to right, #007bff, #0069d9);
+            }
+
+            a {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              .btn-icon {
+                font-size: 0.875rem;
+                margin-right: 5px;
+              }
             }
           }
         }
@@ -340,12 +418,12 @@
             font-size: 1rem;
             line-height: 1rem;
             letter-spacing: 0.5px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
           }
 
           h6 {
-            font-size: 0.875rem;
-            color: lightgrey;
+            font-weight: 500;
+            font-size: 0.75rem;
             margin-bottom: 7px;
             margin-right: 20px;
           }
@@ -357,7 +435,7 @@
             button {
               background-color: green;
               padding: 6px 14px;
-              font-size: 0.875rem;
+              font-size: 0.675rem;
               font-weight: 500;
               color: #fff;
               border-radius: 25px;
@@ -408,18 +486,37 @@
             display: flex;
             justify-content: center;
 
-            img {
-              height: 25px;
-              width: 25px;
-              border-radius: 50%;
-              object-fit: cover;
-              border: 1px solid gray;
+            .img-card {
+              height: 27px;
+              width: 27px;
               margin-left: -10px;
+
+              .client-profile {
+                height: 100%;
+                width: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 1px solid gray;
+              }
+            }
+
+            .initial-fallback {
+              height: 27px;
+              width: 27px;
+              background: linear-gradient(to right, #ff7e5f, #feb47b);
+              color: white;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 50%;
+              font-size: 18px;
+              font-weight: 500;
+              text-transform: uppercase;
             }
 
             span {
               font-weight: 500;
-              font-size: 16px;
+              font-size: 20px;
               margin-left: 3px;
               color: #181717;
             }
@@ -447,7 +544,7 @@
         .services-card {
           background-color: #fff;
           padding: 7px;
-          border-radius: 10px;
+          border-radius: 5px;
           display: flex;
           flex-direction: column;
           width: 120px;

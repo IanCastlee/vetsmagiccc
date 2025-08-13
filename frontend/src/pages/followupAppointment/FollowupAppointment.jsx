@@ -32,26 +32,26 @@ const FollowupAppointment = () => {
   const [drTime, setDrTime] = useState(null);
   const [drDuration, setDrDuration] = useState(null);
   const [appointmentID, setAppointmentID] = useState(null);
+  const [vetId, setVetId] = useState(null);
   const [fa_id, set_fa_id] = useState(null);
   const [payment, setPayment] = useState(null);
   const [noInternetConn, setNoInternetConn] = useState(false);
 
+  const getNotification = async () => {
+    setLoader(true);
+    const res = await axiosIntance.get(
+      `client/appointment/getFollowupAppintment.php?currentUser_id=${currentUser.user_id}`
+    );
+    if (res.data.success) {
+      setAppointmentData(res.data.data);
+      setVisibleData(res.data.data.slice(0, MAX_VISIBLE));
+    } else {
+      console.log("Error : ", res.data);
+    }
+    setLoader(false);
+  };
   //get AppointmentData
   useEffect(() => {
-    const getNotification = async () => {
-      setLoader(true);
-      const res = await axiosIntance.get(
-        `client/appointment/getFollowupAppintment.php?currentUser_id=${currentUser.user_id}`
-      );
-      if (res.data.success) {
-        setAppointmentData(res.data.data);
-        setVisibleData(res.data.data.slice(0, MAX_VISIBLE));
-      } else {
-        console.log("Error : ", res.data);
-      }
-      setLoader(false);
-    };
-
     getNotification();
   }, []);
 
@@ -99,12 +99,6 @@ const FollowupAppointment = () => {
     handleActiveAppointment();
   }, []);
 
-  // const handleClickedAppointment = (time, duration, id) => {
-  //   handleTimeDateSlotToRemove();
-  //   setClickedAppointment({ time, duration, id });
-  //   handleTimeDateSlotToRemove();
-  // };
-
   /////////////////////////////////////////
 
   const [showLoader3, setShowLoader3] = useState(false);
@@ -130,6 +124,8 @@ const FollowupAppointment = () => {
     }));
   };
 
+  console.log("SLEECYED : ", appointmentForm.appointment_date);
+
   useEffect(() => {
     const handleOffline = () => console.log("You are offline");
     const handleOnline = () => console.log("Back online");
@@ -146,6 +142,7 @@ const FollowupAppointment = () => {
   //timeslots to remove
   const handleTimeDateSlotToRemove = async () => {
     const date = new Date(appointmentForm.appointment_date);
+
     const formattedDate = [
       date.getFullYear(),
       String(date.getMonth() + 1).padStart(2, "0"),
@@ -158,17 +155,17 @@ const FollowupAppointment = () => {
       const res = await axiosIntance.get(
         "client/appointment/getTimeDateToRemove.php",
         {
-          params: { choosenDate: formattedDate },
+          params: { choosenDate: formattedDate, vetId: vetId },
         }
       );
       if (res.data.success) {
         setNotAvailableTimeSlot(res.data.data);
         console.log("NOT AVAILABLE TIME SLOT : ", res.data.data);
       } else {
-        console.log("Error : ", res.data);
+        console.log("Error from DB: ", res.data);
       }
     } catch (error) {
-      console.log("Error : ", error);
+      console.log("Errorrrrr : ", error);
     }
   };
 
@@ -288,7 +285,7 @@ const FollowupAppointment = () => {
         setTimeout(() => {
           setAppointmentID(null);
         }, 7000);
-
+        getNotification();
         return true;
       } else {
         console.log("ERROR : ", res.data);
@@ -324,8 +321,8 @@ const FollowupAppointment = () => {
       if (response.data.checkout_url) {
         setTimeout(() => {
           setShowLoader3(false);
+          window.open(response.data.checkout_url, "_blank");
         }, 2000);
-        window.location.href = response.data.checkout_url;
       } else {
         setShowLoader3(false);
         console.log("Error: Unable to fetch the checkout URL.");
@@ -356,6 +353,7 @@ const FollowupAppointment = () => {
     setDrDuration(item.duration);
     set_fa_id(item.fa_id);
     setPayment(item.payment);
+    setVetId(item.dr_id);
   };
 
   // Get the date of next week's Monday
@@ -378,7 +376,7 @@ const FollowupAppointment = () => {
 
   return (
     <>
-      <div className="notification-overlay">
+      <div className="followup-overlay">
         <motion.div
           initial={{ opacity: 0, x: 200 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -411,6 +409,10 @@ const FollowupAppointment = () => {
                       <div className="top">
                         <span className="title">{item.title}</span>
                         <p>{item.description}</p>
+
+                        <span className="price">
+                          <small>Cost: </small>₱ {item.payment}
+                        </span>
                       </div>
                       <div className="bot">
                         <span className="time-sent">{item.sentDate}</span>
@@ -428,7 +430,12 @@ const FollowupAppointment = () => {
                               : " Follow Up"}
                           </button>
                           {item.status == 0 && (
-                            <button className="btn-cancel">Ignore</button>
+                            <button
+                              className="btn-cancel"
+                              onClick={() => setModlToShow("")}
+                            >
+                              Ignore
+                            </button>
                           )}
                         </div>
                       </div>
@@ -449,7 +456,7 @@ const FollowupAppointment = () => {
       </div>
 
       {appointmentID !== null && (
-        <div className="modal-edit-sched-overlay">
+        <div className="modal-fa-sched-overlay">
           <div className="modal-edit-sched">
             <motion.div
               initial={{ opacity: 0, x: 100 }}
@@ -458,7 +465,7 @@ const FollowupAppointment = () => {
               className="date-available"
             >
               <span className="note">
-                Choose your appointment date and time.
+                <p>Choose your appointment date and time.</p>
               </span>
               <h6>Select Your Preferred Date</h6>
 
@@ -497,12 +504,7 @@ const FollowupAppointment = () => {
               </div>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7 }}
-              className="time-available"
-            >
+            <motion.div className="time-available">
               <h6>Available Time Slots</h6>
 
               {appointmentForm.appointment_date !== "" ? (

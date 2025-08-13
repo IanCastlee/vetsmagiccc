@@ -13,11 +13,11 @@ import { IoIosAdd } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import { FaEdit } from "react-icons/fa";
 import { uploadUrl } from "../../../../fileurl";
+import { MdShoppingCartCheckout } from "react-icons/md";
 
 const Shop = () => {
   const [data, setData] = useState([]);
   const [showLoader, setShowLoader] = useState(false);
-
   const [activeFormModal, setActiveFormModal] = useState("");
   const [showDelForm, setShowDelForm] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,13 +25,14 @@ const Shop = () => {
 
   const [formData, setFormData] = useState({
     medicine_id: "",
-    specialization: "",
+    specialization: "Medicine",
     category: "",
     med_name: "",
     stock: "",
     price: "",
     dosage: "",
     description: "",
+    expdate: "",
     capital: "",
     image: "",
   });
@@ -45,7 +46,6 @@ const Shop = () => {
     }));
   };
 
-  console.log(formData.image);
   //handle submmit
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,6 +57,7 @@ const Shop = () => {
     formDataAppend.append("stock", formData.stock);
     formDataAppend.append("price", formData.price);
     formDataAppend.append("dosage", formData.dosage);
+    formDataAppend.append("expdate", formData.expdate);
     formDataAppend.append("description", formData.description);
     formDataAppend.append("capital", formData.capital);
     formDataAppend.append("image", formData.image);
@@ -88,7 +89,7 @@ const Shop = () => {
   //get data
   const fetchedData = async () => {
     try {
-      const res = await axiosIntance.get("admin/shop/GetShop.php");
+      const res = await axiosIntance.get("admin/shop/getShop.php");
       if (res.data.success) {
         setData(res.data.data);
         console.log("PROD : ", res.data.data);
@@ -104,6 +105,7 @@ const Shop = () => {
   }, []);
 
   const setShowEditModal = (item) => {
+    console.log("ITEM  : ", item);
     setFormData({
       medicine_id: item.medicine_id || "",
       specialization: item.specialization || "",
@@ -112,6 +114,7 @@ const Shop = () => {
       stock: item.stock || "",
       price: item.price || "",
       dosage: item.dosage || "",
+      expdate: item.expiration_date || "",
       description: item.description || "",
       capital: item.capital || "",
     });
@@ -129,6 +132,7 @@ const Shop = () => {
       stock: "",
       price: "",
       dosage: "",
+      expdate: "",
       description: "",
       image: "",
     });
@@ -147,6 +151,8 @@ const Shop = () => {
     formDataAppend.append("stock", formData.stock);
     formDataAppend.append("price", formData.price);
     formDataAppend.append("dosage", formData.dosage);
+    formDataAppend.append("expdate", formData.expdate);
+    formDataAppend.append("capital", formData.capital);
     formDataAppend.append("description", formData.description);
     formDataAppend.append("image", formData.image);
 
@@ -275,12 +281,17 @@ const Shop = () => {
       setAddExpncsForm("");
     }
   };
+
+  console.log("Categ : ", formData.category);
+
   return (
     <>
       <div className="admin-shop">
         <div className="top">
           <div className="left">
-            <h3>SHOP MANAGEMENT</h3>
+            <h3>
+              <MdShoppingCartCheckout /> VETSMAGIC PRODUCTS
+            </h3>
           </div>
           <div className="right">
             <div className="search-input">
@@ -327,7 +338,6 @@ const Shop = () => {
                   <th>ID</th>
                   <th>Image</th>
                   <th>Med Name</th>
-                  <th>Specialization</th>
                   <th>Category</th>
                   <th>Price</th>
                   <th>Orig_Stock</th>
@@ -352,7 +362,6 @@ const Shop = () => {
                         />
                       </td>
                       <td>{item.med_name}</td>
-                      <td>{item.specialization}</td>
                       <td>{item.category}</td>
                       <td>{item.price}</td>
                       <td>{item.orig_stock}</td>
@@ -454,7 +463,7 @@ const Shop = () => {
                 className="form"
               >
                 <div className="form-wrapper">
-                  <div className="input-label-wrapper">
+                  {/* <div className="input-label-wrapper">
                     <label htmlFor="specialization">
                       Animal Specialization
                     </label>
@@ -469,8 +478,12 @@ const Shop = () => {
                       <option value="Dog Medicine">Dog Medicine</option>
                       <option value="Cat Medicine">Cat Medicine</option>
                       <option value="Bird Medicine">Bird Medicine</option>
+                      <option value="Bird Medicine">Pet Food</option>
+                      <option value="Bird Medicine">Vitamins</option>
+                      <option value="Bird Medicine">Shampoo</option>
+                      <option value="Bird Medicine">Accesories</option>
                     </select>
-                  </div>
+                  </div> */}
 
                   <div className="input-label-wrapper">
                     <label htmlFor="category">Category</label>
@@ -482,23 +495,26 @@ const Shop = () => {
                       required
                     >
                       <option value="">Category</option>
-                      <option value="Flea & Tick Prevention">
-                        Flea & Tick Prevention
-                      </option>
-                      <option value="Dewormer">Dewormer</option>
+                      <option value="Dog Medicine">Dog Medicine</option>
+                      <option value="Cat Medicine">Cat Medicine</option>
+                      <option value="Bird Medicine">Bird Medicine</option>
+                      <option value="Pet Food">Pet Food</option>
+                      <option value="Vitamins">Vitamins</option>
+                      <option value="Shampoo">Shampoo</option>
+                      <option value="Accessories">Accessories</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="form-wrapper">
                   <div className="input-label-wrapper">
-                    <label htmlFor="med_name">Medicine Name</label>
+                    <label htmlFor="med_name">Product Name</label>
                     <input
                       className="input"
                       type="text"
                       id="med_name"
                       name="med_name"
-                      placeholder="Medicine Name"
+                      placeholder="Product"
                       value={formData.med_name}
                       onChange={handleChange}
                       required
@@ -535,19 +551,21 @@ const Shop = () => {
                     />
                   </div>
 
-                  <div className="input-label-wrapper">
-                    <label htmlFor="dosage">Dosage</label>
-                    <input
-                      className="input"
-                      type="text"
-                      id="dosage"
-                      name="dosage"
-                      placeholder="Dosage"
-                      value={formData.dosage}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
+                  {formData.category !== "Accessories" && (
+                    <div className="input-label-wrapper">
+                      <label htmlFor="dosage">Dosage</label>
+                      <input
+                        className="input"
+                        type="text"
+                        id="dosage"
+                        name="dosage"
+                        placeholder="Dosage"
+                        value={formData.dosage}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="form-address-wrapper">
@@ -564,67 +582,82 @@ const Shop = () => {
                   </div>
 
                   <div className="input-label-wrapper">
-                    <label htmlFor="capital">Expences</label>
+                    {formData.category !== "Accessories" && (
+                      <label htmlFor="capital">Expiration Date</label>
+                    )}
+                    {formData.category !== "Accessories" && (
+                      <input
+                        type="date"
+                        className="input"
+                        name="expdate"
+                        id="expdate"
+                        value={formData.expdate}
+                        onChange={handleChange}
+                        style={{ marginBottom: "15px" }}
+                      />
+                    )}
+                    <label htmlFor="capital">Expenses</label>
                     <input
                       type="number"
                       className="input"
                       name="capital"
                       id="capital"
-                      placeholder="Expences"
+                      placeholder="Expenses"
                       value={formData.capital}
                       onChange={handleChange}
                       required
                     />
-
-                    <div className="subtract">
-                      <span
-                        style={{
-                          fontSize: "10px",
-                        }}
-                      >
-                        Add Expences
-                      </span>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "3px",
-                        }}
-                        className="inpt-wrapper"
-                      >
-                        <input
-                          type="number"
+                    {activeFormModal === "update" && (
+                      <div className="subtract">
+                        <span
                           style={{
-                            border: "1px solid lightgrey",
-                            height: "30px",
-                            borderRadius: "4px",
-                            textAlign: "center",
-                          }}
-                          onChange={(e) => setAddExpncsForm(e.target.value)}
-                        />
-                        <button
-                          style={{
-                            border: "none",
-                            height: "30px",
-                            borderRadius: "4px",
-                            textAlign: "center",
-                            backgroundColor: "green",
                             fontSize: "10px",
-                            color: "#fff",
-                            padding: "0 6px",
                           }}
-                          type="button"
-                          onClick={handleAddExpense}
                         >
-                          Add Expense
-                        </button>
+                          Add Expenses
+                        </span>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "3px",
+                          }}
+                          className="inpt-wrapper"
+                        >
+                          <input
+                            type="number"
+                            style={{
+                              border: "1px solid lightgrey",
+                              height: "30px",
+                              borderRadius: "4px",
+                              textAlign: "center",
+                            }}
+                            onChange={(e) => setAddExpncsForm(e.target.value)}
+                          />
+                          <button
+                            style={{
+                              border: "none",
+                              height: "30px",
+                              borderRadius: "4px",
+                              textAlign: "center",
+                              backgroundColor: "green",
+                              fontSize: "10px",
+                              color: "#fff",
+                              padding: "0 6px",
+                            }}
+                            type="button"
+                            onClick={handleAddExpense}
+                          >
+                            Add Expense
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
 
                 <div className="form-textarea-wrapper">
-                  <label htmlFor="image">Medicine Image</label>
+                  <label htmlFor="image">Product Image</label>
                   <input
                     type="file"
                     id="image"

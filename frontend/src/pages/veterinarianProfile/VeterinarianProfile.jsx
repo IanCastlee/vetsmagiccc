@@ -3,20 +3,21 @@ import axiosIntance from "../../../axios";
 import { motion } from "framer-motion";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-
-//IMAGES
 import { Link, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+//IMAGES
+import clientProfile from "../../assets/imges/user1.jpg";
 
 //IC0NS
 import { CiStethoscope } from "react-icons/ci";
 import { IoMdTime } from "react-icons/io";
-import { PiCertificateBold } from "react-icons/pi";
+import { PiCalendarPlusLight, PiCertificateBold } from "react-icons/pi";
 import { LuBadgeCheck } from "react-icons/lu";
 import { MdOutlineMail } from "react-icons/md";
 import { PiPhone } from "react-icons/pi";
 import { uploadUrl } from "../../../fileurl";
 import { FaArrowLeft } from "react-icons/fa6";
+// import { IoAddCircleSharp } from "react-icons/io5";
 
 const VeterinarianProfile = () => {
   const userId = useParams();
@@ -38,7 +39,7 @@ const VeterinarianProfile = () => {
 
           console.log(res.data.data.veterinarianInfo);
         } else {
-          console.log(res.data.message);
+          console.log("Error from clicked vet BE :", res.data.message);
         }
       } catch (error) {
         console.log("Error : ", error);
@@ -136,12 +137,6 @@ const VeterinarianProfile = () => {
             <h3>About</h3>
             <p className="about">{veterinarianInfo?.about}</p>
           </div>
-
-          <button className="btn-sent-appointment">
-            <Link to={`/set-appointment/${veterinarianInfo?.user_id}`}>
-              Set Appointment
-            </Link>
-          </button>
         </div>
       </div>
     </div>

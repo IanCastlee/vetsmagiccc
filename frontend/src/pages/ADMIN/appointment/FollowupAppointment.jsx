@@ -5,6 +5,7 @@ import axiosIntance from "../../../../axios";
 //ICONS
 import { FiSearch } from "react-icons/fi";
 import { IoIosAdd } from "react-icons/io";
+import { uploadUrl } from "../../../../fileurl";
 
 const FollowupAppointment = () => {
   const [doneAppointment, setDoneAppointment] = useState([]);
@@ -116,10 +117,12 @@ const FollowupAppointment = () => {
                 <th>Pet Type</th>
                 <th>Pet Name</th>
                 <th>Service</th>
+                <th>Medical History</th>
                 <th>Pet Health Issue</th>
                 <th>Dr Incharge</th>
                 <th>Date Sched</th>
                 <th>Time Sched</th>
+                <th>Payment Method</th>
                 <th>Payment</th>
                 <th>Status</th>
               </tr>
@@ -136,7 +139,7 @@ const FollowupAppointment = () => {
                           width: "40px",
                           objectFit: "cover",
                         }}
-                        src={`http://localhost/VETCARE/backend/uploads/${item.image}`}
+                        src={`${uploadUrl.uploadurl}/${item.image}`}
                         alt="profile_pic"
                       />
                     </td>
@@ -144,10 +147,12 @@ const FollowupAppointment = () => {
                     <td>{item.pet_type}</td>
                     <td>{item.pet_name}</td>
                     <td>{item.service}</td>
+                    <td>{item.history_health_issue}</td>
                     <td>{item.current_health_issue}</td>
                     <td>Dr. {item.drFullname}</td>
                     <td>{item.appointment_date}</td>
                     <td>{item.appointment_time}</td>{" "}
+                    <td>{item.payment_method}</td>
                     <td>₱ {item.paid_payment}</td>
                     <td style={{ color: item.status == 0 ? "red" : "blue" }}>
                       {item.status == 0 ? "Pending" : "Done"}

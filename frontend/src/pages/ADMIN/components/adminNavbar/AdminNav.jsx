@@ -64,10 +64,10 @@ const AdminNav = ({ isHome }) => {
             className="notification-icon-wrapper"
             onClick={() => setShowNav(!showNav)}
           >
-            <AiFillBell className="admin-icon" />
+            {/* <AiFillBell className="admin-icon" />
             <div className="dot">
               <span>9</span>
-            </div>
+            </div> */}
           </div>
           <RiMenuLine className="menu-icon" onClick={toggleSidebar} />
         </div>

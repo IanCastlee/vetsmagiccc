@@ -1,5 +1,5 @@
 import "./Footer.scss";
-import logo from "../../assets/icons/logo.png";
+import logo from "../../assets/icons/vetmagic.png";
 import { Link } from "react-router-dom";
 import { IoMdContact } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
@@ -7,17 +7,38 @@ import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { FaTiktok } from "react-icons/fa";
+import axiosIntance from "../../../axios";
+import { useEffect, useState } from "react";
 
 const Footer = () => {
+  const [services, setServices] = useState([]);
+
+  //get services
+  useEffect(() => {
+    const getGetservices = async () => {
+      try {
+        const res = await axiosIntance.get("client/service/getGetservices.php");
+        if (res.data.success) {
+          console.log("services : ", res.data.data);
+          setServices(res.data.data);
+
+          setClientProfile(res.data.dta);
+        } else {
+          console.log("Error from db  : ", res.data);
+        }
+      } catch (error) {
+        console.log("Error from fetching services : ", error);
+      }
+    };
+
+    getGetservices();
+  }, []);
+
   return (
     <div className="footer">
       <div className="logo">
         <img src={logo} alt="" />
-        <p>
-          One Paw Closer to Better Care. Book your next vet visit in seconds
-          with our smart clinic system. Trusted by pet parents. Loved by furry
-          friends.
-        </p>
+        <p>VETSMAGIC ANIMAL CLINIC AND GROOMING SERVICES</p>
       </div>
 
       <div className="links">
@@ -35,21 +56,21 @@ const Footer = () => {
 
       <div className="links">
         <span>Services</span>
-        <Link className="qlinks">Vaccination</Link>{" "}
-        <Link className="qlinks">Deworming</Link>
-        <Link className="qlinks">Dental</Link>
-        <Link className="qlinks">General Check-up</Link>
-        <Link className="qlinks">Surgery</Link>
-        <Link className="qlinks">Deworming</Link>
+        {services &&
+          services.map((item, index) => (
+            <Link key={index} className="qlinks">
+              {item.name}
+            </Link>
+          ))}
       </div>
 
       <div className="links">
         <span>Contacts</span>
         <Link className="qlinks">
-          <IoMdContact className="icon" /> +63 9877 xxx xxxx
+          <IoMdContact className="icon" /> 0917 639 9344
         </Link>{" "}
         <Link className="qlinks">
-          <MdEmail className="icon" /> vetcareinfo.gmail.com
+          <MdEmail className="icon" /> billyjoelbutay@yahoo.com
         </Link>
       </div>
 
@@ -68,7 +89,7 @@ const Footer = () => {
         <div className="map-wrapper">
           <iframe
             title="Clinic Location"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3876.101011198024!2d123.87176231483047!3d12.6717755909819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33a07b41dc94ad4b%3A0x39f716b63079fa27!2sBulan%2C%20Sorsogon!5e0!3m2!1sen!2sph!4v1717933096221!5m2!1sen!2sph"
+            src="https://www.google.com/maps/embed?pb=!1m12!1m8!1m3!1d31101.455930541895!2d124.0052605!3d12.9921803!3m2!1i1024!2i768!4f13.1!2m1!1sMagsaysay%20st%20Cogon%20bibincahan%20Sorsogon%20Philippines!5e0!3m2!1sen!2sph!4v1754319695038!5m2!1sen!2sph"
             width="100%"
             height="200"
             style={{ border: 0, borderRadius: "8px", marginTop: "10px" }}

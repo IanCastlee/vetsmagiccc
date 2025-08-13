@@ -10,7 +10,7 @@ if (isset($input['currentUser'])) {
 
     $client_id = $input['currentUser'];
 
-    $getAppointment = $conn->prepare("SELECT a.*, u1.fullname AS drFullname, u1.profile, vi.time, vi.duration, vi.specialization, u2.user_id as clientId FROM appointments AS a LEFT JOIN veterinarian_info AS vi ON vi.user_id = a.dr_id LEFT JOIN users AS u1 ON a.dr_id = u1.user_id LEFT JOIN users AS u2 ON a.client_id = u2.user_id WHERE u2.user_id = $client_id");
+    $getAppointment = $conn->prepare("SELECT a.*, u1.fullname AS drFullname, u1.profile, vi.time, vi.duration, vi.specialization, u2.user_id as clientId FROM appointments AS a LEFT JOIN vetinfo AS vi ON vi.user_id = a.dr_id LEFT JOIN users AS u1 ON a.dr_id = u1.user_id LEFT JOIN users AS u2 ON a.client_id = u2.user_id WHERE u2.user_id = $client_id");
 
     $getAppointment->execute();
     $result =  $getAppointment->get_result();

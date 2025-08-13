@@ -12,6 +12,9 @@ $completedFollowUp = mysqli_query($conn, "SELECT COUNT(*) as count FROM appointm
 $meds = mysqli_query($conn, "SELECT COUNT(*) as count FROM shop");
 $soonToExpire = mysqli_query($conn, "SELECT COUNT(*) as count FROM shop");
 $bestSeller = mysqli_query($conn, "SELECT COUNT(*) as count FROM shop");
+$lowstock = mysqli_query($conn, "SELECT COUNT(*) as count FROM shop WHERE stock < 4");
+$soonToExpire = mysqli_query($conn, "SELECT COUNT(*) as count FROM shop WHERE expiration_date >= CURDATE() AND expiration_date <= DATE_ADD(CURDATE(), INTERVAL 1 MONTH)
+");
 
 $response['appointment'] = [
     'pending' => mysqli_fetch_assoc($pending)['count'],
@@ -24,6 +27,8 @@ $response['shop'] = [
     'all' => mysqli_fetch_assoc($meds)['count'],
     'soonToExpire' => mysqli_fetch_assoc($soonToExpire)['count'],
     'bestSeller' => mysqli_fetch_assoc($bestSeller)['count'],
+    'lowstock' => mysqli_fetch_assoc($lowstock)['count'],
 ];
+
 
 echo json_encode($response);

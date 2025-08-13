@@ -2,7 +2,7 @@ import "./Appointment.scss";
 import Swal from "sweetalert2";
 
 import { motion } from "framer-motion";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import axiosIntance from "../../../axios";
 import Loader3 from "../../components/loader/Loader3";
@@ -13,6 +13,7 @@ import Footer from "../../components/footer/Footer";
 //IMAGES
 import appointmentImage from "../../assets/icons/medical-appointment.png";
 import cat from "../../assets/icons/mouth.png";
+import html2pdf from "html2pdf.js";
 
 //ICONS
 import { BsCalendar2Date } from "react-icons/bs";
@@ -21,12 +22,14 @@ import { CiClock2 } from "react-icons/ci";
 import { CiCalendarDate } from "react-icons/ci";
 import { PiPawPrintLight } from "react-icons/pi";
 import { IoPricetagsOutline } from "react-icons/io5";
-import { FaRegEdit } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa6";
 import Emptydata from "../../components/emptydata/Emptydata";
+import { LiaEdit } from "react-icons/lia";
+import { PiPrinterLight } from "react-icons/pi";
 
 const Appointment = () => {
   const { currentUser } = useContext(AuthContext);
+  const receiptRef = useRef();
 
   const [activeContent, setActiveContent] = useState(true);
 
@@ -258,13 +261,134 @@ const Appointment = () => {
       showConfirmButton: false,
     });
   };
+  const handleDownload = () => {
+    setShowReceipt(true);
+    setTimeout(() => {
+      const element = receiptRef.current;
+      if (!element) {
+        console.error("Receipt element not found");
+        return;
+      }
+
+      const opt = {
+        margin: 0, // Remove large margins
+        filename: "vetcare-receipt.pdf",
+        image: { type: "jpeg", quality: 0.9 },
+        html2canvas: { scale: 2 },
+        jsPDF: {
+          unit: "mm",
+          format: [80, 140], // width x height in mm (receipt size)
+          orientation: "portrait",
+        },
+      };
+
+      html2pdf().set(opt).from(element).save();
+    }, 1000);
+  };
+
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [appointmentFormReceipt, setAppointmentFormReceipt] = useState({
+    appointment_date: "",
+    appointment_time: "",
+    breed: "",
+    current_health_issue: "",
+    drFullname: "",
+    paid_payment: "",
+    pet_name: "",
+    pet_type: "",
+    service: "",
+  });
+
+  const handleGetReceipt = (item) => {
+    console.log("ITEM  : ", item);
+    setShowReceipt(true);
+    setAppointmentFormReceipt({
+      appointment_date: item.appointment_date,
+      appointment_time: item.appointment_time,
+      breed: item.breed,
+      current_health_issue: item.current_health_issue,
+      drFullname: item.drFullname,
+      paid_payment: item.paid_payment,
+      pet_name: item.pet_name,
+      pet_type: item.pet_type,
+      service: item.service,
+    });
+  };
 
   return (
     <>
+      <div style={{ position: "absolute", left: "-9999px", top: 0 }}>
+        <div ref={receiptRef}>
+          <div className="receipt">
+            <div className="top">
+              <span>VETCARE</span>
+              <p>San Francisco Bulan, Sorsogon</p>
+              <p>098 7634 346</p>
+            </div>
+            <div className="border">
+              <span>RECEIPT</span>
+            </div>
+            <div className="content">
+              <section>
+                <span>
+                  Appointment Date: {appointmentFormReceipt.appointment_date}
+                </span>
+                <span>
+                  Appointment Time: {appointmentFormReceipt.appointment_time}
+                </span>
+              </section>
+              <section>
+                <strong>Owner Information</strong>
+                <span>Name: {currentUser.fullname}</span>
+                <span>Contact: {currentUser.phone}</span>
+              </section>
+              <section>
+                <strong>Pet Information</strong>
+                <span>Name: {appointmentFormReceipt.pet_name}</span>
+                <span>Type: {appointmentFormReceipt.pet_type}</span>
+                <span>Breed: {appointmentFormReceipt.breed}</span>
+              </section>
+              <section>
+                <strong>Service</strong>
+                <span>Treatment: {appointmentFormReceipt.service}</span>
+                <span>
+                  Health Issue: {appointmentFormReceipt.current_health_issue}
+                </span>
+                <span>Dr. Incharge: {appointmentFormReceipt.drFullname}</span>
+              </section>
+              <section>
+                <div
+                  style={{ borderTop: "3px dotted gray", marginBottom: "20px" }}
+                ></div>
+                <strong>Payment</strong>
+                <span>
+                  Payment:{" "}
+                  <strong style={{ color: "#000" }}>
+                    ₱ {appointmentFormReceipt.paid_payment}
+                  </strong>
+                </span>
+                <div
+                  style={{ borderTop: "3px dotted gray", marginTop: "20px" }}
+                ></div>
+              </section>
+              <span
+                style={{
+                  textAlign: "center",
+                  marginTop: "20px",
+                  fontSize: "14px",
+                }}
+              >
+                Thank You!!!
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="appointment">
         <div className="container">
           <div className="top">
-            <h2 className="main-title">Appointment</h2>
+            <h2 className="main-title">Appointment</h2>{" "}
           </div>
           {!showLoader && (
             <div className="title">
@@ -285,6 +409,119 @@ const Appointment = () => {
           <div className="myappointment">
             {activeContent && (
               <div className="current-appointment">
+                {showLoader ? (
+                  <Loader3 />
+                ) : (
+                  (() => {
+                    const filteredAppointment = activeAppointment.filter(
+                      (item) => item.status === 0
+                    );
+
+                    return filteredAppointment.length > 0 ? (
+                      filteredAppointment.map((item) => (
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.7 }}
+                          className="card"
+                          key={item.appointment_id}
+                        >
+                          <img
+                            src={appointmentImage}
+                            alt=""
+                            className="profile"
+                          />
+                          <div className="right-card">
+                            <div className="top-card">
+                              <h3 className="dr">
+                                <PiPawPrintLight className="iconn" />
+                                {item.pet_name}
+
+                                <small
+                                  style={{
+                                    color: "gray",
+                                    fontSize: "0.875rem",
+                                  }}
+                                >
+                                  ({item.pet_type})
+                                </small>
+                              </h3>
+                              <div className="date-time">
+                                <span className="date">
+                                  <CiStethoscope className="iconn" />
+                                  Dr. {item.drFullname}
+                                </span>
+                                <span className="date">
+                                  <CiCalendarDate className="iconn" />
+                                  {item.appointment_date}
+                                </span>
+
+                                <div className="time-price">
+                                  <span className="time">
+                                    <CiClock2 className="iconn" />
+                                    {item.appointment_time}
+                                  </span>
+
+                                  <p
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "start",
+                                      alignItems: "center",
+                                    }}
+                                    className="price"
+                                  >
+                                    <IoPricetagsOutline className="iconn" />₱
+                                    {item.paid_payment}
+                                    <span
+                                      style={{
+                                        color: "gray",
+                                        fontSize: "12px",
+                                        marginBottom: "5px",
+                                        marginLeft: "5px",
+                                      }}
+                                      className="price"
+                                    >
+                                      ({item.payment_method})
+                                    </span>
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="icon-buttons">
+                              <PiPrinterLight
+                                title="Download Receipt"
+                                className="icon"
+                                onClick={() => {
+                                  handleGetReceipt(item);
+                                  handleDownload();
+                                }}
+                              />
+                              {/* <LiaEdit
+                                title="Change Schedule"
+                                className="icon"
+                                onClick={() =>
+                                  handleClickedAppointment(
+                                    item.time,
+                                    item.duration,
+                                    item.appointment_id
+                                  )
+                                }
+                              /> */}
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))
+                    ) : (
+                      <Emptydata />
+                    );
+                  })()
+                )}
+              </div>
+            )}
+
+            {!activeContent && (
+              <div className="previous-appointment">
                 {showLoader ? (
                   <Loader3 />
                 ) : (
@@ -317,7 +554,7 @@ const Appointment = () => {
                               <div className="date-time">
                                 <span className="date">
                                   <CiStethoscope className="iconn" />
-                                  {item.drFullname}
+                                  Dr. {item.drFullname}
                                 </span>
                                 <span className="date">
                                   <CiCalendarDate className="iconn" />
@@ -330,25 +567,31 @@ const Appointment = () => {
                                     {item.appointment_time}
                                   </span>
 
-                                  <span className="price">
+                                  <p
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "start",
+                                      alignItems: "center",
+                                    }}
+                                    className="price"
+                                  >
                                     <IoPricetagsOutline className="iconn" />₱
                                     {item.paid_payment}
-                                  </span>
+                                    <span
+                                      style={{
+                                        color: "gray",
+                                        fontSize: "12px",
+                                        marginBottom: "5px",
+                                        marginLeft: "5px",
+                                      }}
+                                      className="price"
+                                    >
+                                      ({item.payment_method})
+                                    </span>
+                                  </p>
                                 </div>
                               </div>
                             </div>
-
-                            <FaRegEdit
-                              title="Change Schedule"
-                              className="icon"
-                              onClick={() =>
-                                handleClickedAppointment(
-                                  item.time,
-                                  item.duration,
-                                  item.appointment_id
-                                )
-                              }
-                            />
                           </div>
                         </motion.div>
                       ))
@@ -356,67 +599,6 @@ const Appointment = () => {
                       <Emptydata />
                     );
                   })()
-                )}
-              </div>
-            )}
-
-            {!activeContent && (
-              <div className="previous-appointment">
-                {showLoader ? (
-                  <Loader3 />
-                ) : activeAppointment.length > 0 ? (
-                  activeAppointment
-                    .filter((item) => item.status === 0)
-                    .map((item, index) => (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.7 }}
-                        className="card"
-                        key={index}
-                      >
-                        <img
-                          src={appointmentImage}
-                          alt=""
-                          className="profile"
-                        />
-                        <div className="right-card">
-                          <div className="top-card">
-                            <h3 className="dr">
-                              <PiPawPrintLight className="iconn" />
-                              {item.pet_name}
-                            </h3>
-                            <span className="rule">{item.pet_type}</span>
-                            <div className="date-time">
-                              <span className="date">
-                                <CiStethoscope className="iconn" />
-                                {item.drFullname}
-                              </span>
-                              <span className="date">
-                                <CiCalendarDate className="iconn" />
-                                {item.appointment_date}
-                              </span>
-
-                              <div className="time-price">
-                                <span className="time">
-                                  <CiClock2 className="iconn" />
-                                  {item.appointment_time}
-                                </span>
-
-                                <span className="price">
-                                  <IoPricetagsOutline className="iconn" />₱
-                                  {item.paid_payment}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))
-                ) : (
-                  <div className="empty-container">
-                    <Emptydata />
-                  </div>
                 )}
               </div>
             )}
@@ -433,8 +615,8 @@ const Appointment = () => {
             className="modal-edit-sched"
           >
             <div className="date-available">
-              <span className="note">
-                *Choose your appointment date and time.{" "}
+              <span className="note2">
+                Choose your appointment date and time.{" "}
               </span>
               <h6>Select Your Preferred Date</h6>
 

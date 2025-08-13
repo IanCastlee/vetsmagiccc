@@ -33,12 +33,20 @@ import DoneAppointment from "./pages/ADMIN/appointment/DoneAppointment";
 
 import FollowupAppointment from "./pages/ADMIN/appointment/FollowupAppointment";
 import CompletedFollowUpAppointment from "./pages/ADMIN/appointment/CompletedFollowUpAppointment";
-import SMSNotif from "./pages/SMSNotif";
 import User from "./pages/ADMIN/user/User";
 import Notactiveuser from "./pages/ADMIN/user/Notactiveuser";
 import AdminNav from "./pages/ADMIN/components/adminNavbar/AdminNav";
 import Service from "./pages/ADMIN/service/Service";
 import Profile from "./pages/profile/Profile";
+import ClickSend from "./pages/ClickSend";
+import AppointmentHistory from "./pages/VETERINARIAN/components/history/AppointmentHistory";
+import Announcement from "./pages/ADMIN/announcement/Announcement";
+import Test from "./pages/testing/Test";
+import LowStock from "./pages/ADMIN/shop/LowStock";
+import ProtectedRoute from "./contexts/ProtectedRoute";
+import NotFound from "./components/notFound/NotFound";
+import Appointmenthistory from "./pages/ADMIN/appointment/Appointmenthistory";
+import Soontoexpired from "./pages/ADMIN/shop/Soontoexpired";
 
 const Layout = () => {
   const location = useLocation();
@@ -50,7 +58,9 @@ const Layout = () => {
     location.pathname.startsWith("/view-veterinarian/") ||
     location.pathname.startsWith("/set-appointment/") ||
     location.pathname.startsWith("/profile/") ||
-    location.pathname.startsWith("/medicine/");
+    location.pathname.startsWith("/medicine/") ||
+    location.pathname.startsWith("/notfound") ||
+    location.pathname.startsWith("/test");
   return (
     <>
       {!shouldHideNavbar && <Navbar isHome={isHome} />}
@@ -69,8 +79,10 @@ const Layout = () => {
         <Route path="/signin/" element={<Signin />} />
         <Route path="/signup/" element={<Signup />} />
         <Route path="/confirm/" element={<ConfirmationForm />} />
-        <Route path="/sms/" element={<SMSNotif />} />
         <Route path="/profile/" element={<Profile />} />
+        <Route path="/sms/" element={<ClickSend />} />
+        <Route path="/test/" element={<Test />} />
+        <Route path="/notfound/" element={<NotFound />} />
       </Routes>
     </>
   );
@@ -81,7 +93,8 @@ const Veterinarian = () => {
     <>
       <VeterinarianNavbar />
       <Routes>
-        <Route path="/home/:vetId" element={<VeterinarianHome />} />
+        <Route path="home/:vetId" element={<VeterinarianHome />} />
+        <Route path="/history/" element={<AppointmentHistory />} />
       </Routes>
     </>
   );
@@ -120,16 +133,23 @@ const Admin = () => {
                 element={<FollowupAppointment />}
               />
               <Route
+                path="/appointment-history/"
+                element={<Appointmenthistory />}
+              />
+              <Route
                 path="/completed-followup-appointment/"
                 element={<CompletedFollowUpAppointment />}
               />
 
               <Route path="/shop/" element={<Shop />} />
+              <Route path="/low-stock/" element={<LowStock />} />
+              <Route path="/soon-expired/" element={<Soontoexpired />} />
 
               <Route path="/active-user/" element={<User />} />
               <Route path="/not-active-user/" element={<Notactiveuser />} />
 
               <Route path="/service/" element={<Service />} />
+              <Route path="/announcement/" element={<Announcement />} />
             </Routes>
           </div>
         </div>
@@ -142,9 +162,30 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/admin/*" element={<Admin />} />
-        <Route path="/veterinarian/*" element={<Veterinarian />} />
-        <Route path="/*" element={<Layout />} />
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute allowedRoles={[2]}>
+              <Admin />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/veterinarian/*"
+          element={
+            <ProtectedRoute allowedRoles={[1]}>
+              <Veterinarian />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/*"
+          element={
+            <ProtectedRoute allowedRoles={[0]}>
+              <Layout />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

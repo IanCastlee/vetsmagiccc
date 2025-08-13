@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 
 //ICONS
 import { FiSearch } from "react-icons/fi";
+import { GoDotFill } from "react-icons/go";
 
 const Notactiveuser = () => {
   const [veterinarian, setVeterinarian] = useState([]);
@@ -84,7 +85,10 @@ const Notactiveuser = () => {
       <div className="admin-veterinarian">
         <div className="top">
           <div className="left">
-            <h3>NOT ACTIVE CLIENT</h3>
+            <h3>
+              {" "}
+              <GoDotFill style={{ color: "gray" }} /> NOT ACTIVE CLIENT
+            </h3>
           </div>
           <div className="right">
             <div className="search-input">

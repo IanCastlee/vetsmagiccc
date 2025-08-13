@@ -1,4 +1,4 @@
-.notification-overlay {
+.followup-overlay {
   position: fixed;
   width: 100%;
   height: 100vh;
@@ -23,8 +23,8 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    margin-top: 3px;
     margin-right: 3px;
+    border-top: 8px solid #007bff;
 
     .top {
       display: flex;
@@ -89,6 +89,10 @@
               font-size: 14px;
               font-weight: 400;
               color: #26262b;
+              margin-top: 10px;
+            }
+
+            .price {
               margin-top: 10px;
             }
           }
@@ -158,7 +162,7 @@
   }
 }
 
-.modal-edit-sched-overlay {
+.modal-fa-sched-overlay {
   width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.6);
@@ -175,6 +179,7 @@
     padding: 10px;
     border-radius: 5px;
     background-color: #fff;
+    border-top: 5px #007bff solid;
 
     .top {
       width: 100%;
@@ -187,12 +192,19 @@
       align-items: center;
 
       .note {
-        font-size: 1.125rem;
-        color: #0c0950;
-        text-align: center;
-        margin-bottom: 20px;
-      }
+        width: 100%;
+        margin-bottom: 40px;
+        border: 1px solid lightgrey;
+        border-radius: 10px;
+        padding: 7px 15px;
+        background-color: rgb(241, 241, 209);
 
+        p {
+          font-size: 0.875rem;
+          color: gray;
+          text-align: center;
+        }
+      }
       h6 {
         font-size: 0.875rem;
         color: #0c0950;
@@ -385,7 +397,7 @@
 }
 
 @media (max-width: 786px) {
-  .notification-overlay {
+  .followup-overlay {
     position: fixed;
     width: 100%;
     height: 100vh;
@@ -402,7 +414,6 @@
       width: 100%;
       background-color: #f5f5f5;
       height: 100%;
-
       border-bottom-left-radius: 10px;
       border-bottom-right-radius: 10px;
       padding: 10px;
@@ -528,6 +539,224 @@
       }
     }
   }
+
+  .modal-fa-sched-overlay {
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .modal-edit-sched {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #fff;
+
+      .top {
+        width: 100%;
+      }
+
+      .date-available {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .note {
+          width: 100%;
+          margin-bottom: 40px;
+          border: 1px solid lightgrey;
+          border-radius: 10px;
+          padding: 7px 15px;
+          background-color: rgb(241, 241, 209);
+
+          p {
+            font-size: 0.875rem;
+            color: gray;
+            text-align: center;
+          }
+        }
+        h6 {
+          font-size: 0.875rem;
+          color: #0c0950;
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+
+          .calendar-icon {
+            font-size: 20px;
+            margin-right: 5px;
+          }
+        }
+
+        .dates-wrapper {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+
+          span {
+            font-size: 0.875rem;
+            color: #0c0950;
+          }
+          .date-input2 {
+            height: 38px;
+            border: none;
+            box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
+              rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            width: 200px;
+            justify-content: space-between;
+            padding: 0 10px;
+
+            input {
+              width: 100%;
+              font-size: 12px;
+              color: #0c0950;
+              cursor: pointer;
+              padding: 5px 8px;
+              border-radius: 5px;
+              border: none;
+              background-color: transparent;
+
+              &:focus {
+                outline: none;
+              }
+            }
+
+            .icon {
+              font-size: 1.125rem;
+              color: #0c0950;
+            }
+          }
+        }
+      }
+
+      .time-available {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 80px;
+
+        h6 {
+          font-size: 0.875rem;
+          color: #0c0950;
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+
+          .clock-icon {
+            font-size: 20px;
+            margin-right: 5px;
+          }
+        }
+
+        .times-wrapper {
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+          flex-wrap: wrap;
+
+          .time2 {
+            width: 30%;
+            font-size: 12px;
+            color: #0a4b5e;
+            cursor: pointer;
+            border: none;
+            box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
+              rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+            padding: 5px 8px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &.selected {
+              background-color: #0c0950;
+              color: #fff;
+            }
+          }
+
+          .no-avslot {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            img {
+              height: 50px;
+              width: 50px;
+            }
+
+            p {
+              font-size: 12px;
+              color: gray;
+            }
+          }
+        }
+
+        .choose-date {
+          width: 70%;
+          display: flex;
+          justify-content: center;
+
+          span {
+            font-size: 0.875rem;
+            color: #2a3335;
+            text-align: center;
+          }
+        }
+
+        .set-appointment-wrapper {
+          display: flex;
+          width: 100%;
+          justify-content: space-between;
+          margin-top: 25px;
+          align-items: center;
+          gap: 50px;
+
+          .back-icon {
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: #0c0950;
+          }
+
+          .btn-setappointment {
+            width: 100%;
+            padding: 7px 0;
+            font-size: 0.75rem;
+            background-color: #261fb3;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            height: 37px;
+
+            &:hover {
+              background-color: #161179;
+            }
+
+            &:disabled {
+              background-color: gray;
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+    }
+  }
+
   .no-internet {
     background-color: lightgrey;
     position: fixed;

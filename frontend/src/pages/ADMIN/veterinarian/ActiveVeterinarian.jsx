@@ -10,8 +10,9 @@ import { FaTrashAlt } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { IoIosAdd } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
-import { MdAddBox } from "react-icons/md";
+import { MdAddBox, MdOutlineRemoveCircle } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
+import { uploadUrl } from "../../../../fileurl";
 
 const ActiveVeterinarian = () => {
   const [veterinarian, setVeterinarian] = useState([]);
@@ -22,6 +23,7 @@ const ActiveVeterinarian = () => {
   const [showDelForm, setShowDelForm] = useState(null);
   const [showDelServiceId, setShowDelServiceId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [activeServiceModal, setActiveServicesModal] = useState("");
 
@@ -84,7 +86,7 @@ const ActiveVeterinarian = () => {
   const getVeterinarian = async () => {
     try {
       const res = await axiosIntance.get(
-        "admin/veterinarian/GetVeterinarian.php"
+        "admin/veterinarian/getveterinarian.php"
       );
       if (res.data.success) {
         setVeterinarian(res.data.data);
@@ -106,21 +108,92 @@ const ActiveVeterinarian = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const {
+      fullname,
+      specialization,
+      age,
+      gender,
+      time,
+      duration,
+      experience,
+      certificate,
+      address,
+      phone,
+      about,
+      profile,
+      email,
+      password,
+      cpassword,
+    } = veterinarianData;
+
+    // Basic required fields check
+    if (
+      !fullname ||
+      !specialization ||
+      !age ||
+      !gender ||
+      !time ||
+      !duration ||
+      !experience ||
+      !certificate ||
+      !address ||
+      !phone ||
+      !about ||
+      !email ||
+      !password ||
+      !cpassword
+    ) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phone)) {
+      alert("Phone number must be exactly 10 digits.");
+      return;
+    }
+
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!gmailRegex.test(email)) {
+      alert("Please enter a valid Gmail address (must end with @gmail.com).");
+      return;
+    }
+
+    const passwordCriteria = /^(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
+    if (!passwordCriteria.test(password)) {
+      alert(
+        "Password must be at least 8 characters long and include a capital letter and a number."
+      );
+      return;
+    }
+
+    if (password !== cpassword) {
+      alert("Passwords and confirm password do not match!");
+      return;
+    }
+
+    if (!profile || typeof profile !== "object") {
+      alert("Please upload a profile picture.");
+      return;
+    }
+
+    setShowLoader(true);
+
     const formData = new FormData();
-    formData.append("fullname", veterinarianData.fullname);
-    formData.append("specialization", veterinarianData.specialization);
-    formData.append("age", veterinarianData.age);
-    formData.append("gender", veterinarianData.gender);
-    formData.append("time", veterinarianData.time);
-    formData.append("duration", veterinarianData.duration);
-    formData.append("experience", veterinarianData.experience);
-    formData.append("certificate", veterinarianData.certificate);
-    formData.append("address", veterinarianData.address);
-    formData.append("phone", veterinarianData.phone);
-    formData.append("about", veterinarianData.about);
-    formData.append("profile", veterinarianData.profile);
-    formData.append("email", veterinarianData.email);
-    formData.append("password", veterinarianData.cpassword);
+    formData.append("fullname", fullname);
+    formData.append("specialization", specialization);
+    formData.append("age", age);
+    formData.append("gender", gender);
+    formData.append("time", time);
+    formData.append("duration", duration);
+    formData.append("experience", experience);
+    formData.append("certificate", certificate);
+    formData.append("address", address);
+    formData.append("phone", phone);
+    formData.append("about", about);
+    formData.append("profile", profile);
+    formData.append("email", email);
+    formData.append("password", cpassword);
 
     try {
       const res = await axiosIntance.post(
@@ -132,15 +205,19 @@ const ActiveVeterinarian = () => {
           },
         }
       );
+
       if (res.data.success) {
-        console.log("Response : ", res.data.message);
         closeFormModal();
         showSuccessAlert_add();
+        getVeterinarian();
       } else {
-        console.log("Error : ", res.data);
+        alert(res.data.message || "Something went wrong.");
       }
     } catch (error) {
-      console.log("Error : ", error);
+      alert("An error occurred during submission.");
+      console.error("Submission error:", error);
+    } finally {
+      setShowLoader(false);
     }
   };
 
@@ -181,6 +258,7 @@ const ActiveVeterinarian = () => {
   //handleUpdate Veterinarian Information
   const handleUpdateVeterinarianInof = async (e) => {
     e.preventDefault();
+    setShowLoader(true);
 
     const formData = new FormData();
     formData.append("user_id", veterinarianData.user_id);
@@ -222,17 +300,22 @@ const ActiveVeterinarian = () => {
 
         closeFormModal();
         showSuccessAlert_update();
+        getVeterinarian();
+        setShowLoader(false);
       } else {
         console.log("Error : ", res.data);
+        setShowLoader(false);
       }
     } catch (error) {
       console.log("Error : ", error);
+      setShowLoader(false);
     }
   };
 
   //handleUpdate Services Information
   const handleUpdateServices = async (e) => {
     e.preventDefault();
+    setShowLoader(true);
 
     const formData = new FormData();
     formData.append("service_id", servicesForm.service_id);
@@ -256,11 +339,14 @@ const ActiveVeterinarian = () => {
         getVeterinarian();
         setActiveServicesModal("");
         setActiveFormModal("");
+        setShowLoader(false);
       } else {
         console.log("Error : ", res.data);
+        setShowLoader(false);
       }
     } catch (error) {
       console.log("Error : ", error);
+      setShowLoader(false);
     }
   };
 
@@ -551,7 +637,7 @@ const ActiveVeterinarian = () => {
                             width: "40px",
                             objectFit: "cover",
                           }}
-                          src={`http://localhost/VETCARE/backend/uploads/${item.profile}`}
+                          src={`${uploadUrl.uploadurl}/${item.profile}`}
                           alt="profile_pic"
                         />
                       </td>
@@ -568,8 +654,8 @@ const ActiveVeterinarian = () => {
                         >
                           <MdAddBox className="icon" />
                         </button>
-                        <button title="Delete" className="btn">
-                          <FaTrashAlt
+                        <button title="Deactivate" className="btn">
+                          <MdOutlineRemoveCircle
                             className="icon"
                             onClick={() => setShowDelForm(item.user_id)}
                           />
@@ -680,6 +766,9 @@ const ActiveVeterinarian = () => {
                       id="specialization"
                     >
                       <option value="">Specialization</option>{" "}
+                      <option value="General Veterinarian">
+                        General Veterinarian
+                      </option>
                       <option value="Dog Veterinarian">Dog Veterinarian</option>
                       <option value="Cat Veterinarian">Cat Veterinarian</option>
                       <option value="Bird Veterinarian">
@@ -733,23 +822,25 @@ const ActiveVeterinarian = () => {
                 </div>
                 <div className="form-wrapper">
                   <div className="input-label-wrapper">
-                    <label htmlFor="time">Time</label>
+                    <label htmlFor="time">Time(e.g 7:30AM - 5:00PM)</label>
                     <input
                       className="input"
                       type="text"
                       id="time"
                       name="time"
-                      placeholder="Time"
+                      placeholder="Time e.g 7:30AM - 5:00PM"
                       value={veterinarianData.time}
                       onChange={handleChange}
                     />
                   </div>
 
                   <div className="input-label-wrapper">
-                    <label htmlFor="duration">Duration</label>
+                    <label htmlFor="duration">
+                      Appointment Duration(min format)
+                    </label>
                     <input
                       className="input"
-                      type="text"
+                      type="number"
                       id="duration"
                       name="duration"
                       placeholder="Duration"
@@ -799,15 +890,37 @@ const ActiveVeterinarian = () => {
 
                   <div className="input-label-wrapper">
                     <label htmlFor="phone">Phone</label>
-                    <input
-                      className="input"
-                      type="text"
-                      id="phone"
-                      name="phone"
-                      placeholder="Phone"
-                      value={veterinarianData.phone}
-                      onChange={handleChange}
-                    />
+
+                    <div
+                      className="phone-input"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        border: "1px solid lightgrey",
+                        height: "40px",
+                        borderRadius: "5px",
+                        backgroundColor: "#fff",
+                        padding: "0 10px",
+                        gap: "7px",
+                      }}
+                    >
+                      <span style={{ fontSize: "0.875rem" }}>+63</span>
+                      <input
+                        id="phone"
+                        type="number"
+                        placeholder="946 7021 ***"
+                        name="phone"
+                        value={veterinarianData.phone}
+                        onChange={handleChange}
+                        style={{
+                          border: "none",
+                          height: "35px",
+                          borderLeft: "1px solid lightgrey",
+                          borderRadius: "0",
+                          padding: "0 5px",
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -901,6 +1014,7 @@ const ActiveVeterinarian = () => {
                         className="input"
                         type="email"
                         name="email"
+                        placeholder="Email"
                         value={veterinarianData.email}
                         onChange={handleChange}
                       />
@@ -910,7 +1024,7 @@ const ActiveVeterinarian = () => {
                       <label htmlFor="password">Password</label>
                       <input
                         className="input"
-                        type="password"
+                        type={`${showPassword ? "text" : "password"}`}
                         placeholder="Password"
                         name="password"
                         value={veterinarianData.password}
@@ -922,12 +1036,21 @@ const ActiveVeterinarian = () => {
                       <label htmlFor="cPassword">Confirm Password</label>
                       <input
                         className="input"
-                        type="cPassword"
+                        type={`${showPassword ? "text" : "password"}`}
                         placeholder="Cofirm password"
                         name="cpassword"
                         value={veterinarianData.cpassword}
                         onChange={handleChange}
                       />
+                    </div>
+                    <div className="showpass-wrapper">
+                      <input
+                        type="checkbox"
+                        onChange={(e) => setShowPassword(e.target.checked)}
+                      />
+                      <span style={{ marginLeft: "5px", fontSize: "12px" }}>
+                        Show password
+                      </span>
                     </div>
                   </div>
                 )}

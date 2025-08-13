@@ -1,5 +1,5 @@
 import "./Home.scss";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { AuthContext } from "../../contexts/AuthContext";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
@@ -7,15 +7,15 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 //IMAGES
 import waveImage from "../../assets/imges/wavebg3.png";
 import dogImage from "../../assets/imges/dog.png";
-import ttt from "../../assets/imges/user5.jpg";
 import { Link } from "react-router-dom";
 import axiosIntance from "../../../axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 //ICONS
 import { CiSearch } from "react-icons/ci";
 import { LuView } from "react-icons/lu";
 import { CiStethoscope } from "react-icons/ci";
+import { PiCalendarPlusLight } from "react-icons/pi";
 
 //IMAGES (services)
 
@@ -29,7 +29,9 @@ const Home = () => {
   const [veterinarian, setVeterinarian] = useState([]);
   const [services, setServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loaded, setLoaded] = useState(false);
+  const [clientProfile, setClientProfile] = useState([]);
+  const [loaderDot, setLoaderDot] = useState(false);
+  const targetRef = useRef(null);
 
   // get veterinarian data
   useEffect(() => {
@@ -39,9 +41,7 @@ const Home = () => {
         const res = await axiosIntance(
           "admin/veterinarian/getveterinarian.php"
         );
-        // const res = await axios.get(
-        //   `https://vetcare002.kesug.com/backend/admin/veterinarian/getveterinarian.php`
-        // );
+
         if (res.data.success) {
           setVeterinarian(res.data.data);
           setShowLoader2(false);
@@ -50,7 +50,7 @@ const Home = () => {
         }
       } catch (error) {
         setShowLoader2(false);
-        console.log("Error:", error);
+        console.error("Error:", error);
       }
     };
 
@@ -80,6 +80,8 @@ const Home = () => {
         if (res.data.success) {
           console.log("services : ", res.data.data);
           setServices(res.data.data);
+
+          setClientProfile(res.data.dta);
         } else {
           console.log("Error from db  : ", res.data);
         }
@@ -89,6 +91,45 @@ const Home = () => {
     };
 
     getGetservices();
+  }, []);
+
+  // GetTrustedClient
+  useEffect(() => {
+    const getProfileReview = async () => {
+      setLoaderDot(true);
+      try {
+        const res = await axiosIntance.get(
+          "client/appointment/GetTrustedClient.php"
+        );
+        if (res.data.success) {
+          console.log("DATA :  ", res.data.data);
+          setClientProfile(res.data.data);
+          setLoaderDot(false);
+        } else {
+          console.log("Erro from DB : ", res.data);
+          setLoaderDot(false);
+        }
+      } catch (error) {
+        console.error("Error from frontend : ", error);
+        setLoaderDot(false);
+      }
+    };
+    getProfileReview();
+  }, [currentUser]);
+
+  const rotatingWords = ["Livestock", "Wildlife", "Exotic"];
+
+  const handleScroll = () => {
+    targetRef?.current.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % rotatingWords.length);
+    }, 2000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -104,19 +145,34 @@ const Home = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                One Paw Closer to Better Care. Book your next vet visit in
-                seconds with our smart clinic system.
+                <span style={{ color: "#007bff", fontWeight: "bold" }}>
+                  VETSMAGIC
+                </span>{" "}
+                ANIMAL CLINIC AND GROOMING SERVICES
               </motion.h1>
+
               <motion.h6
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
               >
-                Trusted by pet parents. Loved by furry friends.
+                We cater all companion animals &nbsp;
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={rotatingWords[index]}
+                    className="blue-text"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {rotatingWords[index]}
+                  </motion.span>
+                </AnimatePresence>
               </motion.h6>
-
               <div className="buttons">
-                <button>Book Now</button>
+                <button onClick={handleScroll}>Book Now</button>
               </div>
             </div>
           </div>
@@ -124,25 +180,41 @@ const Home = () => {
             <LazyLoadImage
               alt="Dog Image"
               src={dogImage}
-              effect="none"
+              effect="blur"
               className="dog-img"
             />
 
             <div className="trusted-wrapper">
               <span>Trusted by</span>
               <div className="trusted">
-                <img src={ttt} alt="" /> <img src={ttt} alt="" />
-                <img src={ttt} alt="" />
-                <img src={ttt} alt="" />
-                <img src={ttt} alt="" />
-                <span>9+</span>
+                {loaderDot ? (
+                  <h6>...</h6>
+                ) : (
+                  clientProfile &&
+                  clientProfile.slice(0, 3).map((item, index) => (
+                    <div className="img-card" key={index}>
+                      {item.profile ? (
+                        <img
+                          src={`${uploadUrl.uploadurl}/${item?.profile}`}
+                          className="client-profile"
+                        />
+                      ) : (
+                        <div className="initial-fallback">
+                          {item.fullname?.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+
+                <span>+5</span>
               </div>
             </div>
           </div>
         </div>
 
         <div className="services">
-          <h2>Our Services</h2>
+          <h2>Services</h2>
           <div className="servives-container">
             {showLoader2 ? (
               <Loader3 />
@@ -158,7 +230,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="search-container">
+        <div ref={targetRef} className="search-container">
           <div className="search-input-icon">
             <input
               type="text"
@@ -219,11 +291,13 @@ const Home = () => {
                       <button className="btn-set-appointment">
                         {currentUser === null ? (
                           <Link onClick={() => setFormToShow("signin")}>
-                            Set Appointment
+                            <PiCalendarPlusLight className="btn-icon" /> Set
+                            Appointment
                           </Link>
                         ) : (
                           <Link to={`/set-appointment/${item.user_id}`}>
-                            Set Appointment
+                            <PiCalendarPlusLight className="btn-icon" /> Set
+                            Appointment
                           </Link>
                         )}
                       </button>

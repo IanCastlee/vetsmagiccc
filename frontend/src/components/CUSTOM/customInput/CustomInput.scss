@@ -1,0 +1,39 @@
+.custom-input {
+  width: 100%;
+  height: 40px;
+  position: relative;
+  border-radius: 5px;
+  padding: 0 10px;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+
+  .custom-input-field {
+    border: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: #fff !important;
+
+    &:focus {
+      outline: none !important;
+      background-color: #fff !important;
+      border: none !important;
+    }
+  }
+
+  label {
+    position: absolute;
+    left: 10px !important;
+    top: 12px !important;
+    font-size: 0.75rem !important;
+    color: rgb(121, 116, 116) !important;
+
+    &.not-empty {
+      top: -15px !important;
+      left: 10px !important;
+      background-color: #fff !important;
+      padding: 2px 15px !important;
+      border-radius: 3px !important;
+    }
+  }
+}

@@ -3,7 +3,7 @@
 include("../../header.php");
 include("../../databaseConnection.php");
 
-if (isset($_POST['medicine_id'], $_POST['specialization'], $_POST['category'], $_POST['med_name'], $_POST['stock'], $_POST['price'], $_POST['dosage'], $_POST['description'])) {
+if (isset($_POST['medicine_id'], $_POST['specialization'], $_POST['category'], $_POST['med_name'], $_POST['stock'], $_POST['price'], $_POST['expdate'], $_POST['dosage'], $_POST['description'], $_POST['capital'], $_POST['expdate'])) {
 
 
     $medicine_id = $_POST['medicine_id'];
@@ -12,7 +12,9 @@ if (isset($_POST['medicine_id'], $_POST['specialization'], $_POST['category'], $
     $med_name = $_POST['med_name'];
     $stock = $_POST['stock'];
     $price = $_POST['price'];
+    $expdate = $_POST['expdate'];
     $dosage = $_POST['dosage'];
+    $capital = $_POST['capital'];
     $description = $_POST['description'];
 
 
@@ -34,11 +36,12 @@ if (isset($_POST['medicine_id'], $_POST['specialization'], $_POST['category'], $
     }
 
     if ($update_image) {
-        $update_medicine = $conn->prepare("UPDATE shop SET specialization = ? , category = ?, med_name = ?, stock = ?, price = ?, dosage = ?, description = ?, med_image = ? WHERE medicine_id = ?");
-        $update_medicine->bind_param("ssssssssi",  $specialization,  $category, $med_name, $stock, $price, $dosage, $description, $unique_image_name, $medicine_id);
+        $update_medicine = $conn->prepare("UPDATE shop SET specialization = ?, category = ?, med_name = ?, stock = ?, price = ?, dosage = ?, description = ?, capital = ?, expiration_date = ?, med_image = ? WHERE medicine_id = ?");
+
+        $update_medicine->bind_param("ssssssssdsi",  $specialization,  $category, $med_name, $stock, $price, $dosage, $description, $capital, $expdate, $unique_image_name, $medicine_id);
     } else {
-        $update_medicine = $conn->prepare("UPDATE shop SET specialization = ?, category = ?, med_name = ?, stock = ?, price = ?, dosage = ?, description = ? WHERE medicine_id = ?");
-        $update_medicine->bind_param("sssssssi",  $specialization,  $category, $med_name, $stock, $price, $dosage, $description, $medicine_id);
+        $update_medicine = $conn->prepare("UPDATE shop SET specialization = ?, category = ?, med_name = ?, stock = ?, price = ?, dosage = ?, description = ?,capital = ?, expiration_date=? WHERE medicine_id = ?");
+        $update_medicine->bind_param("sssssssdsi",  $specialization,  $category, $med_name, $stock, $price, $dosage, $description, $capital, $expdate, $medicine_id);
     }
 
     if ($update_medicine->execute()) {

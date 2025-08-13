@@ -1,5 +1,5 @@
 import "./LandingPage.scss";
-import logo from "../../assets/icons/logo-landingpage.png";
+import logo from "../../assets/icons/vetmagic.png";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 const LandingPage = () => {

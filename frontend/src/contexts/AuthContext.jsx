@@ -4,6 +4,7 @@ import Signup from "../components/signinSignUp/Signup";
 import ConfirmationForm from "../components/signinSignUp/ConfirmationForm";
 import ForgotPassword from "../components/signinSignUp/ForgotPassword";
 import FollowupAppointment from "../pages/followupAppointment/FollowupAppointment";
+import Announcement from "../components/announcement/Announcement";
 
 export const AuthContext = createContext();
 
@@ -50,6 +51,7 @@ export const AuthContextProvider = ({ children }) => {
       {children}
 
       {modalToShow === "follow-up" && <FollowupAppointment />}
+      {modalToShow === "announcement" && <Announcement />}
       {formToShow === "signin" && <Signin />}
       {formToShow === "signup" && <Signup />}
       {formToShow === "forgot" && <ForgotPassword />}

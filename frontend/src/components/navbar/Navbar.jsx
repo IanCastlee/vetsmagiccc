@@ -5,28 +5,38 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthContext";
 import axiosIntance from "../../../axios";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+import { uploadUrl } from "../../../fileurl";
+import Notification from "../notification/Notification";
+import { NotifContext } from "../../contexts/NotificationContext";
 
 //IMAGES
-import logo from "../../assets/icons/logo.png";
+import logo from "../../assets/icons/vetmagic.png";
 
 //ICONS
 import { AiOutlineBell } from "react-icons/ai";
-import { FaRegCircleUser } from "react-icons/fa6";
-import { RiMenu3Line } from "react-icons/ri";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoMdLogOut } from "react-icons/io";
-import Notification from "../notification/Notification";
-import { AiFillBell } from "react-icons/ai";
+import { PiMegaphone } from "react-icons/pi";
+import { IoIosArrowDown } from "react-icons/io";
+import { FaCircleExclamation } from "react-icons/fa6";
+import { LiaBellSolid } from "react-icons/lia";
+import { CgMenuGridR } from "react-icons/cg";
+import LogoutUI from "../logoutUI/LogoutUI";
+import { SlRefresh } from "react-icons/sl";
 
 const Navbar = ({ isHome }) => {
   const navigate = useNavigate();
   const { setFormToShow, setCurrentUser, currentUser, setModlToShow } =
     useContext(AuthContext);
+  const { activeNotifCount } = useContext(NotifContext);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showActiveModal, setShowActiveModal] = useState("");
   const [activeLink, setActiveLink] = useState("");
+  const [showLogoutUI, setShowLogoutUI] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,27 +47,35 @@ const Navbar = ({ isHome }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  //handleLogout
   const handleLogout = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axiosIntance.post(
-        "client/auth/Logout.php",
-        {},
-        { withCredentials: true }
-      );
 
-      if (res.data.success) {
-        localStorage.removeItem("data");
-        localStorage.clear();
-        navigate("/home/");
-        setCurrentUser(null);
-        setFormToShow("signin");
-      } else {
-        console.error("Logout failed: ", res.data.message);
+    setShowLogoutUI(true);
+
+    setTimeout(async () => {
+      try {
+        const res = await axiosIntance.post(
+          "client/auth/Logout.php",
+          {},
+          { withCredentials: true }
+        );
+
+        if (res.data.success) {
+          localStorage.removeItem("data");
+          localStorage.clear();
+          setCurrentUser(null);
+          setFormToShow("signin");
+          navigate("/home/");
+        } else {
+          console.error("Logout failed: ", res.data.message);
+        }
+      } catch (error) {
+        console.log("Error in logging out", error);
+      } finally {
+        setShowLogoutUI(false);
       }
-    } catch (error) {
-      console.log("Error in logging out", error);
-    }
+    }, 3000);
   };
 
   return (
@@ -80,10 +98,8 @@ const Navbar = ({ isHome }) => {
                   activeLink === "home" ? "active" : ""
                 } `}
               >
-                {/* <RiHomeLine className="nav-icon" /> */}
                 Home
               </Link>
-
               <Link
                 to="/medicine/"
                 onClick={() => setActiveLink("shop")}
@@ -111,15 +127,25 @@ const Navbar = ({ isHome }) => {
                   title="Follow-up Appointment"
                   onClick={() => {
                     setModlToShow("follow-up");
-                    setActiveLink("fa-appointment");
                   }}
-                  className={`list-icon ${
-                    activeLink === "fa-appointment" ? "active" : ""
-                  } `}
+                  // className={`list-icon ${
+                  //   activeLink === "fa-appointment" ? "active" : ""
+                  // } `}
+                  className="list-icon-notif"
                 >
-                  Follow-up Appointment
+                  <SlRefresh className="nav-icon" />
+                  <FaCircleExclamation className="exclamation-icon" />
                 </Link>
-              )}
+              )}{" "}
+              <Link
+                title="Notification"
+                className="list-icon-notif"
+                onClick={() => setModlToShow("announcement")}
+              >
+                <PiMegaphone className="nav-icon" />
+
+                <FaCircleExclamation className="exclamation-icon" />
+              </Link>
               <Link
                 title="Notification"
                 className="list-icon-notif"
@@ -127,19 +153,40 @@ const Navbar = ({ isHome }) => {
               >
                 <AiOutlineBell className="nav-icon" />
 
-                <div className="dot-wrapper">
-                  <span>9</span>
-                </div>
+                {activeNotifCount > 0 && (
+                  <div className="dot-wrapper">
+                    <span>
+                      {activeNotifCount > 9 ? "9+" : activeNotifCount}
+                    </span>
+                  </div>
+                )}
               </Link>
               {currentUser !== null && (
-                <Link
+                <div
+                  style={{ display: "flex", alignItems: "center" }}
+                  className="user-prof"
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="list-icon"
                 >
-                  <FaRegCircleUser className="nav-icon" />
-                </Link>
+                  {currentUser.profile ? (
+                    <LazyLoadImage
+                      effect="blur"
+                      src={`${uploadUrl.uploadurl}/${currentUser?.profile}`}
+                      className="nav-profile"
+                    />
+                  ) : (
+                    <div className="initial-profile">
+                      {currentUser?.fullname.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <IoIosArrowDown
+                    style={{
+                      marginBottom: "2px",
+                      color: "gray",
+                      cursor: "pointer",
+                    }}
+                  />
+                </div>
               )}
-
               {currentUser === null && (
                 <button
                   className="btn-signin"
@@ -156,12 +203,15 @@ const Navbar = ({ isHome }) => {
               className="notification-icon"
               onClick={() => setShowActiveModal("notif")}
             >
-              <AiFillBell className="bell-icon" />
-              <div className="count">
-                <span>8</span>
-              </div>
+              <LiaBellSolid className="bell-icon" />
+
+              {activeNotifCount > 0 && (
+                <div className="count">
+                  <span>{activeNotifCount}</span>
+                </div>
+              )}
             </div>
-            <RiMenu3Line
+            <CgMenuGridR
               className={`menu-icon ${isHome ? "home_" : ""}`}
               onClick={() => setShowMobileSidebar(true)}
             />
@@ -192,6 +242,8 @@ const Navbar = ({ isHome }) => {
       {showActiveModal === "notif" && (
         <Notification close={() => setShowActiveModal("")} />
       )}
+
+      {showLogoutUI && <LogoutUI />}
     </>
   );
 };

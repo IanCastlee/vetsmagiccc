@@ -5,7 +5,7 @@ include("../../databaseConnection.php");
 
 // First, get all veterinarians
 $get_veterinarian = $conn->prepare("SELECT u.*, v.* FROM users AS u 
-    JOIN veterinarian_info AS v ON u.user_id = v.user_id 
+    JOIN vetinfo AS v ON u.user_id = v.user_id 
     WHERE u.acc_type = 1 AND status = 0");
 
 $get_veterinarian->execute();

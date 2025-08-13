@@ -60,7 +60,7 @@ if (
 
     if ($update_user->execute()) {
         // Update veterinarian_info table
-        $update_info = $conn->prepare("UPDATE veterinarian_info SET specialization=?, age=?, gender=?, time=?, duration=?, experience=?, certification=?, about=? WHERE user_id=?");
+        $update_info = $conn->prepare("UPDATE vetinfo SET specialization=?, age=?, gender=?, time=?, duration=?, experience=?, certification=?, about=? WHERE user_id=?");
         $update_info->bind_param("sississsi", $specialization, $age, $gender, $time, $duration, $experience, $certificate, $about, $user_id);
 
         if ($update_info->execute()) {

@@ -12,6 +12,7 @@
   &.scrolled {
     background-color: #fff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.9s ease, box-shadow 0.3s ease;
   }
   .nav-container {
     width: 100%;
@@ -20,8 +21,8 @@
     align-items: center;
 
     .logo {
-      height: 50px;
-      width: auto;
+      height: 70px;
+      margin-top: 10px;
     }
 
     .nav-buttons {
@@ -46,6 +47,7 @@
           background-color: rgb(255, 254, 254);
           border-radius: 25px;
           padding: 3px 10px;
+          background-color: rgb(235, 235, 211);
         }
       }
       .bot {
@@ -99,21 +101,38 @@
 
           .nav-icon {
             cursor: pointer;
-            color: #0a4b5e;
-            font-size: 1.25rem;
+            color: #fff;
+            font-size: 1.6875rem;
+            background-color: #007bff;
+            border-radius: 50%;
+            padding: 5px;
+            transition: 0.3s ease-in-out all;
+
+            &:hover {
+              background-color: #0d6ed6;
+              transform: translateY(-3px);
+            }
+          }
+
+          .exclamation-icon {
+            position: absolute;
+            top: -3px;
+            left: 17px;
+            color: red;
+            font-size: 1rem;
           }
 
           .dot-wrapper {
             position: absolute;
-            top: 0;
-            left: 10px;
+            top: -3px;
+            left: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             border-radius: 50%;
             background-color: red;
-            height: 13px;
-            width: 12px;
+            height: 1.0625rem;
+            width: 1.0625rem;
 
             span {
               color: #fff;
@@ -123,19 +142,42 @@
           }
         }
 
-        .btn-signin {
-          background-color: #161179;
-          border: none;
-          color: #fff;
-          font-size: 0.875rem;
-          font-weight: 500;
-          height: 38px;
-          padding: 0 15px;
+        .nav-profile {
+          width: 37px;
+          height: 37px;
+          border-radius: 50%;
+          object-fit: cover;
           cursor: pointer;
-          border-radius: 5px;
+        }
+        .initial-profile {
+          height: 37px;
+          width: 37px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 18px;
+          color: #fff;
+          font-weight: 500;
+          cursor: pointer;
+          background: linear-gradient(to right, #130c99, #261fb3);
+        }
+
+        .btn-signin {
+          background-color: #007bff;
+          padding: 10px 20px;
+          color: #fff;
+          font-size: 0.75rem;
+          cursor: pointer;
+          border-radius: 25px;
+          border: none;
+          transition: background-color 0.2s ease, transform 0.2s ease;
+          background: linear-gradient(to right, #0069d9, #007bff);
 
           &:hover {
-            background-color: #0c0950;
+            background-color: #0069d9;
+            transform: scale(1);
+            background: linear-gradient(to right, #007bff, #0069d9);
           }
         }
       }
@@ -191,6 +233,8 @@
     left: 0;
     z-index: 999;
     background-color: transparent;
+    margin-top: 0;
+
     &.scrolled {
       background-color: rgba(0, 0, 0, 0.5);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -200,10 +244,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-top: 0;
 
       .logo {
-        height: 40px;
+        height: 50px;
         width: auto;
+        margin-top: 10px;
       }
 
       .nav-buttons {
@@ -243,15 +289,16 @@
       .menu-notif-wrapper {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
 
         .notification-icon {
           position: relative;
 
           .bell-icon {
-            font-size: 1.4375rem;
-            color: #a5a0a0;
+            font-size: 25px;
+            color: #0a4b5e;
             cursor: pointer;
+            margin-top: 3px;
           }
 
           .count {

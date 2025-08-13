@@ -5,7 +5,7 @@ import TermsAndCondations from "../termsAndCondations/TermsAndCondations";
 
 //IMAGE
 import catdog from "../../assets/imges/signinimaeg.png";
-import logo from "../../assets/icons/logo.png";
+import logo from "../../assets/icons/vetmagic.png";
 
 //ICONS
 import { AiOutlineClose } from "react-icons/ai";
@@ -61,23 +61,35 @@ const Signup = () => {
   };
 
   const handleNext = () => {
-    if (
-      signUpdata.fullname === "" ||
-      signUpdata.address === "" ||
-      signUpdata.phone === ""
-    ) {
-      if (signUpdata.fullname === "") {
-        setEmptyFullname("Fullname is required");
-      }
-      if (signUpdata.address === "") {
-        setEmptyAddress("Address is required");
-      }
-      if (signUpdata.phone === "") {
-        setEmptyPhone("Phone is required");
-      }
+    let hasError = false;
 
-      return;
+    // Reset previous error messages
+    setEmptyFullname("");
+    setEmptyAddress("");
+    setEmptyPhone("");
+
+    // Check for empty fields
+    if (signUpdata.fullname === "") {
+      setEmptyFullname("Fullname is required");
+      hasError = true;
     }
+
+    if (signUpdata.address === "") {
+      setEmptyAddress("Address is required");
+      hasError = true;
+    }
+
+    if (signUpdata.phone === "") {
+      setEmptyPhone("Phone is required");
+      hasError = true;
+    } else if (!/^[0-9]{10}$/.test(signUpdata.phone)) {
+      setEmptyPhone("Phone must be exactly 10 digits");
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    // If all validations pass
     setformToShow("2");
   };
 
@@ -148,7 +160,7 @@ const Signup = () => {
       const res = await axiosIntance.post("client/auth/Signup.php", {
         fullname: signUpdata.fullname,
         address: signUpdata.address,
-        phone: signUpdata.phone,
+        phone: `+63${signUpdata.phone}`,
         email: signUpdata.email,
         password: signUpdata.cpassword,
       });
@@ -196,15 +208,21 @@ const Signup = () => {
         >
           <div className="left">
             <div className="top">
-              <img src={logo} alt="logo" className="logo" />
+              <img
+                style={{ height: "100px" }}
+                src={logo}
+                alt="logo"
+                className="logo"
+              />
 
               <div className="signin-label-wrapper">
                 <h3 className="h3">SIGN UP</h3>
-                <span>to VETCARE</span>
+                <span>to VETSMAGIC</span>
                 <div className="div">
                   <strong>OR</strong>
                 </div>
                 <span
+                  style={{ color: "blue" }}
                   className="sign-up-btn"
                   onClick={() => {
                     setFormToShow("signin");
@@ -265,16 +283,38 @@ const Signup = () => {
                   >
                     {emptyPhone !== "" ? emptyPhone : "Phone"}
                   </label>
-                  <input
-                    id="phone"
-                    type="text"
-                    placeholder="Enter your Phone"
-                    name="phone"
-                    onChange={handleSignUpDataChange}
-                    value={signUpdata.phone}
-                  />
-                </div>
 
+                  <div
+                    className="phone-input"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      border: "1px solid #161179",
+                      height: "40px",
+                      borderRadius: "5px",
+                      backgroundColor: "#fff",
+                      padding: "0 10px",
+                      gap: "7px",
+                    }}
+                  >
+                    <span style={{ fontSize: "0.875rem" }}>+63</span>
+                    <input
+                      id="phone"
+                      type="number"
+                      placeholder="946 7021 ***"
+                      name="phone"
+                      onChange={handleSignUpDataChange}
+                      value={signUpdata.phone}
+                      style={{
+                        border: "none",
+                        height: "35px",
+                        borderLeft: "1px solid lightgrey",
+                        borderRadius: "0",
+                        padding: "0 5px",
+                      }}
+                    />
+                  </div>
+                </div>
                 <div className="button-wrapper-continue">
                   <FaArrowCircleRight
                     onClick={handleNext}
@@ -314,7 +354,7 @@ const Signup = () => {
                   </label>
                   <input
                     id="password"
-                    type="text"
+                    type="password"
                     placeholder="Enter your Password"
                     name="password"
                     onChange={handleSignUpDataChange}
@@ -332,7 +372,7 @@ const Signup = () => {
                   </label>
                   <input
                     id="cpassword"
-                    type="text"
+                    type="password"
                     placeholder="Confirm your Password"
                     name="cpassword"
                     onChange={handleSignUpDataChange}

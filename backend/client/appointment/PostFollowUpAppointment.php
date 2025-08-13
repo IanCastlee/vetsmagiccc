@@ -15,6 +15,7 @@ $status = 0;
 $status_set = 1;
 
 
+
 if (!$appointment_id || !$appointment_date || !$appointment_time || !$fa_id) {
     echo json_encode([
         "success" => false,
@@ -43,7 +44,8 @@ try {
     $original['appointment_date'] = $appointment_date;
     $original['appointment_time'] = $appointment_time;
     $original['paid_payment'] = $payment;
-    $original['is_followup'] = $status;
+    $original['status'] = 0;
+    $original['is_followup'] = 1;
 
     // 3. Build insert query
     $columns = implode(", ", array_keys($original));

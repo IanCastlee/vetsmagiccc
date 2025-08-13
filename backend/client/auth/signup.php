@@ -65,7 +65,8 @@ if (isset($input['fullname'], $input['address'], $input['phone'], $input['email'
                     $mail->send();
                     echo json_encode([
                         'success' => true,
-                        'message' => "Successfully registered! Check your email ($email) to verify your account.",
+                        'message' => "Successfully registered! Check your email ($email) to verify your account. If you don't see the email, please check your Spam or Junk folder.",
+
                         'email' => $email
                     ]);
                 } catch (Exception $e) {

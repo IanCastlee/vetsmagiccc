@@ -1,16 +1,20 @@
 import "./Home.scss";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
-
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 //IMAGES
 
 //ICONS
 import { CiStethoscope } from "react-icons/ci";
 import { IoMdClose } from "react-icons/io";
+import { MdDoNotDisturbAlt } from "react-icons/md";
+import { IoIosCheckmarkCircle } from "react-icons/io";
+import { FaUser } from "react-icons/fa";
 
 import { MdOutlineMoreHoriz } from "react-icons/md";
 import { FaRegCircleCheck } from "react-icons/fa6";
-import { TbCancel } from "react-icons/tb";
+import { TbCancel, TbVaccine } from "react-icons/tb";
 import { useEffect, useState } from "react";
 import { VscClose } from "react-icons/vsc";
 import { useParams } from "react-router-dom";
@@ -18,6 +22,7 @@ import axiosIntance from "../../../../../axios";
 import Loader3 from "../../../../components/loader/Loader2";
 import Emptydata from "../../../../components/emptydata/Emptydata";
 import { uploadUrl } from "../../../../../fileurl";
+import { PiVirusBold } from "react-icons/pi";
 
 const Home = () => {
   const vetId = useParams();
@@ -28,6 +33,10 @@ const Home = () => {
   const [price, setPrice] = useState("");
   const [clickedDoneId, setClickedDoneId] = useState(null);
   const [clickedCancelId, setClickedCancelId] = useState(null);
+
+  const [showVaccinationModal, setShowVaccinationModal] = useState(false);
+
+  const [noteFromVetForm, setNoteFromVetForm] = useState("");
 
   useEffect(() => {
     const getClickedVeterinarian = async () => {
@@ -91,13 +100,6 @@ const Home = () => {
     setClickedID(id);
   };
 
-  const [moreInfo, setMorenInfo] = useState(null);
-
-  const clickedMoreInfo = (item) => {
-    setMorenInfo(item);
-    console.log(item);
-  };
-
   const followUpData = [
     {
       id: 1,
@@ -115,6 +117,9 @@ const Home = () => {
     client_id: "",
     dr_fullname: "",
     dr_id: "",
+    phone: "",
+    pet_name: "",
+    pet_type: "",
   });
   const [selectedFollowUpMessage, setSelectedFollowUpMessage] = useState(null);
   const [manualMessage, setManualMessage] = useState("");
@@ -123,14 +128,34 @@ const Home = () => {
     appointment_id,
     client_id,
     dr_fullname,
-    dr_id
+    dr_id,
+    phone,
+    petName,
+    petType
   ) => {
     setClickedToFollowUp({
       appointment_id: appointment_id,
       client_id: client_id,
       dr_fullname: dr_fullname,
       dr_id: dr_id,
+      phone: phone,
+      pet_name: petName,
+      pet_type: petType,
     });
+  };
+
+  //handleSubmitSms
+  const handleSubmitSms = async () => {
+    try {
+      await axiosIntance.post("send_sms.php", {
+        phone: clickedToFollowUp.phone,
+        message: `Dr. ${clickedToFollowUp.dr_fullname} is waiting for your confirmation regarding a follow-up appointment for your pet ${clickedToFollowUp.pet_name} next week.\n\nPlease visit the VetCare website to choose a date and confirm the appointment details.`,
+      });
+      console.log("SMS SENT");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to send SMS.");
+    }
   };
 
   //handle submit followup appointment
@@ -144,16 +169,23 @@ const Home = () => {
         {
           appointment_id: clickedToFollowUp.appointment_id,
           client_id: clickedToFollowUp.client_id,
+          pet_name: clickedToFollowUp.pet_name,
+          pet_type: clickedToFollowUp.pet_type,
           title:
-            "Follow-Up Appointment with Br. " + clickedToFollowUp.dr_fullname,
-          desc:
+            "Follow-Up Appointment with Dr. " + clickedToFollowUp.dr_fullname,
+          desc: `${
             selectedFollowUpMessage !== null
               ? selectedFollowUpMessage
-              : manualMessage,
+              : manualMessage
+          } - Petname:  ${clickedToFollowUp.pet_name}, (${
+            clickedToFollowUp.pet_type
+          })`,
+
           dr_id: clickedToFollowUp.dr_id,
           price: price,
         }
       );
+
       if (res.data.success) {
         console.log(res.data.message);
 
@@ -162,11 +194,16 @@ const Home = () => {
         );
         setAppointment(handleUpdateAut);
         showSuccessAlert();
+
+        // Clear state
         setClickedToFollowUp({
           appointment_id: "",
           client_id: "",
           dr_fullname: "",
         });
+
+        await handleSubmitSms();
+
         setLoader(false);
       } else {
         console.log(res.data);
@@ -215,8 +252,10 @@ const Home = () => {
     e.preventDefault();
 
     try {
-      const res = await axiosIntance.post(
-        `admin/appointment/setAppointmentDone.php?appointment_id=${clickedDoneId}`
+      const res = await axiosIntance.get(
+        `admin/appointment/setAppointmentDone.php?appointment_id=${clickedDoneId}&note_from_vet=${encodeURIComponent(
+          noteFromVetForm
+        )}`
       );
 
       if (res.data.success) {
@@ -228,9 +267,9 @@ const Home = () => {
         setAppointment(handleUpdateAut);
         setClickedDoneId(null);
         showSuccessAlert_done();
-        appoi;
+        setNoteFromVetForm("");
       } else {
-        console.log("Delete failed:", res.data);
+        console.log("Error from DB:", res.data);
       }
     } catch (error) {
       console.log("ERROR:", error);
@@ -250,7 +289,9 @@ const Home = () => {
 
     try {
       const res = await axiosIntance.post(
-        `admin/appointment/setAppointmentCanceled.php?appointment_id=${clickedCancelId}`
+        `admin/appointment/setAppointmentCanceled.php?appointment_id=${clickedCancelId}&note_from_vet=${encodeURIComponent(
+          noteFromVetForm
+        )}`
       );
 
       if (res.data.success) {
@@ -269,6 +310,185 @@ const Home = () => {
       console.log("ERROR:", error);
     }
   };
+
+  const [showAllergiesModal, setShowAllergiesModal] = useState(false);
+
+  const [getVaccination, setGetVaccination] = useState([]);
+  const [getAllergies, setGetAllergies] = useState([]);
+  const [moreInfo, setMorenInfo] = useState(null);
+  const [vaccinationForm, setVaccinationForm] = useState("");
+  const [clickedAppointmentId, setClickedAppointmentId] = useState(null);
+
+  const [clickedAppointmentItem, setClickedAppointmentItem] = useState(null);
+  const [allergyForm, setAllergyForm] = useState("");
+
+  const clickedMoreInfo = async (item) => {
+    setMorenInfo(item);
+
+    try {
+      const [vaccinationRes, allergyRes] = await Promise.all([
+        axiosIntance.post(`veterinarian/getVaccination.php`, {
+          pet_name: item.pet_name,
+          pet_type: item.pet_type,
+          client_id: item.clientId,
+        }),
+        axiosIntance.post(`veterinarian/getAllergies.php`, {
+          pet_name: item.pet_name,
+          pet_type: item.pet_type,
+          client_id: item.clientId,
+        }),
+      ]);
+
+      if (vaccinationRes.data.success) {
+        console.log("Vaccination Record:", vaccinationRes.data);
+        setGetVaccination(vaccinationRes.data.data);
+      } else {
+        setGetVaccination([]);
+      }
+
+      if (allergyRes.data.success) {
+        console.log("Allergies:", allergyRes.data.data);
+        setGetAllergies(allergyRes.data.data);
+      } else {
+        setGetAllergies([]);
+      }
+    } catch (error) {
+      console.log("Error from FE:", error);
+      setGetVaccination([]);
+      setGetAllergies([]);
+    }
+  };
+
+  //clickedVaccination=(itemt)
+  const clickedVaccination = async (item) => {
+    setGetVaccination([]);
+    setShowVaccinationModal(true);
+    setClickedAppointmentId(item.appointment_id);
+    setClickedAppointmentItem(item); // ✅ Store the full item for later use
+
+    try {
+      const res = await axiosIntance.post(`veterinarian/getVaccination.php`, {
+        pet_name: item.pet_name,
+        pet_type: item.pet_type,
+        client_id: item.clientId,
+      });
+
+      if (res.data.success) {
+        setGetVaccination(res.data.data);
+      } else {
+        setGetVaccination([]);
+      }
+    } catch (error) {
+      console.log("Error from FE:", error);
+    }
+  };
+
+  //handleVaccinationSubmit
+  const handleVaccinationSubmit = async (e) => {
+    e.preventDefault();
+    setLoader(true);
+
+    try {
+      const res = await axiosIntance.post("veterinarian/postVaccination.php", {
+        appointment_id: clickedAppointmentId,
+        vaccination: vaccinationForm,
+      });
+
+      if (res.data.success) {
+        console.log("Vaccination added successfully:", res.data.message);
+        setVaccinationForm("");
+
+        // ✅ Re-fetch updated vaccination list
+        if (clickedAppointmentItem) {
+          const updateRes = await axiosIntance.post(
+            `veterinarian/getVaccination.php`,
+            {
+              pet_name: clickedAppointmentItem.pet_name,
+              pet_type: clickedAppointmentItem.pet_type,
+              client_id: clickedAppointmentItem.clientId,
+            }
+          );
+
+          if (updateRes.data.success) {
+            setGetVaccination(updateRes.data.data);
+          } else {
+            setGetVaccination([]);
+          }
+        }
+      } else {
+        console.log("Error adding vaccination:", res.data.message);
+      }
+    } catch (error) {
+      console.log("Error from FE:", error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  //allergies
+  const clickedAllergies = async (item) => {
+    setGetAllergies([]);
+    setShowAllergiesModal(true);
+    setClickedAppointmentId(item.appointment_id);
+    setClickedAppointmentItem(item);
+    try {
+      const res = await axiosIntance.post(`veterinarian/getAllergies.php`, {
+        pet_name: item.pet_name,
+        pet_type: item.pet_type,
+        client_id: item.clientId,
+      });
+
+      if (res.data.success) {
+        console.log("Allergeis : ", res.data.data);
+        setGetAllergies(res.data.data);
+      } else {
+      }
+    } catch (error) {
+      console.log("Error from FE:", error);
+    }
+  };
+
+  //handleAllergySubmit
+  const handleAllergySubmit = async (e) => {
+    e.preventDefault();
+    setLoader(true);
+
+    try {
+      const res = await axiosIntance.post("veterinarian/postAllergy.php", {
+        appointment_id: clickedAppointmentId,
+        allergies: allergyForm,
+      });
+
+      if (res.data.success) {
+        console.log("Allergy added successfully:", res.data.message);
+        setAllergyForm("");
+
+        if (clickedAppointmentItem) {
+          const updateRes = await axiosIntance.post(
+            `veterinarian/getAllergies.php`,
+            {
+              pet_name: clickedAppointmentItem.pet_name,
+              pet_type: clickedAppointmentItem.pet_type,
+              client_id: clickedAppointmentItem.clientId,
+            }
+          );
+
+          if (updateRes.data.success) {
+            setGetAllergies(updateRes.data.data);
+          } else {
+            setGetAllergies([]);
+          }
+        }
+      } else {
+        console.log("Error adding allergies:", res.data.message);
+      }
+    } catch (error) {
+      console.log("Error from FE:", error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
   return (
     <>
       <div className="veterinarian-home">
@@ -276,10 +496,11 @@ const Home = () => {
           <div className="left">
             <div className="left-wrapper">
               <div className="profile-wrapper">
-                <img
-                  src={`http://localhost/VETCARE/backend/uploads/${veterinarianInfo?.profile}`}
+                <LazyLoadImage
+                  src={`${uploadUrl.uploadurl}/${veterinarianInfo?.profile}`}
                   alt="profile_pic"
                   className="profile"
+                  effect="blur"
                 />
               </div>
 
@@ -315,23 +536,28 @@ const Home = () => {
                           key={item.appointment_id}
                         >
                           <div className="left-card">
-                            <img
+                            <LazyLoadImage
                               src={`${uploadUrl.uploadurl}/${item?.image}`}
                               alt="profile"
                               className="profile-card"
+                              effect="blur"
+                              style={{ objectFit: "cover" }}
                             />
                           </div>
 
-                          <div className="right-card">
+                          <div
+                            className="right-card"
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                            }}
+                          >
                             <div className="top">
                               <div className="name-info">
                                 <div className="name">{item.pet_name}</div>
                                 <p>{item.appointment_date}</p>
                                 <p>{item.appointment_time}</p>
-
-                                <button onClick={() => clickedMoreInfo(item)}>
-                                  Read More
-                                </button>
                               </div>
                               <MdOutlineMoreHoriz
                                 onClick={() => clickedMenu(item.appointment_id)}
@@ -340,17 +566,55 @@ const Home = () => {
                               />
                             </div>
 
-                            <div className="bot">
-                              <div className="pet">
+                            <div
+                              className="bot"
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <div className="pet" style={{ gap: "10px" }}>
+                                <span
+                                  className="type"
+                                  style={{
+                                    fontSize: "12px",
+                                    fontWeight: "300",
+                                    borderRight: "1px solid gray",
+                                    paddingRight: "10px",
+                                    color: "blue",
+                                  }}
+                                >
+                                  <IoIosCheckmarkCircle
+                                    style={{ color: "green", fontSize: "14px" }}
+                                  />
+                                  {item.is_followup === 1 ? "Follow-Up" : ""}
+                                </span>
                                 <span
                                   style={{
-                                    fontSize: "10px",
+                                    fontSize: "12px",
                                     fontWeight: "300",
                                   }}
                                   className="type"
                                 >
-                                  Owner : {item.petOwner}
+                                  <FaUser
+                                    style={{ color: "gray", fontSize: "13px" }}
+                                  />
+                                  Owner: {item.petOwner}
                                 </span>
+                              </div>
+
+                              <div className="bot-buttons">
+                                <button onClick={() => clickedMoreInfo(item)}>
+                                  View Info
+                                </button>
+                                <button onClick={() => clickedAllergies(item)}>
+                                  Allergy
+                                </button>
+                                <button
+                                  onClick={() => clickedVaccination(item)}
+                                >
+                                  Vaccination
+                                </button>
                               </div>
                             </div>
 
@@ -370,7 +634,10 @@ const Home = () => {
                                         item.appointment_id,
                                         item.clientId,
                                         item.drFullname,
-                                        item.dr_id
+                                        item.dr_id,
+                                        item.phone,
+                                        item.pet_name,
+                                        item.pet_type
                                       )
                                     }
                                   >
@@ -432,83 +699,77 @@ const Home = () => {
                         >
                           <div className="left-card">
                             <img
+                              style={{ objectFit: "cover" }}
                               src={`${uploadUrl.uploadurl}/${item?.image}`}
                               alt="profile"
                               className="profile-card"
                             />
                           </div>
 
-                          <div className="right-card">
+                          <div
+                            className="right-card"
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              justifyContent: "space-between",
+                            }}
+                          >
                             <div className="top">
                               <div className="name-info">
                                 <div className="name">{item.pet_name}</div>
                                 <p>{item.appointment_date}</p>
                                 <p>{item.appointment_time}</p>
-
-                                <button onClick={() => clickedMoreInfo(item)}>
-                                  Read More
-                                </button>
                               </div>
                             </div>
 
-                            <div className="bot">
-                              <div className="pet">
+                            <div
+                              className="bot"
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <div className="pet" style={{ gap: "10px" }}>
+                                <span
+                                  className="type"
+                                  style={{
+                                    fontSize: "12px",
+                                    fontWeight: "300",
+                                    borderRight: "1px solid gray",
+                                    paddingRight: "10px",
+                                    color: "blue",
+                                  }}
+                                >
+                                  <IoIosCheckmarkCircle
+                                    style={{ color: "green", fontSize: "14px" }}
+                                  />
+                                  {item.is_followup === 1 ? "Follow-Up" : ""}
+                                </span>
                                 <span
                                   style={{
-                                    fontSize: "10px",
+                                    fontSize: "12px",
                                     fontWeight: "300",
                                   }}
                                   className="type"
                                 >
-                                  Owner : {item.petOwner}
+                                  <FaUser
+                                    style={{ color: "gray", fontSize: "13px" }}
+                                  />
+                                  Owner: {item.petOwner}
                                 </span>
                               </div>
-                            </div>
 
-                            {clickedID === item.appointment_id && (
-                              <div className="modal-menu">
-                                <div className="top">
-                                  <VscClose
-                                    className="back-icon"
-                                    onClick={() => setClickedID(null)}
-                                  />
-                                </div>
-                                <div className="menu">
-                                  <button
-                                    className="btn"
-                                    onClick={() =>
-                                      clickedToFollowUpItem(
-                                        item.appointment_id,
-                                        item.clientId,
-                                        item.drFullname,
-                                        item.dr_id
-                                      )
-                                    }
-                                  >
-                                    <FaRegCircleCheck className="icon" />
-                                    Follow Up
-                                  </button>
-                                  <button
-                                    onClick={() =>
-                                      setClickedDoneId(item.appointment_id)
-                                    }
-                                    className="btn"
-                                  >
-                                    <FaRegCircleCheck className="icon" />
-                                    Done
-                                  </button>
-                                  <button
-                                    className="btn"
-                                    onClick={() =>
-                                      setClickedCancelId(item.appointment_id)
-                                    }
-                                  >
-                                    <TbCancel className="icon" />
-                                    Cancel
-                                  </button>
-                                </div>
-                              </div>
-                            )}
+                              <button
+                                onClick={() => clickedMoreInfo(item)}
+                                style={{
+                                  padding: "0 10px",
+                                  maxWidth: "fit-content",
+                                  alignSelf: "end",
+                                }}
+                              >
+                                View Info
+                              </button>
+                            </div>
                           </div>
                         </motion.div>
                       ))
@@ -582,13 +843,13 @@ const Home = () => {
                 </div>
 
                 <span>
-                  <strong>Fullname :</strong> {moreInfo.petOwner}
+                  <strong>Fullname:</strong> {moreInfo.petOwner}
                 </span>
                 <span>
-                  <strong>Address :</strong> {moreInfo.clientAddres}
+                  <strong>Address:</strong> {moreInfo.clientAddres}
                 </span>
                 <span>
-                  <strong>Phone :</strong> {moreInfo.phone}
+                  <strong>Phone:</strong> {moreInfo.phone}
                 </span>
               </div>
 
@@ -598,16 +859,60 @@ const Home = () => {
                 </div>
 
                 <span>
-                  <strong>Service :</strong> {moreInfo.service}
+                  <strong>Service:</strong> {moreInfo.service}
                 </span>
                 <span>
-                  <strong>Health Issues :</strong>{" "}
+                  <strong>Health Issues:</strong>{" "}
                   {moreInfo.current_health_issue}
                 </span>
                 <span>
-                  <strong>Medical History :</strong>{" "}
+                  <strong>Medical History:</strong>{" "}
                   {moreInfo.history_health_issue}
                 </span>
+              </div>
+
+              <div className="appointment-content">
+                <div className="title">
+                  <span>Vaccination and Allergies</span>
+                </div>
+
+                <div style={{ marginBottom: "20px" }} className="box">
+                  <span>
+                    <strong>Vaccination:</strong>
+                  </span>
+
+                  <ul style={{ marginLeft: "20px" }}>
+                    {getVaccination.length > 0 ? (
+                      getVaccination.map((item, index) => (
+                        <li style={{ fontSize: "14px" }} key={index}>
+                          {item}
+                        </li>
+                      ))
+                    ) : (
+                      <p style={{ fontSize: "14px" }}>
+                        No recorded vaccination.
+                      </p>
+                    )}
+                  </ul>
+                </div>
+
+                <div style={{ marginBottom: "20px" }} className="box">
+                  <span>
+                    <strong>Allergies:</strong>
+                  </span>
+
+                  <ul style={{ marginLeft: "20px" }}>
+                    {getAllergies.length > 0 ? (
+                      getAllergies.map((item, index) => (
+                        <li style={{ fontSize: "14px" }} key={index}>
+                          {item}
+                        </li>
+                      ))
+                    ) : (
+                      <p style={{ fontSize: "14px" }}>No recorded allergies.</p>
+                    )}
+                  </ul>
+                </div>
               </div>
 
               <div className="appointment-content">
@@ -616,10 +921,10 @@ const Home = () => {
                 </div>
 
                 <span>
-                  <strong>Date :</strong> {moreInfo.appointment_date}
+                  <strong>Date:</strong> {moreInfo.appointment_date}
                 </span>
                 <span>
-                  <strong>Time :</strong> {moreInfo.appointment_time}
+                  <strong>Time:</strong> {moreInfo.appointment_time}
                 </span>
               </div>
             </div>
@@ -649,7 +954,7 @@ const Home = () => {
                 />
               </div>
               <div className="form">
-                <div className="card-checklist">
+                {/* <div className="card-checklist">
                   {followUpData &&
                     followUpData.map((item) => (
                       <div key={item.id} className="check-item">
@@ -666,23 +971,25 @@ const Home = () => {
                         <span>{item.desc}</span>
                       </div>
                     ))}
-                </div>
+                </div> */}
 
                 <div className="input-wrapper">
                   <label htmlFor="inpt-other-concern">
-                    Other Follow Up Message
+                    Add a note or message for this follow-up check-up
                   </label>
-                  <input
+
+                  <textarea
                     id="inpt-other-concern"
-                    className="inpt-other-concern"
+                    className="inpt-other-concern__"
                     type="text"
                     style={{ border: "none" }}
                     value={manualMessage}
+                    placeholder="message"
                     onChange={(e) => {
                       setManualMessage(e.target.value);
                       setSelectedFollowUpMessage(null);
                     }}
-                  />
+                  ></textarea>
                 </div>
                 <div
                   style={{
@@ -697,13 +1004,17 @@ const Home = () => {
                   <div className="payment-wrapper">
                     <h1 style={{ color: "gray" }}>₱</h1>
                     <input
-                      style={{ border: "none" }}
+                      style={{
+                        border: "none",
+                        height: "25px",
+                        paddingLeft: "10px",
+                      }}
                       id="inpt-other-concern"
                       className="inpt-other-concern"
                       type="number"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      placeholder="Appointment Price"
+                      placeholder="Price"
                     />
                   </div>
                 </div>
@@ -716,7 +1027,7 @@ const Home = () => {
                   onClick={handleSubmitFollowUpAppoinment}
                   className="btn-submit"
                 >
-                  {loader ? <Loader3 /> : "Send Follow Up"}
+                  {loader ? <Loader3 /> : "Send message, Follow-up check-up"}
                 </button>
               </div>
             </div>
@@ -724,19 +1035,40 @@ const Home = () => {
         )}
       {/* modal follow up end  */}
 
-      {clickedDoneId !== null ||
-        (clickedCancelId !== null && (
-          <div className="delete-overlay">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="delete"
+      {(clickedDoneId !== null || clickedCancelId !== null) && (
+        <div className="delete-overlay__">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="delete__"
+          >
+            <div
+              className="top"
+              style={{
+                marginBottom: "20px",
+              }}
             >
-              <div className="top">
-                <h6>Confirmation</h6>
-              </div>
+              <h6 style={{ fontSize: "1rem", color: "#000" }}>Confirmation</h6>
+            </div>
 
+            {/* <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                justifyContent: "center",
+              }}
+            >
+              {clickedDoneId !== null ? (
+                <FaRegCircleCheck
+                  style={{ color: "green", fontSize: "40px" }}
+                />
+              ) : clickedCancelId !== null ? (
+                <MdDoNotDisturbAlt style={{ color: "red", fontSize: "45px" }} />
+              ) : (
+                ""
+              )}
               <p>
                 {clickedDoneId !== null
                   ? "Has this appointment been completed?"
@@ -744,33 +1076,153 @@ const Home = () => {
                   ? "Has this appointment been cancelled?"
                   : ""}
               </p>
+            </div> */}
 
-              <div className="bot">
-                <button
-                  className="btn-yes"
-                  onClick={
-                    clickedCancelId
-                      ? handleCancelAppointment
-                      : clickedDoneId
-                      ? handeSetAsDoneAppointment
-                      : ""
-                  }
-                >
-                  Yes
-                </button>
-                <button
-                  className="btn-no"
-                  onClick={() => {
-                    setClickedDoneId(null);
-                    setClickedCancelId(null);
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            </motion.div>
+            <div className="add-note">
+              <textarea
+                name="note"
+                onChange={(e) => setNoteFromVetForm(e.target.value)}
+                value={noteFromVetForm}
+                placeholder="Add note for this appointment"
+              ></textarea>
+            </div>
+
+            <div className="bot___">
+              <button
+                style={{
+                  padding: "6px 10px",
+                  marginTop: "10px",
+                  borderRadius: "3px",
+                  backgroundColor: "#007bff",
+                  color: "#fff",
+                }}
+                className="btn-yes"
+                onClick={
+                  clickedCancelId
+                    ? handleCancelAppointment
+                    : clickedDoneId
+                    ? handeSetAsDoneAppointment
+                    : ""
+                }
+              >
+                {clickedCancelId ? "Send Note, Cancel" : "Send Note, Done"}
+              </button>
+              <button
+                className="btn-no"
+                style={{
+                  padding: "6px 10px",
+                  marginTop: "10px",
+                  borderRadius: "3px",
+                }}
+                onClick={() => {
+                  setClickedDoneId(null);
+                  setClickedCancelId(null);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Add allergy or vaccination */}
+
+      {showVaccinationModal && (
+        <div className="add-vaccination_allergy-overlay">
+          <div className="vaccination_allergy-modal">
+            <div className="title">
+              <h6>Vaccination Record</h6>
+
+              <IoMdClose onClick={() => setShowVaccinationModal(false)} />
+            </div>
+
+            <div className="list">
+              <ul>
+                {getVaccination.length > 0 ? (
+                  getVaccination.map((item) => (
+                    <li style={{ fontSize: "14px" }}>
+                      <TbVaccine
+                        style={{
+                          color: "green",
+                          marginRight: "5px",
+                          marginTop: "5px",
+                        }}
+                      />
+                      {item}
+                    </li>
+                  ))
+                ) : (
+                  <p style={{ fontSize: "14px" }}>No recorded vaccination</p>
+                )}
+              </ul>
+            </div>
+
+            <div className="input-field">
+              <textarea
+                name="textarea"
+                cols={1}
+                placeholder="Add Vaccination Record"
+                onChange={(e) => setVaccinationForm(e.target.value)}
+                value={vaccinationForm}
+              ></textarea>
+
+              <button onClick={handleVaccinationSubmit}>
+                {loader ? <Loader3 /> : "Submit"}
+              </button>
+            </div>
           </div>
-        ))}
+        </div>
+      )}
+
+      {/* Allergies */}
+      {showAllergiesModal && (
+        <div className="add-vaccination_allergy-overlay">
+          <div className="vaccination_allergy-modal">
+            <div className="title">
+              <h6>Allergy Record</h6>
+
+              <IoMdClose onClick={() => setShowAllergiesModal(false)} />
+            </div>
+
+            <div className="list">
+              <ul>
+                {getAllergies.length > 0 ? (
+                  getAllergies.map((item, index) => (
+                    <li key={index} style={{ fontSize: "14px" }}>
+                      <PiVirusBold
+                        style={{
+                          color: "green",
+                          marginRight: "5px",
+                          marginTop: "5px",
+                        }}
+                      />
+
+                      {item}
+                    </li>
+                  ))
+                ) : (
+                  <p style={{ fontSize: "14px" }}>No recorded allergies.</p>
+                )}
+              </ul>
+            </div>
+
+            <div className="input-field">
+              <textarea
+                name="textarea"
+                cols={1}
+                placeholder="Add Allergy Record"
+                onChange={(e) => setAllergyForm(e.target.value)}
+                value={allergyForm}
+              ></textarea>
+
+              <button onClick={handleAllergySubmit}>
+                {loader ? <Loader3 /> : "Submit"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

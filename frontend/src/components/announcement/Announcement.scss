@@ -1,0 +1,260 @@
+.announcement-ovelay {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  top: 80px;
+  left: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: end;
+
+  .announcement {
+    width: 450px;
+    background-color: #f5f5f5;
+    height: 80%;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px,
+      rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px,
+      rgba(0, 0, 0, 0.07) 0px 16px 16px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 0;
+    z-index: 2999;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    margin-right: 3px;
+    border-top: 5px solid #007bff;
+
+    .top-card {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      justify-content: space-between;
+      margin-bottom: 0;
+      border-bottom: 1px solid lightgrey;
+      padding-bottom: 10px;
+      position: sticky;
+      top: 0;
+      right: 0;
+      background-color: #fff;
+      z-index: 3333;
+      padding: 10px;
+      h6 {
+        font-size: 16px;
+        color: #0c0950;
+      }
+
+      .icon {
+        font-size: 20px;
+        cursor: pointer;
+        cursor: pointer;
+      }
+    }
+    .p-note {
+      font-size: 12px;
+      color: gray;
+      margin: 20px;
+    }
+
+    .content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      gap: 10px;
+      .card {
+        display: flex;
+        flex-direction: column;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+
+        .top {
+          width: 100%;
+          height: auto;
+
+          .announcement-image {
+            height: 100px;
+            width: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .bot {
+          display: flex;
+          flex-direction: column;
+          margin-top: 10px;
+          gap: 5px;
+          .title {
+            font-size: 16px;
+            font-weight: 500;
+          }
+
+          .description {
+            font-size: 0.875rem;
+            // display: -webkit-box;
+            // -webkit-line-clamp: 3;
+            // -webkit-box-orient: vertical;
+            // overflow: hidden;
+            white-space: pre-wrap;
+          }
+
+          .btn-readmore {
+            font-size: 0.75rem;
+            cursor: pointer;
+            color: #007bff;
+          }
+
+          .time-sent {
+            font-size: 12px;
+            color: gray;
+            align-self: end;
+            margin-top: 5px;
+          }
+
+          button {
+            background-color: #fff;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid lightgray;
+            max-width: fit-content;
+            align-self: end;
+            margin-top: 8px;
+            padding: 5px 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 786px) {
+  .announcement-ovelay {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: end;
+    z-index: 5000;
+    .announcement {
+      width: 100%;
+      background-color: #f5f5f5;
+      height: 100%;
+      box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px,
+        rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px,
+        rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      padding: 0;
+      z-index: 2999;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      margin-right: 0;
+      border-top: 8px solid #007bff;
+
+      .top-card {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+        margin-bottom: 0;
+        border-bottom: 1px solid lightgrey;
+        padding-bottom: 10px;
+        position: sticky;
+        top: 0;
+        right: 0;
+        background-color: #fff;
+        z-index: 3333;
+        padding: 10px;
+        h6 {
+          font-size: 16px;
+          color: #0c0950;
+        }
+
+        .icon {
+          font-size: 20px;
+          cursor: pointer;
+          cursor: pointer;
+        }
+      }
+      .p-note {
+        font-size: 12px;
+        color: gray;
+        margin: 20px;
+      }
+
+      .content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+
+        .card {
+          display: flex;
+          flex-direction: column;
+          background-color: #fff;
+          padding: 10px;
+          border-radius: 5px;
+          box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+
+          .top {
+            width: 100%;
+            height: auto;
+
+            .announcement-image {
+              height: 100px;
+              width: 100%;
+              object-fit: cover;
+            }
+          }
+
+          .bot {
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+            gap: 5px;
+            .title {
+              font-size: 16px;
+              font-weight: 500;
+            }
+
+            .description {
+              font-size: 0.875rem;
+              // display: -webkit-box;
+              // -webkit-line-clamp: 3;
+              // -webkit-box-orient: vertical;
+              // overflow: hidden;
+            }
+
+            .time-sent {
+              font-size: 12px;
+              color: gray;
+              align-self: end;
+              margin-top: 5px;
+            }
+
+            button {
+              background-color: #fff;
+              border-radius: 5px;
+              font-size: 12px;
+              cursor: pointer;
+              border: 1px solid lightgray;
+              max-width: fit-content;
+              align-self: end;
+              margin-top: 8px;
+              padding: 5px 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

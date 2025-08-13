@@ -19,9 +19,25 @@
   }
   .description {
     text-align: center;
-    max-width: 89%;
+    max-width: 70%;
     font-size: 0.875rem;
     color: gray;
+  }
+
+  .btn-reload {
+    background-color: #007bff;
+    border: none;
+    height: 30px;
+    width: auto;
+    padding: 0 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    color: #fff;
+    font-weight: 500;
+
+    &:hover {
+      background-color: #1860ad;
+    }
   }
 }
 

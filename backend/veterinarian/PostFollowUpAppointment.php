@@ -6,10 +6,12 @@ include("../databaseConnection.php");
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (
-    isset($input['appointment_id'], $input['client_id'], $input['title'], $input['desc'], $input['dr_id'], $input['desc'], $input['price'])
+    isset($input['appointment_id'], $input['client_id'],$input['pet_name'], $input['pet_type'], $input['title'], $input['desc'], $input['dr_id'], $input['desc'], $input['price'])
 ) {
     $appointment_id = $input['appointment_id'];
     $client_id = $input['client_id'];
+    $pet_name = $input['pet_name'];
+    $pet_type = $input['pet_type'];
     $title = $input['title'];
     $description = $input['desc'];
     $dr_id = $input['dr_id'];
@@ -18,8 +20,8 @@ if (
     $sentDate = date("Y-m-d H:i:s");
 
     // Insert into followup_appointment
-    $insert = $conn->prepare("INSERT INTO followup_appointment (appointment_id, dr_id, client_id, title, description, payment, sentDate, nextWeek) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $insert->bind_param("iiissdsi", $appointment_id, $dr_id, $client_id, $title, $description, $price, $sentDate, $nextWeek);
+    $insert = $conn->prepare("INSERT INTO followup_appointment (appointment_id, dr_id, client_id, pet_name, pet_type, title, description, payment, sentDate, nextWeek) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $insert->bind_param("iiissssdsi", $appointment_id, $dr_id, $client_id,  $pet_name, $pet_type, $title, $description, $price, $sentDate, $nextWeek);
     if ($insert->execute()) {
 
         $appointmentStatus = 1;

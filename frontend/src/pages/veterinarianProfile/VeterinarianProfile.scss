@@ -26,10 +26,20 @@
         top: 30px;
         left: 30px;
         .back-icon {
-          font-size: 1.25rem;
           color: #fff;
+          font-size: 1.125rem;
           cursor: pointer;
-          margin-left: 30px;
+
+          background-color: transparent;
+          border: 1px solid #6e6d81;
+          border-radius: 50%;
+          width: 30px;
+          height: 30px;
+          padding: 5px;
+
+          &.hover {
+            background-color: green;
+          }
         }
       }
 
@@ -70,17 +80,17 @@
     }
 
     .veterinarian-bottom {
-      padding: 200px 100px 50px 100px;
+      padding: 30px 100px 50px 100px;
       width: 60%;
       background-color: #fff;
       border-top-right-radius: 25px;
       border-top-left-radius: 25px;
-      height: 100%;
+      max-height: 100%;
       z-index: 100;
       display: flex;
       align-items: center;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       z-index: 1;
       overflow-y: auto;
 
@@ -237,6 +247,76 @@
           background-color: #0069d9;
         }
       }
+
+      .reviews-container {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+          margin-bottom: 20px;
+          h3 {
+            font-size: 18px;
+          }
+        }
+
+        .review-card {
+          border: 1px solid lightgray;
+          max-width: fit-content;
+          height: auto;
+          padding: 10px;
+          border-radius: 5px;
+          margin-bottom: 9px;
+
+          .top-card {
+            display: flex;
+            justify-content: space-between;
+
+            .profile-name-date {
+              display: flex;
+              gap: 5px;
+              .client-profile {
+                height: 30px;
+                width: 30px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 1px solid lightgray;
+              }
+              .name-date {
+                display: flex;
+                flex-direction: column;
+
+                span {
+                  font-size: 0.875rem;
+                  font-weight: 500;
+                  color: #2c2b2b;
+                }
+
+                p {
+                  font-size: 0.625rem;
+                  color: gray;
+                }
+              }
+            }
+          }
+
+          .content {
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+
+            .top-content {
+              span {
+                font-size: 0.875rem;
+              }
+
+              p {
+                font-size: 0.75rem;
+                color: #000;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -274,10 +354,17 @@
           top: 20px;
           left: 15px;
           .back-icon {
-            font-size: 1.25rem;
             color: #fff;
+            font-size: 0.75rem;
             cursor: pointer;
-            margin-left: 10px;
+            margin-top: 0;
+
+            background-color: transparent;
+            border: 1px solid #6e6d81;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            padding: 5px;
           }
         }
 

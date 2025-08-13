@@ -18,7 +18,7 @@ if (isset($input['amount']) && isset($input['description']) && isset($input['rem
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Accept: application/json',
-        'Authorization: Basic c2tfdGVzdF9aWnFMSkNRb2M0WjNjQlRSdGVBUFhhcjk6', 
+        'Authorization: Basic c2tfdGVzdF9aWnFMSkNRb2M0WjNjQlRSdGVBUFhhcjk6',
         'Content-Type: application/json',
     ]);
 

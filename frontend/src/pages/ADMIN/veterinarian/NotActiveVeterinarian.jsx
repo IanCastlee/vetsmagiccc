@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 //ICONS
 import { FiSearch } from "react-icons/fi";
 import { RiRefreshLine } from "react-icons/ri";
+import { uploadUrl } from "../../../../fileurl";
 
 const NotActiveVeterinarian = () => {
   const [veterinarian, setVeterinarian] = useState([]);
@@ -127,7 +128,7 @@ const NotActiveVeterinarian = () => {
                           width: "40px",
                           objectFit: "cover",
                         }}
-                        src={`http://localhost/VETCARE/backend/uploads/${item.profile}`}
+                        src={`${uploadUrl.uploadurl}/${item.profile}`}
                         alt="profile_pic"
                       />
                     </td>

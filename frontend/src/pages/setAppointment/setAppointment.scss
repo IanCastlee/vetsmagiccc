@@ -33,8 +33,15 @@
 
         .arrow-icon {
           color: #fff;
+          font-size: 1.125rem;
           cursor: pointer;
-          font-size: 20px;
+
+          background-color: transparent;
+          border: 1px solid #6e6d81;
+          border-radius: 50%;
+          width: 30px;
+          height: 30px;
+          padding: 5px;
         }
       }
 
@@ -103,6 +110,10 @@
         .note {
           width: 100%;
           margin-bottom: 40px;
+          border: 1px solid lightgrey;
+          border-radius: 10px;
+          padding: 7px 15px;
+          background-color: rgb(241, 241, 209);
 
           p {
             font-size: 0.875rem;
@@ -384,6 +395,10 @@
           color: gray;
           text-align: center;
           margin-bottom: 20px;
+          border: 1px solid lightgrey;
+          border-radius: 10px;
+          padding: 7px 15px;
+          background-color: rgb(241, 241, 209);
         }
 
         h6 {
@@ -572,12 +587,12 @@
   align-items: center;
 
   .container {
-    width: 500px;
+    width: 700px;
     height: auto;
     background-color: #fff;
     padding: 15px;
     border-radius: 7px;
-    border-top: 12px solid #007bff;
+    border-top: 5px solid #007bff;
 
     .top {
       display: flex;
@@ -593,7 +608,8 @@
       }
 
       .icon {
-        display: none;
+        color: #000;
+        font-size: 20px;
       }
     }
 
@@ -657,7 +673,7 @@
 
       .btn-submit {
         background-color: green;
-        font-size: 0.875rem;
+        font-size: 12px;
         font-weight: 500;
         cursor: pointer;
         border: none;
@@ -668,6 +684,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 30px;
 
         &:hover {
           background-color: rgb(28, 78, 5);
@@ -682,7 +699,44 @@
           animation: l4 1s steps(4) infinite;
         }
         .loader:before {
-          content: "Hulat lang ahh...";
+          content: "Please wait...";
+        }
+        @keyframes l4 {
+          to {
+            clip-path: inset(0 -1ch 0 0);
+          }
+        }
+      }
+
+      .btn-submit2 {
+        background-color: rgb(56, 95, 56);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        border-radius: 3px;
+        color: #fff;
+        padding: 5px 10px;
+        width: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+
+        &:hover {
+          background-color: rgb(28, 66, 10);
+        }
+
+        .loader {
+          width: fit-content;
+          font-weight: bold;
+          font-family: monospace;
+          font-size: 0.875rem;
+          clip-path: inset(0 3ch 0 0);
+          animation: l4 1s steps(4) infinite;
+        }
+        .loader:before {
+          content: "Please wait...";
         }
         @keyframes l4 {
           to {
@@ -706,6 +760,83 @@
   span {
     font-size: 12px;
     color: #000;
+  }
+}
+
+.appointment-sent-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .appointment-sent-modal {
+    height: auto;
+    width: 500px;
+    background-color: #fff;
+    border-radius: 5px;
+
+    .top {
+      width: 100%;
+      height: 40px;
+      background-color: green;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      span {
+        font-size: 16px;
+        text-align: center;
+        font-weight: 500;
+        color: #fff;
+      }
+    }
+
+    .content {
+      padding: 20px 10px;
+    }
+
+    .bot {
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: end;
+      align-items: center;
+      gap: 10px;
+
+      .btn-view {
+        height: 30px;
+        border-radius: 5px;
+        padding: 0 15px;
+        cursor: pointer;
+        border: 1px solid gray;
+        color: #000;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+          background-color: lightgrey;
+        }
+      }
+
+      .btn-close {
+        height: 30px;
+        border-radius: 5px;
+        padding: 0 15px;
+        cursor: pointer;
+        border: 1px solid gray;
+        &:hover {
+          background-color: lightgrey;
+        }
+      }
+    }
   }
 }
 
@@ -747,8 +878,15 @@
 
           .arrow-icon {
             color: #fff;
+            font-size: 1.125rem;
             cursor: pointer;
-            font-size: 20px;
+
+            background-color: transparent;
+            border: 1px solid #6e6d81;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            padding: 5px;
           }
         }
 
@@ -1244,10 +1382,6 @@
           color: #2a3335;
           font-size: 1.25rem;
         }
-
-        .icon {
-          display: none;
-        }
       }
 
       .content {
@@ -1342,6 +1476,78 @@
       font-size: 12px;
       color: #000;
       text-align: center;
+    }
+  }
+
+  .appointment-sent-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .appointment-sent-modal {
+      height: auto;
+      width: 98%;
+      background-color: #fff;
+      border-radius: 5px;
+
+      .top {
+        width: 100%;
+        height: 40px;
+        background-color: green;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        span {
+          font-size: 16px;
+          text-align: center;
+          font-weight: 500;
+          color: #fff;
+        }
+      }
+
+      .content {
+        padding: 20px 10px;
+      }
+
+      .bot {
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        gap: 10px;
+
+        .btn-view {
+          height: 30px;
+          border-radius: 5px;
+          padding: 0 15px;
+          cursor: pointer;
+          border: 1px solid gray;
+
+          &:hover {
+            background-color: lightgrey;
+          }
+        }
+
+        .btn-close {
+          height: 30px;
+          border-radius: 5px;
+          padding: 0 15px;
+          cursor: pointer;
+          border: 1px solid gray;
+          &:hover {
+            background-color: lightgrey;
+          }
+        }
+      }
     }
   }
 }

@@ -88,7 +88,7 @@
     }
     .right {
       width: 50%;
-      background-color: #fbe4d6;
+      background-color: #fff;
       display: flex;
       flex-direction: column;
       padding: 20px;
@@ -364,6 +364,7 @@
         padding: 20px;
         justify-content: center;
         height: 65%;
+        overflow-y: auto;
 
         border-top-right-radius: 15px;
         border-top-left-radius: 15px;

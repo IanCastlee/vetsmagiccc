@@ -6,6 +6,15 @@
   top: 0;
   left: 0;
   z-index: 1000;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  scrollbar-width: none;
+
+  -ms-overflow-style: none;
 
   .top {
     padding: 20px;
@@ -38,10 +47,19 @@
       color: #ffffff;
       display: flex;
       align-items: center;
+      padding: 7px;
+
+      &.active {
+        border-radius: 5px;
+        background-color: rgb(6, 8, 107);
+
+        border: 1px solid #07468a;
+      }
 
       .link-icon {
         font-size: 1.25rem;
         margin-right: 7px;
+        margin-bottom: -5px;
       }
     }
 
@@ -54,6 +72,8 @@
       gap: 5px;
       background-color: rgb(6, 8, 107);
       border-radius: 5px;
+      border: 1px solid #07468a;
+
       .btn-li {
         background-color: rgb(6, 8, 107);
         color: lightgray;

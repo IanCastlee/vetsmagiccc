@@ -34,6 +34,20 @@
         object-fit: cover;
         border: 1px solid gray;
       }
+
+      .initial {
+        height: 50px;
+        width: 50px;
+        border: 1px solid lightgray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 500;
+        color: #fff;
+        border-radius: 50%;
+        background: linear-gradient(to right, #130c99, #261fb3);
+      }
       .name {
         font-size: 1rem;
         font-weight: 500;
@@ -65,17 +79,17 @@
     padding: 20px;
 
     .btn-link {
-      font-size: 16px;
+      font-size: 0.9375rem;
       font-weight: 500;
       cursor: pointer;
       list-style: none;
       display: flex;
       align-items: center;
-      color: #0c0950;
+      color: #000;
 
       .icon {
         font-size: 1.5rem;
-        color: #0c0950;
+        color: #000;
         margin-right: 10px;
       }
     }

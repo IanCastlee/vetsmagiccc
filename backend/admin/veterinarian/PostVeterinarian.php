@@ -42,7 +42,7 @@ if (isset($_POST['fullname'], $_POST['specialization'], $_POST['age'], $_POST['g
             if ($insert_user->execute()) {
 
                 $user_id = $conn->insert_id;
-                $insert_veterinarian_info = $conn->prepare("INSERT INTO veterinarian_info (user_id, specialization, age, gender, time, duration, experience, certification, about) VALUES (?,?,?,?,?,?,?,?,?)");
+                $insert_veterinarian_info = $conn->prepare("INSERT INTO vetinfo (user_id, specialization, age, gender, time, duration, experience, certification, about) VALUES (?,?,?,?,?,?,?,?,?)");
                 $insert_veterinarian_info->bind_param("isississs", $user_id, $specialization, $age, $gender, $time, $duration, $experience, $certificate, $about);
 
                 if ($insert_veterinarian_info->execute()) {

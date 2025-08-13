@@ -8,7 +8,7 @@ import Loader from "../loader/Loader";
 
 //IMAGE
 import catdog from "../../assets/imges/signinimaeg.png";
-import logo from "../../assets/icons/logo.png";
+import logo from "../../assets/icons/vetmagic.png";
 
 //ICONS
 import { AiOutlineClose } from "react-icons/ai";
@@ -100,15 +100,21 @@ const Signin = () => {
         >
           <div className="left">
             <div className="top">
-              <img src={logo} alt="logo" className="logo" />
+              <img
+                style={{ height: "100px" }}
+                src={logo}
+                alt="logo"
+                className="logo"
+              />
 
               <div className="signin-label-wrapper">
                 <h3 className="h3">SIGN IN</h3>
-                <span>to your VETCARE account</span>
+                <span>to your VETSMAGIC account</span>
                 <div className="div">
                   <strong>OR</strong>
                 </div>{" "}
                 <span
+                  style={{ color: "blue" }}
                   className="sign-up-btn"
                   onClick={() => {
                     setFormToShow("signup");

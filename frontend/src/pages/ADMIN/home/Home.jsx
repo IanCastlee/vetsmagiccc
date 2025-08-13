@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { FiArrowRightCircle } from "react-icons/fi";
+
 import "./Home.scss";
 import axiosIntance from "../../../../axios";
 import { motion } from "framer-motion";
@@ -14,6 +16,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import Emptydata from "../../../components/emptydata/Emptydata";
+import { IoWarningOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [counts, setCounts] = useState(null);
@@ -26,6 +31,11 @@ const Home = () => {
   });
 
   const [activeChart, setActiveChart] = useState(false);
+  const [dataSales, setDataSales] = useState({
+    totalCapital: "",
+    currentSale: "",
+  });
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -33,8 +43,12 @@ const Home = () => {
           axiosIntance.get("admin/getDashboardCounts.php"),
           axiosIntance.get("admin/shop/getMostSellingProducts.php"),
         ]);
+        setDataSales({
+          totalCapital: mostSoldRes.data.totalCapital,
+          currentSale: mostSoldRes.data.currentSale,
+        });
         setCounts(countsRes.data);
-        setMostSold(mostSoldRes.data);
+        setMostSold(mostSoldRes.data.data);
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
       }
@@ -42,6 +56,8 @@ const Home = () => {
 
     fetchDashboardData();
   }, []);
+
+  console.log(mostSold);
 
   const maxY = Math.max(
     ...appointmentStats.monthly.flatMap((item) => [
@@ -114,8 +130,91 @@ const Home = () => {
     !Array.isArray(appointmentStats.daily) ||
     !Array.isArray(appointmentStats.monthly)
   ) {
-    return <div>Loading...</div>;
+    return <Emptydata />;
   }
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+
+      const formatNumber = (num) =>
+        new Intl.NumberFormat("en-PH", {
+          style: "currency",
+          currency: "PHP",
+          minimumFractionDigits: 2,
+        }).format(num);
+
+      return (
+        <div
+          style={{
+            background: "#fff",
+            padding: "10px",
+            border: "1px solid lightgray",
+            borderRadius: "10px",
+          }}
+        >
+          <p style={{ fontSize: "14px" }}>
+            <strong>{label}</strong>
+          </p>
+          <p style={{ fontSize: "12px", marginTop: "5px" }}>
+            Original Stock: {data.orig_stock}
+          </p>
+          <p style={{ fontSize: "12px" }}>Sold: {data.sold}</p>
+          <p style={{ fontSize: "12px" }}>
+            Current Stock : {data.orig_stock - data.sold}
+          </p>
+          <p style={{ fontSize: "12px" }}>Price : {formatNumber(data.price)}</p>
+          <div
+            style={{ borderBottom: "1px solid lightgrey", margin: "10px 0" }}
+          ></div>
+          <p style={{ fontSize: "12px", marginBottom: "5px" }}>
+            Initial Investment : {formatNumber(data.capital)}
+          </p>
+          <p style={{ fontSize: "12px" }}>
+            Total Sale : {formatNumber(data.price * data.sold)}
+          </p>
+          <p style={{ fontSize: "12px", marginTop: "5px" }}>
+            <strong
+              style={{
+                color: `${
+                  data.capital > data.price * data.sold ? "red" : "#000"
+                }`,
+              }}
+            >
+              Profit: {formatNumber(data.price * data.sold - data.capital)}
+            </strong>
+          </p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  const now = new Date();
+
+  // Get Monday (start of the week)
+  const firstDayOfWeek = new Date(now);
+  firstDayOfWeek.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  firstDayOfWeek.setHours(0, 0, 0, 0);
+
+  // Get Sunday (end of the week)
+  const lastDayOfWeek = new Date(firstDayOfWeek);
+  lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+  lastDayOfWeek.setHours(0, 0, 0, 0);
+
+  // Filter and sum total_payment for the current week
+  const weeklyStats =
+    appointmentStats.daily?.filter((item) => {
+      const date = new Date(item.day || item.date);
+      date.setHours(0, 0, 0, 0);
+      return date >= firstDayOfWeek && date <= lastDayOfWeek;
+    }) || [];
+
+  const totalWeeklyPayment = weeklyStats.reduce(
+    (sum, item) => sum + (parseFloat(item.total_payment) || 0),
+    0
+  );
 
   return (
     <>
@@ -123,30 +222,125 @@ const Home = () => {
       <div className="home">
         <div className="content">
           <div className="top">
-            <Section title="Appointment">
-              <Card
-                title="Pending Appointment"
-                count={counts.appointment.pending ?? 0}
-              />
-              <Card
-                title="Completed Appointment"
-                count={counts.appointment.completed ?? 0}
-              />
-              <Card
-                title="Follow-up Appointment"
-                count={counts.appointment.followUp ?? 0}
-              />
-              <Card
-                title="Completed Follow-up Appointment"
-                count={counts.appointment.completedFollowUp ?? 0}
-              />
-            </Section>
+            <div className="cards">
+              <h2>Appointment Report</h2>
+              <div className="appointment-card">
+                <div className="card">
+                  <div className="topp">
+                    <div className="left">
+                      <span>Pending Appointment</span>
+                    </div>
+                    <div className="right">
+                      <span>{counts.appointment.pending ?? 0}</span>
+                    </div>
+                  </div>
+                  <div className="bott">
+                    <Link to="/admin/pending-appointment/">
+                      <FiArrowRightCircle className="info-icon" />
+                    </Link>
+                  </div>
+                </div>
+                <div className="card">
+                  <div className="topp">
+                    <div className="left">
+                      <span>Completed Appointment</span>
+                    </div>
+                    <div className="right">
+                      <span> {counts.appointment.completed ?? 0}</span>
+                    </div>
+                  </div>
+                  <div className="bott">
+                    <Link to="/admin/done-appointment/">
+                      <FiArrowRightCircle className="info-icon" />
+                    </Link>
+                  </div>
+                </div>
 
-            <Section title="Shop" style={{ marginTop: "12px" }}>
-              <Card title="All Medicine" count={counts.shop.all ?? 0} />
-              <Card title="Expires Soon" count={4} />
-              <Card title="New Added" count={2} />
-            </Section>
+                <div className="card">
+                  <div className="topp">
+                    <div className="left">
+                      <span>Follow-up Appointment</span>
+                    </div>
+                    <div className="right">
+                      <span>{counts.appointment.followUp ?? 0}</span>
+                    </div>
+                  </div>
+                  <div className="bott">
+                    <Link to="/admin/followup-appointment/">
+                      <FiArrowRightCircle className="info-icon" />
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="topp">
+                    <div className="left">
+                      <span>Completed Follow-up Appointment</span>
+                    </div>
+                    <div className="right">
+                      <span>{counts.appointment.completedFollowUp ?? 0}</span>
+                    </div>
+                  </div>
+                  <div className="bott">
+                    <Link to="/admin/completed-followup-appointment/">
+                      <FiArrowRightCircle className="info-icon" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="cards">
+              <h2>Shop Status</h2>
+              <div className="appointment-card">
+                <div className="card">
+                  <div className="topp">
+                    <div className="left">
+                      <span>All Products</span>
+                    </div>
+                    <div className="right">
+                      <span>{counts.shop.all ?? 0}</span>
+                    </div>
+                  </div>
+                  <div className="bott">
+                    <Link to="/admin/shop/">
+                      <FiArrowRightCircle className="info-icon" />
+                    </Link>
+                  </div>
+                </div>
+                <div className="card">
+                  <div className="topp">
+                    <div className="left">
+                      <span>Expires Soon</span>
+                    </div>
+                    <div className="right">
+                      <span> {counts.shop.soonToExpire}</span>
+                    </div>
+                  </div>
+                  <div className="bott">
+                    <Link to="/admin/soon-expired/">
+                      <FiArrowRightCircle className="info-icon" />
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="card">
+                  <div className="topp">
+                    <div className="left">
+                      <span>Low Stock Product</span>
+                    </div>
+                    <div className="right">
+                      <span>{counts.shop.lowstock ?? 0}</span>
+                    </div>
+                  </div>
+                  <div className="bott">
+                    <Link to="/admin/low-stock/">
+                      <FiArrowRightCircle className="info-icon" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="bot">
@@ -187,7 +381,7 @@ const Home = () => {
                       const firstDayOfWeek = new Date(now);
                       firstDayOfWeek.setDate(
                         now.getDate() - ((now.getDay() + 6) % 7)
-                      ); // Monday
+                      );
 
                       // Get the end of the week (Sunday)
                       const lastDayOfWeek = new Date(firstDayOfWeek);
@@ -245,9 +439,19 @@ const Home = () => {
                     fill="url(#colorAppointments)"
                     name="Appointments"
                   />
+                  <Area
+                    type="monotone"
+                    dataKey="total_payment"
+                    stroke="#e74c3c"
+                    fillOpacity={1}
+                    fill="url(#colorPayments)"
+                    name="Earned"
+                  />
                 </AreaChart>
               </ChartContainer>
             )}
+            <h4>Earnings This Week: ₱{totalWeeklyPayment.toLocaleString()}</h4>
+
             {activeChart && (
               <ChartContainer style={{ marginTop: "20px", paddingTop: "30px" }}>
                 <AreaChart
@@ -322,8 +526,7 @@ const Home = () => {
 
             {activeChart && (
               <h4>
-                Total Payment for {selectedYear}: ₱
-                {appointmentStats.yearly || 0}
+                Total Earned for {selectedYear}: ₱{appointmentStats.yearly || 0}
               </h4>
             )}
           </div>
@@ -348,10 +551,26 @@ const Home = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <Tooltip />
-                <Bar dataKey="sold" fill="#0075F6" />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="sold" fill="#0075F6" />{" "}
               </BarChart>
             </ChartContainer>
+
+            <div className="sales-wrapper">
+              <p>
+                Total Capital: ₱
+                {Number(dataSales.totalCapital).toLocaleString()}
+              </p>
+              <p>
+                Total Sale: ₱{Number(dataSales.currentSale).toLocaleString()}
+              </p>
+              <p style={{ marginTop: "10px", borderTop: "1px solid gray" }}>
+                Total Profit: ₱
+                {Number(
+                  dataSales.currentSale - dataSales.totalCapital
+                ).toLocaleString()}
+              </p>
+            </div>
           </div>
         </div>
       </div>

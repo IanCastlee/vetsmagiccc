@@ -12,10 +12,10 @@ const TermsAndCondations = ({ close }) => {
         </div>
         <div className="title">
           <span>
-            Welcome to [Your Website Name] ("we", "our", or "us"). These Terms
-            and Conditions govern your access to and use of our website located
-            at [your domain] (the "Site"). By using our Site, you agree to be
-            bound by these Terms.
+            Welcome to Vetsmagic ("we", "our", or "us"). These Terms and
+            Conditions govern your access to and use of our website located at
+            https://vetcare4.unaux.com (the "Site"). By using our Site, you
+            agree to be bound by these Terms.
           </span>
         </div>
 
@@ -76,7 +76,7 @@ const TermsAndCondations = ({ close }) => {
             <ul>
               <li>
                 All content, design elements, and code on this Site are owned by
-                vetcare or its licensors and are protected by copyright and
+                vetsmagic or its licensors and are protected by copyright and
                 intellectual property laws.
               </li>
             </ul>
@@ -96,8 +96,7 @@ const TermsAndCondations = ({ close }) => {
             <span>7. Contact Us</span>
             <ul>
               <li>
-                For questions or support, please contact us at [your
-                email/contact info].
+                For questions or support, please contact us at 0917 639 9344.
               </li>
             </ul>
           </div>

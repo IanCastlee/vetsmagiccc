@@ -13,62 +13,76 @@
       display: flex;
       flex-direction: column;
 
-      .appointment-section {
+      .cards {
+        width: 100%;
         display: flex;
         flex-direction: column;
+        margin-bottom: 20px;
 
-        .title {
-          color: blue;
-          font-size: 16px;
-          font-weight: 500;
-          margin: 5px 0;
+        h2 {
+          font-size: 1rem;
+          margin-bottom: 5px;
+          color: #0c0950;
         }
-
-        .appointment-wrapper {
+        .appointment-card {
+          width: 100%;
           width: 100%;
           display: flex;
-          justify-content: space-between;
+          flex-wrap: nowrap;
           gap: 10px;
+
           .card {
-            width: 100%;
+            flex: 1;
             border-radius: 5px;
             height: 100px;
-            padding: 20px 0;
             border: 1px solid rgb(168, 168, 221);
-
+            padding: 10px;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             background: linear-gradient(135deg, #afc3e7, #d6e8fa);
             border-left: 5px solid #170fb1;
+            gap: 20px;
 
-            .left {
-              width: 30%;
-              height: 100%;
-              border-right: 2px solid rgb(255, 255, 255);
+            .topp {
+              flex: 5;
               display: flex;
-              justify-content: center;
-              align-items: center;
+              width: 100%;
+              .left {
+                flex: 3;
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                border-right: 2px solid rgb(255, 255, 255);
 
-              span {
-                font-size: 35px;
-                font-weight: bold;
-                color: #0c0950;
+                span {
+                  font-size: 14px;
+                  font-weight: 700;
+                  color: #170fb1;
+                }
+              }
+              .right {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                span {
+                  font-size: 30px;
+                  font-weight: bold;
+                }
               }
             }
-
-            .right {
-              width: 70%;
-              height: 100%;
+            .bott {
+              flex: 1;
               display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 20px;
-
-              span {
-                font-size: 14px;
-                color: blue;
-                font-weight: 500;
+              justify-content: start;
+              align-items: end;
+              a {
+                cursor: pointer;
+                .info-icon {
+                  font-size: 20px;
+                  color: #302e2e;
+                }
               }
             }
           }
@@ -124,6 +138,22 @@
         margin-top: 7px;
         color: #0c0950;
       }
+
+      .sales-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: end;
+        align-items: end;
+        flex-direction: column;
+        margin-top: 5px;
+        margin-bottom: 20px;
+
+        p {
+          font-size: 14px;
+          font-weight: 500;
+          text-align: start;
+        }
+      }
     }
   }
 }
@@ -144,62 +174,70 @@
         display: flex;
         flex-direction: column;
 
-        .appointment-section {
+        .cards {
+          width: 100%;
           display: flex;
           flex-direction: column;
+          margin-bottom: 20px;
 
-          .title {
-            color: blue;
-            font-size: 16px;
-            font-weight: 500;
-            margin: 5px 0;
-          }
-
-          .appointment-wrapper {
+          .appointment-card {
             width: 100%;
             display: flex;
-            justify-content: space-between;
-            gap: 10px;
             flex-direction: column;
+            flex-wrap: wrap;
+            gap: 10px;
+
             .card {
-              width: 100%;
+              flex: 1;
               border-radius: 5px;
               height: 100px;
-              padding: 20px 0;
               border: 1px solid rgb(168, 168, 221);
-
+              padding: 10px;
               display: flex;
-              align-items: center;
-              justify-content: center;
-              background-color: #afc3e7;
-
-              .left {
-                width: 30%;
-                height: 100%;
-                border-right: 2px solid rgb(255, 255, 255);
+              flex-direction: column;
+              background: linear-gradient(135deg, #afc3e7, #d6e8fa);
+              border-left: 5px solid #170fb1;
+              gap: 20px;
+              .topp {
+                flex: 5;
                 display: flex;
-                justify-content: center;
-                align-items: center;
+                width: 100%;
+                .left {
+                  flex: 3;
+                  display: flex;
+                  justify-content: start;
+                  align-items: center;
+                  border-right: 2px solid rgb(255, 255, 255);
 
-                span {
-                  font-size: 35px;
-                  font-weight: bold;
-                  color: blue;
+                  span {
+                    font-size: 14px;
+                    font-weight: 700;
+                    color: #170fb1;
+                  }
+                }
+                .right {
+                  flex: 1;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+
+                  span {
+                    font-size: 30px;
+                    font-weight: bold;
+                  }
                 }
               }
-
-              .right {
-                width: 70%;
-                height: 100%;
+              .bott {
+                flex: 1;
                 display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 20px;
-
-                span {
-                  font-size: 14px;
-                  color: blue;
-                  font-weight: 500;
+                justify-content: start;
+                align-items: end;
+                a {
+                  cursor: pointer;
+                  .info-icon {
+                    font-size: 20px;
+                    color: #302e2e;
+                  }
                 }
               }
             }
@@ -224,6 +262,7 @@
           display: flex;
           gap: 10px;
           margin-top: 80px;
+
           select {
             width: fit-content;
             margin-left: 50px;

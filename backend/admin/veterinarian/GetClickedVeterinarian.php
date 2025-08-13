@@ -9,7 +9,7 @@ if (isset($input['user_id'])) {
     $user_id = $input['user_id'];
 
     // Get veterinarian basic info
-    $get_veterinarian = $conn->prepare("SELECT u.*, v.* FROM users AS u JOIN veterinarian_info AS v ON u.user_id = v.user_id WHERE u.user_id = ?");
+    $get_veterinarian = $conn->prepare("SELECT u.*, v.* FROM users AS u JOIN vetinfo AS v ON u.user_id = v.user_id WHERE u.user_id = ?");
     $get_veterinarian->bind_param("i", $user_id);
     $get_veterinarian->execute();
     $veterinarianResult = $get_veterinarian->get_result();

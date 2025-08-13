@@ -2,19 +2,23 @@ import "./Navbar.scss";
 import axiosIntance from "../../../../../axios";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import logo from "../../../../assets/icons/logo.png";
-import { motion } from "framer-motion";
-import Loader2 from "../../../../components/loader/Loader3";
-import Emptydata from "../../../../components/emptydata/Emptydata";
+
 //ICONS
 import { LiaBell } from "react-icons/lia";
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
-import { IoCloseOutline } from "react-icons/io5";
-import appointmentImg from "../../../../assets/icons/calendar.png";
+
+import { LiaHistorySolid } from "react-icons/lia";
+import AppointmentHistory from "../history/AppointmentHistory";
+import LogoutUI from "../../../../components/logoutUI/LogoutUI";
+import Notification_vet from "../notification/Notification_vet";
+import { NotifContext } from "../../../../contexts/NotificationContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { activeNotifCount } = useContext(NotifContext);
+
   const [showDropdown, setShowDropdown] = useState(false);
   const { setFormToShow, setCurrentUser } = useContext(AuthContext);
 
@@ -22,7 +26,8 @@ const Navbar = () => {
   const [notif, setNotif] = useState([]);
   const [visibleNotif, setVisibleNotif] = useState([]);
   const [showAll, setShowAll] = useState(false);
-  const [showNav, setShowNav] = useState(false);
+  const [activeModal, setActiveModal] = useState("");
+  const [showLogoutUI, setShowLogoutUI] = useState(false);
 
   const MAX_VISIBLE = 5;
   const toggleSidebar = () => {
@@ -58,25 +63,32 @@ const Navbar = () => {
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axiosIntance.post(
-        "client/auth/Logout.php",
-        {},
-        { withCredentials: true }
-      );
 
-      if (res.data.success) {
-        localStorage.removeItem("data");
-        localStorage.clear();
-        navigate("/home/");
-        setCurrentUser(null);
-        setFormToShow("signin");
-      } else {
-        console.error("Logout failed: ", res.data.message);
+    setShowLogoutUI(true);
+
+    setTimeout(async () => {
+      try {
+        const res = await axiosIntance.post(
+          "client/auth/Logout.php",
+          {},
+          { withCredentials: true }
+        );
+
+        if (res.data.success) {
+          localStorage.removeItem("data");
+          localStorage.clear();
+          setCurrentUser(null);
+          setFormToShow("signin");
+          navigate("/home/");
+        } else {
+          console.error("Logout failed: ", res.data.message);
+        }
+      } catch (error) {
+        console.log("Error in logging out", error);
+      } finally {
+        setShowLogoutUI(false);
       }
-    } catch (error) {
-      console.log("Error in logging out", error);
-    }
+    }, 3000);
   };
 
   return (
@@ -85,103 +97,47 @@ const Navbar = () => {
         <div className="nav-container">
           <img src={logo} alt="logo" className="logo" />
           <div className="vnav-buttons">
-            {/* <Link className="list-icon">
-              <GoHomeFill className="nav-icon" />
-            </Link>
-            <Link className="list-icon">
-              <BiSolidMessageRoundedDetail className="nav-icon" />
-            </Link> */}
-            <Link
+            <div
               title="Notification"
               className="list-icon-bell"
-              onClick={() => setShowNav(!showNav)}
+              onClick={() => setActiveModal("notif")}
+              style={{ cursor: "pointer" }}
             >
               <LiaBell className="nav-icon" />
-              <div className="dot">
-                <span>9</span>
-              </div>
-            </Link>
-            <Link
-              title="Logout"
+              {activeNotifCount > 0 && (
+                <div className="dot">
+                  <span>{activeNotifCount > 9 ? "9+" : activeNotifCount}</span>
+                </div>
+              )}
+            </div>
+
+            <div
+              title="Appointment History"
               className="list-icon"
               onClick={() => setShowDropdown(!showDropdown)}
             >
-              <IoIosLogOut className="nav-icon" />
-            </Link>
+              <LiaHistorySolid
+                className="nav-icon"
+                onClick={() => setActiveModal("history")}
+              />
+            </div>
 
-            {/* {showDropdown && (
-              <div className="dropdown-vet">
-                <div className="container">
-                  <span>
-                    <IoSettingsOutline className="icon" /> Setting
-                  </span>
-                  <span onClick={handleLogout}>
-                    <IoMdLogOut className="icon" /> Logout
-                  </span>
-                </div>
-              </div>
-            )} */}
+            <div title="Logout" className="list-icon" onClick={handleLogout}>
+              <IoIosLogOut className="nav-icon" />
+            </div>
           </div>
         </div>
       </div>
 
-      {showNav && (
-        <div className="notification-overlayv">
-          <motion.div
-            initial={{ opacity: 0, x: 200 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="notification-vet"
-          >
-            <div className="top">
-              <h6>Notification</h6>{" "}
-              <IoCloseOutline
-                className="icon"
-                onClick={() => setShowNav(false)}
-              />
-            </div>
-            <div className="notification-content">
-              {loader ? (
-                <Loader2 />
-              ) : visibleNotif.length > 0 ? (
-                <>
-                  {visibleNotif.map((item) => (
-                    <div key={item.notif_id} className="card">
-                      <div className="left">
-                        <img src={appointmentImg} alt="" />
-                      </div>
-                      <div className="right">
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "start",
-                            alignItems: "start",
-                          }}
-                          className="top"
-                        >
-                          <span className="title">{item.title}</span>
-                          <p>{item.description}</p>
-                        </div>
-                        <div className="bot">
-                          <span>{item.sentDate}</span>
-                          <button>Mark As Read</button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {!showAll && notif.length > MAX_VISIBLE && (
-                    <button className="view-more-btn" onClick={handleViewMore}>
-                      View More
-                    </button>
-                  )}
-                </>
-              ) : (
-                <Emptydata />
-              )}
-            </div>
-          </motion.div>
-        </div>
+      {activeModal === "notif" && (
+        <Notification_vet close={() => setActiveModal("")} />
       )}
+
+      {activeModal === "history" && (
+        <AppointmentHistory close={() => setActiveModal("")} />
+      )}
+
+      {showLogoutUI && <LogoutUI />}
     </>
   );
 };
