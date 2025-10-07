@@ -1,32 +1,17 @@
-
-
-
-
-
 <?php
+require __DIR__ . '/vendor/autoload.php';
 
-// $host = "sql307.infinityfree.com";
-// $username = "if0_38726600";
-// $password = 'gKfcV0pCqkQsL';
-// $database = "if0_38726600_vetcare";
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
-// $conn = mysqli_connect($host, $username, $password, $database);
-
-// if(!$conn){
-//     die("Connection failed: " . mysqli_connect_error());
-// }
-
-
-
-$host = "localhost";
-$username = "root";
-$password = '';
-$database = "vetcare";
+$host     = $_ENV['DB_HOST'];
+$username = $_ENV['DB_USER'];
+$password = $_ENV['DB_PASS'];
+$database = $_ENV['DB_NAME'];
 
 $conn = mysqli_connect($host, $username, $password, $database);
 
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
-
 ?>

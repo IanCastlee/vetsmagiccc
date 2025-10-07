@@ -271,13 +271,13 @@ const Appointment = () => {
       }
 
       const opt = {
-        margin: 0, // Remove large margins
+        margin: 0,
         filename: "vetcare-receipt.pdf",
         image: { type: "jpeg", quality: 0.9 },
         html2canvas: { scale: 2 },
         jsPDF: {
           unit: "mm",
-          format: [80, 140], // width x height in mm (receipt size)
+          format: [80, 140],
           orientation: "portrait",
         },
       };
@@ -321,9 +321,11 @@ const Appointment = () => {
         <div ref={receiptRef}>
           <div className="receipt">
             <div className="top">
-              <span>VETCARE</span>
-              <p>San Francisco Bulan, Sorsogon</p>
-              <p>098 7634 346</p>
+              <span>VETSMAGIC</span>
+              <p style={{ textAlign: "center", marginBottom: "7px" }}>
+                Magsaysay st,. Cogon bibincahan, Sorsogon
+              </p>
+              <p>0917 639 9344</p>
             </div>
             <div className="border">
               <span>RECEIPT</span>
@@ -497,17 +499,6 @@ const Appointment = () => {
                                   handleDownload();
                                 }}
                               />
-                              {/* <LiaEdit
-                                title="Change Schedule"
-                                className="icon"
-                                onClick={() =>
-                                  handleClickedAppointment(
-                                    item.time,
-                                    item.duration,
-                                    item.appointment_id
-                                  )
-                                }
-                              /> */}
                             </div>
                           </div>
                         </motion.div>
@@ -527,7 +518,7 @@ const Appointment = () => {
                 ) : (
                   (() => {
                     const filteredAppointment = activeAppointment.filter(
-                      (item) => item.status === 1
+                      (item) => item.status !== 0
                     );
 
                     return filteredAppointment.length > 0 ? (
@@ -590,6 +581,26 @@ const Appointment = () => {
                                     </span>
                                   </p>
                                 </div>
+
+                                <span className="notefromvet">
+                                  <span
+                                    style={{ color: "gray", fontSize: "12px" }}
+                                  >
+                                    Note:
+                                  </span>
+                                  {item.note_from_vet}
+                                </span>
+
+                                <span
+                                  style={{
+                                    alignSelf: "end",
+                                    color: item.status === 1 ? "blue" : "red",
+                                  }}
+                                >
+                                  {item.status === 1
+                                    ? "Completed"
+                                    : "Cancelled"}
+                                </span>
                               </div>
                             </div>
                           </div>

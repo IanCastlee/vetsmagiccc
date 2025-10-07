@@ -47,8 +47,11 @@ import ProtectedRoute from "./contexts/ProtectedRoute";
 import NotFound from "./components/notFound/NotFound";
 import Appointmenthistory from "./pages/ADMIN/appointment/Appointmenthistory";
 import Soontoexpired from "./pages/ADMIN/shop/Soontoexpired";
+import TreatedPets from "./pages/ADMIN/treated_pets/TreatedPets";
+import Paymongo from "./Paymongo";
 
-const Layout = () => {
+//CLIENT
+const Client = () => {
   const location = useLocation();
 
   const isHome = location.pathname === "/home/";
@@ -83,11 +86,13 @@ const Layout = () => {
         <Route path="/sms/" element={<ClickSend />} />
         <Route path="/test/" element={<Test />} />
         <Route path="/notfound/" element={<NotFound />} />
+        <Route path="/paymongo" element={<Paymongo />} />
       </Routes>
     </>
   );
 };
 
+//Veterinarian
 const Veterinarian = () => {
   return (
     <>
@@ -100,6 +105,7 @@ const Veterinarian = () => {
   );
 };
 
+//Admin
 const Admin = () => {
   const location = useLocation();
   const normalizedPath = location.pathname.replace(/\/+$/, "");
@@ -149,6 +155,7 @@ const Admin = () => {
               <Route path="/not-active-user/" element={<Notactiveuser />} />
 
               <Route path="/service/" element={<Service />} />
+              <Route path="/treated_pet/" element={<TreatedPets />} />
               <Route path="/announcement/" element={<Announcement />} />
             </Routes>
           </div>
@@ -182,7 +189,7 @@ const App = () => {
           path="/*"
           element={
             <ProtectedRoute allowedRoles={[0]}>
-              <Layout />
+              <Client />
             </ProtectedRoute>
           }
         />

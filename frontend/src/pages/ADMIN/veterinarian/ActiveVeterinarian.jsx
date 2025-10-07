@@ -765,7 +765,9 @@ const ActiveVeterinarian = () => {
                       name="specialization"
                       id="specialization"
                     >
-                      <option value="">Specialization</option>{" "}
+                      <option value="" disabled hidden>
+                        Specialization
+                      </option>{" "}
                       <option value="General Veterinarian">
                         General Veterinarian
                       </option>

@@ -244,11 +244,14 @@ const Shop = () => {
   };
 
   //filteredData
+
   const filteredData = data.filter(
     (item) =>
       item.med_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.specialization.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.category.toLowerCase().includes(searchQuery.toLowerCase())
+      item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.price.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(item.stock).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      String(item.orig_stock).toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -281,8 +284,6 @@ const Shop = () => {
       setAddExpncsForm("");
     }
   };
-
-  console.log("Categ : ", formData.category);
 
   return (
     <>

@@ -2,30 +2,40 @@
 include("./header.php");
 include("./databaseConnection.php");
 
+require_once __DIR__ . '/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 header('Content-Type: application/json');
 
 // Decode raw JSON input from request body
 $input = json_decode(file_get_contents("php://input"), true);
 
-if (isset($input['amount']) && isset($input['description']) && isset($input['remarks'])) {
-    $amount = $input['amount'];
+// Validate required input fields
+if (isset($input['amount'], $input['description'], $input['remarks'])) {
+    $amount = (int) $input['amount'];
     $description = $input['description'];
     $remarks = $input['remarks'];
 
     $ch = curl_init();
 
+    // Securely fetch your PayMongo secret key from .env
+    $secretKey = $_ENV['PAYMONGO_SECRET_KEY'];
+    $encodedSecret = base64_encode($secretKey . ':');
+
     curl_setopt($ch, CURLOPT_URL, "https://api.paymongo.com/v1/links");
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'Accept: application/json',
-        'Authorization: Basic c2tfdGVzdF9aWnFMSkNRb2M0WjNjQlRSdGVBUFhhcjk6',
+        "Authorization: Basic $encodedSecret",
         'Content-Type: application/json',
     ]);
 
     $data = [
         "data" => [
             "attributes" => [
-                "amount" => (int)$amount,
+                "amount" => $amount,
                 "description" => $description,
                 "remarks" => $remarks,
                 "redirect" => [

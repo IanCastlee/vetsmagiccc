@@ -164,6 +164,21 @@
               }
             }
           }
+
+          .view-more-wrapper {
+            margin-top: 8px;
+            span {
+              color: #0069d9;
+              font-weight: 500;
+              cursor: pointer;
+              font-size: 0.75rem;
+              &:hover {
+                background-color: rgb(249, 245, 245);
+                border-radius: 20px;
+                padding: 0 7px;
+              }
+            }
+          }
         }
 
         .vet-info {

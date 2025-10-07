@@ -23,6 +23,7 @@ const VeterinarianProfile = () => {
   const userId = useParams();
   const [veterinarianInfo, setVeterinarianInfo] = useState([]);
   const [veterinarianServices, setVeterinarianServices] = useState([]);
+  const [showAllServices, setShowAllServices] = useState(false);
 
   useEffect(() => {
     const getClickedVeterinarian = async () => {
@@ -93,19 +94,40 @@ const VeterinarianProfile = () => {
           <div className="veterinarian-userinfo-card-wrapper">
             <div className="services">
               <h3>Services</h3>
-              <div className="services-wrapper">
-                {veterinarianServices &&
-                  veterinarianServices.map((item, index) => (
-                    <div key={index} className="card">
-                      <span className="service">{item.vservices}</span>
-                      <span className="price">₱ {item.price}</span>
-                    </div>
-                  ))}
+              <div
+                className="services-wrapper"
+                onClick={() => setShowAllServices(false)}
+              >
+                {(showAllServices
+                  ? veterinarianServices
+                  : veterinarianServices.slice(0, 5)
+                ).map((item, index) => (
+                  <div key={index} className="card">
+                    <span className="service">{item.vservices}</span>
+                    <span className="price">₱ {item.price}</span>
+                  </div>
+                ))}
               </div>
+
+              {veterinarianServices.length > 1 && !showAllServices && (
+                <div className="view-more-wrapper">
+                  <span onClick={() => setShowAllServices(true)}>
+                    View More
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="vet-info">
-              <span>
+              <span
+                style={{
+                  marginBottom: "10px",
+                  fontSize: "16px",
+                  backgroundColor: "#FFFDF6",
+                  maxWidth: "fit-content",
+                  paddingRight: "10px",
+                }}
+              >
                 <IoMdTime className="icon" />
                 Time Schedule : {veterinarianInfo?.time}
               </span>

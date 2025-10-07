@@ -7,7 +7,7 @@ if (isset($_GET['user_id'], $_GET['petType'])) {
 
     $user_id = $_GET['user_id'];
     $petType = $_GET['petType'];
-    $status = 0;
+    $status = 1;
 
     // Step 1: Get the latest appointment per pet (grouped by pet_name, pet_type, breed, gender)
     if ($petType === "General") {
@@ -18,7 +18,7 @@ if (isset($_GET['user_id'], $_GET['petType'])) {
             INNER JOIN (
                 SELECT pet_name, pet_type, breed, gender, MAX(appointment_id) AS max_id
                 FROM appointments 
-                WHERE client_id = ? AND is_followup = ?
+                WHERE client_id = ? AND status = ?
                 GROUP BY pet_name, pet_type, breed, gender
             ) latest 
             ON a.pet_name = latest.pet_name 
@@ -26,7 +26,7 @@ if (isset($_GET['user_id'], $_GET['petType'])) {
                AND a.breed = latest.breed 
                AND a.gender = latest.gender 
                AND a.appointment_id = latest.max_id
-            WHERE a.client_id = ? AND a.is_followup = ?
+            WHERE a.client_id = ? AND a.status = ?
         ");
         $getPets->bind_param("iiii", $user_id, $status, $user_id, $status);
     } else {
@@ -37,7 +37,7 @@ if (isset($_GET['user_id'], $_GET['petType'])) {
             INNER JOIN (
                 SELECT pet_name, pet_type, breed, gender, MAX(appointment_id) AS max_id
                 FROM appointments 
-                WHERE client_id = ? AND pet_type = ? AND is_followup = ?
+                WHERE client_id = ? AND pet_type = ? AND status = ?
                 GROUP BY pet_name, pet_type, breed, gender
             ) latest 
             ON a.pet_name = latest.pet_name 
@@ -45,7 +45,7 @@ if (isset($_GET['user_id'], $_GET['petType'])) {
                AND a.breed = latest.breed 
                AND a.gender = latest.gender 
                AND a.appointment_id = latest.max_id
-            WHERE a.client_id = ? AND a.pet_type = ? AND a.is_followup = ?
+            WHERE a.client_id = ? AND a.pet_type = ? AND a.status = ?
         ");
         $getPets->bind_param("isiiis", $user_id, $petType, $status, $user_id, $petType, $status);
     }

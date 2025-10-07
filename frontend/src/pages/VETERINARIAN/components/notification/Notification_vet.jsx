@@ -12,6 +12,7 @@ import axiosIntance from "../../../../../axios";
 import { NotifContext } from "../../../../contexts/NotificationContext";
 import Loader2 from "../../../../components/loader/Loader3";
 import Emptydata from "../../../../components/emptydata/Emptydata";
+import OpenNotification from "../../../../components/openNotification/OpenNotification";
 
 const Notification_vet = ({ close }) => {
   const { fetchNotifCount, setActiveNotifCount } = useContext(NotifContext);
@@ -20,6 +21,11 @@ const Notification_vet = ({ close }) => {
   const [visibleNotif, setVisibleNotif] = useState([]);
   const [showAll, setShowAll] = useState(false);
   const MAX_VISIBLE = 5;
+
+  const [notificationClicked, setNotificationClicked] = useState(false);
+  const [clickedAppointId, setClickedAppointId] = useState(null);
+  const [clickedAppointTitle, setClickedAppointTitle] = useState(null);
+  const [isVet, setIsVet] = useState(false);
 
   //get notification
   useEffect(() => {
@@ -70,65 +76,80 @@ const Notification_vet = ({ close }) => {
   }, []);
 
   return (
-    <div className="notificationnn-overlay">
-      <motion.div
-        initial={{ opacity: 0, x: 200 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="notification"
-      >
-        <div className="top-card">
-          <h6>Notification</h6>{" "}
-          <IoCloseOutline className="icon" onClick={close} />
-        </div>
+    <>
+      <div className="notificationnn-overlay">
+        <motion.div
+          initial={{ opacity: 0, x: 200 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="notification"
+        >
+          <div className="top-card">
+            <h6>Notification</h6>{" "}
+            <IoCloseOutline className="icon" onClick={close} />
+          </div>
 
-        {notif.length > 0 && (
-          <p className="p-note">
-            Note : Once you click the notification, it will be marked as read.
-          </p>
-        )}
-        <div className="notification-content">
-          {loader ? (
-            <Loader2 />
-          ) : visibleNotif.length > 0 ? (
-            <>
-              {visibleNotif.map((item) => (
-                <div
-                  key={item.notif_id}
-                  className={`card ${item.status == 1 ? "clicked" : ""}`}
-                  onClick={() => handleUpdateAsRead(item.notif_id)}
-                >
-                  <div className="left">
-                    <img src={appointmentImg} alt="" />
-                  </div>
-                  <div className="right">
-                    <div className="top">
-                      <span className="title">{item.title}</span>
-                      <p>{item.description}</p>
+          <div className="notification-content">
+            {loader ? (
+              <Loader2 />
+            ) : visibleNotif.length > 0 ? (
+              <>
+                {visibleNotif.map((item) => (
+                  <div
+                    key={item.notif_id}
+                    className={`card ${item.status == 1 ? "clicked" : ""}`}
+                    onClick={() => {
+                      handleUpdateAsRead(item.notif_id);
+                      setNotificationClicked(true);
+                      setClickedAppointId(item.appointment_id);
+                      setClickedAppointTitle(item.title);
+                      setIsVet(true);
+                    }}
+                  >
+                    <div className="left">
+                      <img src={appointmentImg} alt="" />
                     </div>
-                    <div className="bot">
-                      <span>{item.sentDate}</span>
-                      {item.title === "Appointment reminder" && (
-                        <button className="btn-view">
-                          <Link to="/myappointment/">View</Link>
-                        </button>
-                      )}
+                    <div className="right">
+                      <div className="top">
+                        <span className="title">{item.title}</span>
+                        <p>{item.description}</p>
+                      </div>
+                      <div className="bot">
+                        <span>{item.sentDate}</span>
+                        {item.title === "Appointment reminder" && (
+                          <button className="btn-view">
+                            <Link to="/myappointment/">View</Link>
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-              {!showAll && notif.length > MAX_VISIBLE && (
-                <button className="view-more-btn" onClick={handleViewMore}>
-                  View More
-                </button>
-              )}
-            </>
-          ) : (
-            <Emptydata />
-          )}
-        </div>
-      </motion.div>
-    </div>
+                ))}
+                {!showAll && notif.length > MAX_VISIBLE && (
+                  <button className="view-more-btn" onClick={handleViewMore}>
+                    View More
+                  </button>
+                )}
+              </>
+            ) : (
+              <Emptydata />
+            )}
+          </div>
+        </motion.div>
+      </div>
+
+      {notificationClicked && (
+        <OpenNotification
+          appointment_id={clickedAppointId}
+          appointment_title={clickedAppointTitle}
+          isVet={isVet}
+          close={() => {
+            setClickedAppointId(null);
+            setNotificationClicked(false);
+          }}
+        />
+      )}
+    </>
   );
 };
 

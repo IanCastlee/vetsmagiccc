@@ -398,7 +398,7 @@
     border-top: 5px solid #007bff;
     overflow-y: scroll;
 
-    .top {
+    .top-title-wrappperr {
       width: 100%;
       display: flex;
       justify-content: space-between;
@@ -1031,19 +1031,20 @@
       padding: 12px 12px 30px 12px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: start;
       background-color: #fff;
       max-height: 100%;
       height: 100%;
       border-radius: 0;
       border-top: 5px solid #007bff;
 
-      .top {
+      .top-title-wrappperr {
         width: 100%;
         display: flex;
         justify-content: space-between;
         margin-bottom: 50px;
         align-items: center;
+        height: 40px;
 
         .left {
           width: 70%;
@@ -1087,10 +1088,12 @@
           .image-wraper {
             width: 120px;
             height: 120px;
+            padding: 10px;
 
             img {
               width: 100%;
               height: 100%;
+              object-fit: cover;
             }
           }
 

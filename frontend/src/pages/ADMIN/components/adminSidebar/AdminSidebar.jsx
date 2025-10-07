@@ -8,7 +8,7 @@ import { useContext, useState } from "react";
 //ICONS
 import { LuStethoscope } from "react-icons/lu";
 import { TbShoppingBagEdit } from "react-icons/tb";
-import { PiMegaphoneSimple } from "react-icons/pi";
+import { PiDog, PiMegaphoneSimple } from "react-icons/pi";
 import { RiHomeLine } from "react-icons/ri";
 import { MdOutlineDateRange } from "react-icons/md";
 import { PiUsersThreeBold } from "react-icons/pi";
@@ -182,26 +182,6 @@ const AdminSidebar = () => {
             </div>
           )}
 
-          {/* <li className={`item ${activeLink === "shop" ? "active" : ""}`}>
-            <Link
-              className="btn-li"
-              to="/admin/shop/"
-              // onClick={() => {
-              //   setActiveLink("shop");
-              //   toggleSidebar;
-              //   setActiveDropdown("");
-              // }}
-
-              onClick={() => {
-                setActiveDropdown(activeDropdown === "user" ? "" : "user");
-                setActiveLink("user");
-              }}
-            >
-              <TbShoppingBagEdit className="link-icon" />
-              Manage Shop
-            </Link>
-          </li> */}
-
           <li
             className={`item ${activeLink === "shop" ? "active" : ""}`}
             onClick={() => {
@@ -239,6 +219,23 @@ const AdminSidebar = () => {
             >
               <MdOutlineMedicalServices className="link-icon" />
               Services
+            </Link>
+          </li>
+
+          <li
+            className={`item ${activeLink === "treated_pet" ? "active" : ""}`}
+          >
+            <Link
+              className="btn-li"
+              to="/admin/treated_pet"
+              onClick={() => {
+                setActiveLink("treated_pet");
+                toggleSidebar;
+                setActiveDropdown("");
+              }}
+            >
+              <PiDog className="link-icon" />
+              Treated Pets
             </Link>
           </li>
 

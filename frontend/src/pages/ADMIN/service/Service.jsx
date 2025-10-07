@@ -18,7 +18,6 @@ import { MdOutlineMedicalServices } from "react-icons/md";
 const Service = () => {
   const [data, setData] = useState([]);
   const [showLoader, setShowLoader] = useState(false);
-
   const [activeFormModal, setActiveFormModal] = useState("");
   const [showDelForm, setShowDelForm] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,8 +37,6 @@ const Service = () => {
       [name]: value,
     }));
   };
-
-  console.log(formData);
 
   //handle submmit
   const handleSubmit = async (e) => {
@@ -63,7 +60,12 @@ const Service = () => {
       if (res.data.success) {
         console.log("Response : ", res.data.message);
         setActiveFormModal("");
-
+        setFormData({
+          id: "",
+          service_name: "",
+          description: "",
+          image: "",
+        });
         fetchedData();
         showSuccessAlert_add_prod();
       } else {
@@ -212,12 +214,11 @@ const Service = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [vetsPerPage, setVetsPerPage] = useState(7);
 
-  // Pagination logic
+  //Pagination logic
   const indexOfLastData = currentPage * vetsPerPage;
   const indexOfFirstVet = indexOfLastData - vetsPerPage;
   const currentData = filteredData.slice(indexOfFirstVet, indexOfLastData);
   const totalPages = Math.ceil(filteredData.length / vetsPerPage);
-
   const goToPage = (pageNumber) => setCurrentPage(pageNumber);
   const nextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
@@ -490,7 +491,7 @@ const Service = () => {
               <h6>Confirmation</h6>
             </div>
 
-            <p>Are you sure you want to remove this service from the shop?</p>
+            <p>Are you sure you want to remove this service?</p>
 
             <div className="bot">
               <button className="btn-yes" onClick={handleDelete}>

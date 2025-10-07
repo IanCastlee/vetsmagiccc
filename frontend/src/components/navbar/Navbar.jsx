@@ -90,6 +90,7 @@ const Navbar = ({ isHome }) => {
               </div>
             )}
             <div className="bot">
+              {/* <Link to="/paymongo">PAYMONGO</Link> */}
               <Link
                 to="/home/"
                 onClick={() => setActiveLink("home")}
@@ -128,9 +129,6 @@ const Navbar = ({ isHome }) => {
                   onClick={() => {
                     setModlToShow("follow-up");
                   }}
-                  // className={`list-icon ${
-                  //   activeLink === "fa-appointment" ? "active" : ""
-                  // } `}
                   className="list-icon-notif"
                 >
                   <SlRefresh className="nav-icon" />
@@ -207,7 +205,7 @@ const Navbar = ({ isHome }) => {
 
               {activeNotifCount > 0 && (
                 <div className="count">
-                  <span>{activeNotifCount}</span>
+                  <span> {activeNotifCount > 9 ? "9+" : activeNotifCount}</span>
                 </div>
               )}
             </div>

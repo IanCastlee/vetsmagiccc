@@ -13,6 +13,7 @@ if (isset($input['otp'], $input['email'])) {
 
     $otp = $input['otp'];  
     $email = $input['email'];
+     $password = password_hash($input['password'], PASSWORD_DEFAULT);
 
     $check_otp = $conn->prepare("SELECT * FROM users WHERE email = ? AND verify_token = ?");
     $check_otp->bind_param('ss', $email, $otp);
@@ -22,20 +23,22 @@ if (isset($input['otp'], $input['email'])) {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();  
 
-        if ($row['status'] == 0) {  
-            $update_status = $conn->prepare("UPDATE users SET status = 1 WHERE email = ? AND verify_token = ?");
-            $update_status->bind_param('ss', $email, $otp);
+        
+
+        // if ($row['status'] == 0) {  
+            $update_status = $conn->prepare("UPDATE users SET password = ?, status = 1 WHERE email = ? AND verify_token = ?");
+            $update_status->bind_param('sss', $password, $email, $otp);
 
             if ($update_status->execute()) {
-                echo json_encode(['success' => true, 'message' => "Your account has been successfully verified"]);
+                echo json_encode(['success' => true, 'message' => ""]);
             } else {
                 echo json_encode(['success' => false, 'message' => "Error updating verification status"]);
             }
 
             $update_status->close();
-        } else {
-            echo json_encode(['success' => false, 'message' => "Your account is already verified"]);
-        }
+        // } else {
+        //     echo json_encode(['success' => false, 'message' => "Your account is already verified"]);
+        // }
 
     } else {
         echo json_encode(['success' => false, 'message' => "Your OTP is not registered"]);

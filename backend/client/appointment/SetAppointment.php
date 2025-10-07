@@ -82,7 +82,7 @@ if (
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->bind_param(
-        "iissssisssssssss",
+        "iissssssssssssss",
         $client_id,
         $dr_id,
         $service,
@@ -101,19 +101,24 @@ if (
         $image_name
     );
 
-    if ($stmt->execute()) {
+   if ($stmt->execute()) {
+    $appointment_id = $stmt->insert_id;
 
-        $insertNotification = $conn->prepare("INSERT INTO notifications (sender_id, reciever_id, title, description, sentDate)VALUES(?,?,?,?,?)");
-        $insertNotification->bind_param("iisss", $client_id, $dr_id, $title_for_vet, $message_for_vet, $sentDate);
+    $insertNotification = $conn->prepare("INSERT INTO notifications (appointment_id, sender_id, reciever_id, title, description, sentDate) VALUES (?, ?, ?, ?, ?, ?)");
+    $insertNotification->bind_param("iiisss", $appointment_id, $client_id, $dr_id, $title_for_vet, $message_for_vet, $sentDate);
 
+    if ($insertNotification->execute()) {
+        $insertNotif = $conn->prepare("INSERT INTO notifications (appointment_id, reciever_id, title, description, sentDate) VALUES (?, ?, ?, ?, ?)");
+        $insertNotif->bind_param("iisss", $appointment_id, $client_id, $title_for_client, $desc_for_client, $sentDate);
+        $insertNotif->execute();
 
-        if ($insertNotification->execute()) {
-            $insertNotif = $conn->prepare("INSERT INTO notifications ( reciever_id, title, description, sentDate) VALUES (?, ?, ?, ?)");
-            $insertNotif->bind_param("isss", $client_id, $title_for_client, $desc_for_client, $sentDate);
-            $insertNotif->execute();
-            echo json_encode(['success' => true, 'message' => "Appointment sent successfully"]);
-        }
-    } else {
+        echo json_encode([
+            'success' => true,
+            'message' => "Appointment sent successfully",
+            'appointment_id' => $appointment_id
+        ]);
+    }
+} else {
         echo json_encode(['success' => false, 'message' => "Database error: " . $conn->error]);
     }
 

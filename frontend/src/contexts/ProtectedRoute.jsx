@@ -20,6 +20,8 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     "/myappointment",
     "/signin/",
     "/notfound",
+    "/sms",
+    // "/paymongo",
   ];
 
   const clientDynamicPaths = [
@@ -64,6 +66,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       "/admin/active-user",
       "/admin/not-active-user",
       "/admin/service",
+      "/admin/treated_pet",
       "/admin/announcement",
       "/signin/",
     ].includes(normalizedPath.toLowerCase())

@@ -399,13 +399,12 @@ const Profile = () => {
                 <span>
                   <small>Gender : </small> {clickedAppointment.gender}
                 </span>
-                <span>
+                <span style={{ display: "flex", gap: "5px" }}>
                   <small>Age : </small> {clickedAppointment.age}
-                  <small> year old</small>
                 </span>
-                <span>
+                <span style={{ display: "flex", gap: "5px" }}>
                   <small>Weight : </small> {clickedAppointment.weight}
-                  <small> klg </small>
+                  <small> kg </small>
                 </span>
                 <br />
 
@@ -431,7 +430,14 @@ const Profile = () => {
                                 {item.service}
                               </span>
 
-                              <span className="vet__note">
+                              <span
+                                style={{
+                                  whiteSpace: "pre-wrap",
+                                  display: "flex",
+                                  alignItems: "start",
+                                }}
+                                className="vet__note"
+                              >
                                 <span
                                   style={{
                                     fontSize: "0.625rem",

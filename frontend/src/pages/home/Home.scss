@@ -385,6 +385,341 @@
   }
 }
 
+.chatbotBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  cursor: pointer;
+  z-index: 999;
+  height: 60px;
+  width: 60px;
+
+  /* Pulse animation */
+  animation: pulse 3s infinite;
+}
+
+/* Define the pulse animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+//TABLET
+@media (min-width: 786px) and (max-width: 1024px) {
+  .client-home {
+    width: 100%;
+    background-color: rgb(243, 238, 238);
+
+    .hero {
+      width: 100%;
+      display: flex;
+      height: 500px;
+      background-color: rgb(243, 238, 238);
+
+      .hero-left {
+        width: 75%;
+        position: relative;
+
+        .wave-bg {
+          width: 100%;
+          height: 100%;
+        }
+
+        .hero-wrapper {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 100%;
+          padding: 120px 20px 100px 20px;
+
+          h1 {
+            color: #fbe4d6;
+            font-size: 2.25rem;
+            line-height: 2.125rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+          }
+
+          h6 {
+            font-weight: 500;
+            font-size: 1.25rem;
+            margin-bottom: 7px;
+            margin-right: 20px;
+          }
+
+          .buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 15px;
+            button {
+              background-color: green;
+              padding: 8px 20px;
+              font-size: 0.675rem;
+              font-weight: 500;
+              color: #fff;
+              border-radius: 25px;
+              cursor: pointer;
+              border: none;
+
+              &:hover {
+                background-color: #1b1694;
+              }
+
+              &:first-child {
+                background-color: #007bff;
+
+                &:hover {
+                  background-color: #0069d9;
+                }
+              }
+            }
+          }
+        }
+      }
+      .hero-right {
+        width: 25%;
+        padding-top: 80px;
+        position: relative;
+
+        .dog-img {
+          width: 80%;
+          height: 70%;
+        }
+
+        .trusted-wrapper {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          border-radius: 20px;
+          position: absolute;
+          bottom: 0;
+          right: 10px;
+          span {
+            font-size: 12px;
+            color: #4b4747;
+          }
+          .trusted {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+
+            .img-card {
+              height: 27px;
+              width: 27px;
+              margin-left: -10px;
+
+              .client-profile {
+                height: 100%;
+                width: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 1px solid gray;
+              }
+            }
+
+            .initial-fallback {
+              height: 27px;
+              width: 27px;
+              background: linear-gradient(to right, #ff7e5f, #feb47b);
+              color: white;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 50%;
+              font-size: 18px;
+              font-weight: 500;
+              text-transform: uppercase;
+            }
+
+            span {
+              font-weight: 500;
+              font-size: 20px;
+              margin-left: 3px;
+              color: #181717;
+            }
+          }
+        }
+      }
+    }
+
+    .services {
+      padding: 0 10px;
+      margin-top: 20px;
+      padding: 0 50px;
+      h2 {
+        font-size: 16px;
+        margin-bottom: 10px;
+        display: flex;
+      }
+
+      .servives-container {
+        width: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 7px;
+        overflow-x: scroll;
+        .services-card {
+          background-color: #fff;
+          padding: 7px;
+          border-radius: 5px;
+          display: flex;
+          flex-direction: column;
+          width: 120px;
+          flex-shrink: 0;
+          align-items: center;
+          justify-content: center;
+
+          img {
+            height: 50px;
+            width: 50px;
+            object-fit: cover;
+          }
+          span {
+            color: #000;
+          }
+        }
+      }
+    }
+
+    .search-container {
+      width: 100%;
+      padding: 10px;
+      padding: 0 50px;
+      .search-input-icon {
+        display: flex;
+        width: 100%;
+        height: 45px;
+        border-radius: 25px;
+        padding: 15px;
+        background-color: #fff;
+        align-items: center;
+
+        input {
+          width: 100%;
+          border: none;
+          height: 100%;
+          background-color: #fff;
+
+          &::focus {
+            outline: none;
+          }
+        }
+
+        .search-icon {
+          font-size: 1.625rem;
+          cursor: pointer;
+          color: #007bff;
+        }
+      }
+    }
+
+    .veterinarian-container {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      margin-top: 20px;
+      padding: 0 50px;
+
+      h2 {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      .veterinarian {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        height: auto;
+        position: relative;
+
+        .veterinarian-wrapper {
+          width: 100%;
+          display: flex;
+          height: 100px;
+          gap: 10px;
+          background-color: #fff;
+
+          .veterinarian-profile {
+            height: 100%;
+            width: 100px;
+            border-radius: 6px;
+            object-fit: cover;
+          }
+
+          .veterinarian-info {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            .veterinarian-name-button-wrapper {
+              width: 100%;
+              display: flex;
+              justify-content: space-between;
+
+              .name-rule {
+                display: flex;
+                flex-direction: column;
+
+                .name {
+                  font-size: 0.875rem;
+                  font-weight: 700;
+                  color: #292222;
+                }
+                .rule {
+                  font-size: 0.625rem;
+                  color: gray;
+                }
+              }
+
+              button {
+                border: none;
+                font-size: 1.25rem;
+                font-weight: 500;
+                cursor: pointer;
+                color: #000;
+                background-color: #fff;
+
+                .icon-view {
+                  color: #007bff;
+                  font-size: 1rem;
+                }
+              }
+            }
+
+            .btn-set-appointment {
+              background-color: #007bff;
+              padding: 6px 12px;
+              color: #fff;
+              font-size: 0.75rem;
+              cursor: pointer;
+              border-radius: 25px;
+              border: none;
+              align-self: end;
+              width: 100%;
+              max-width: fit-content;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 @media (max-width: 786px) {
   .client-home {
     width: 100%;
@@ -686,5 +1021,18 @@
         }
       }
     }
+  }
+
+  .chatbotBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 999;
+    height: 50px;
+    width: 50px;
+
+    /* Pulse animation */
+    animation: pulse 3s infinite;
   }
 }

@@ -352,6 +352,17 @@
                     }
                   }
                 }
+
+                .notefromvet {
+                  display: flex;
+                  background-color: #fff5f2;
+                  max-width: 80%;
+                  padding: 10px;
+                  border-radius: 15px;
+                  margin-top: 10px;
+                  white-space: pre-wrap;
+                  margin-top: 10px;
+                }
               }
             }
 
@@ -918,6 +929,17 @@
                         margin-right: 5px;
                       }
                     }
+                  }
+
+                  .notefromvet {
+                    display: flex;
+                    background-color: #fff5f2;
+                    max-width: 100%;
+                    padding: 10px;
+                    border-radius: 15px;
+                    margin-top: 10px;
+                    white-space: pre-wrap;
+                    margin-top: 10px;
                   }
                 }
               }

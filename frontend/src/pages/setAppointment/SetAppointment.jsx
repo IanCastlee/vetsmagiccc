@@ -9,7 +9,6 @@ import Loader2 from "../../components/loader/Loader2";
 import { uploadUrl } from "../../../fileurl";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import html2pdf from "html2pdf.js";
 
 //IMAGES
 import cat from "../../assets/icons/mouth.png";
@@ -27,8 +26,6 @@ import { AiOutlineSnippets } from "react-icons/ai";
 import { RiImageAddFill } from "react-icons/ri";
 
 const SetAppointment = () => {
-  const receiptRef = useRef();
-
   const { currentUser } = useContext(AuthContext);
 
   const userId = useParams();
@@ -43,6 +40,9 @@ const SetAppointment = () => {
   const [data, setData] = useState([]);
   const [loader, setLoader] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
+  const [treatedPets, setTreatedPets] = useState([]);
+
+  const [disabledField, setDisabledField] = useState(false);
 
   const navigate = useNavigate();
 
@@ -52,6 +52,7 @@ const SetAppointment = () => {
     pet_name: "",
     pet_type: "",
     breed: "",
+    ageUnit: "",
     age: "",
     weight: "",
     gender: "",
@@ -77,6 +78,7 @@ const SetAppointment = () => {
   const [emptybreed, setEmptybreed] = useState("");
   const [emptyprofile, setEmptyprofile] = useState(null);
   const [emptyage, setEmptyage] = useState("");
+  const [emptyageunit, setEmptyageunit] = useState("");
   const [emptyweight, setEmptyweight] = useState("");
   const [emptygender, setEmptygender] = useState("");
   const [emptycurrent_health_issue, setEmptycurrent_health_issue] =
@@ -85,25 +87,6 @@ const SetAppointment = () => {
     useState("");
   const [emptyappointment_date, setEmptyappointment_date] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setEmptyService("");
-    setEmptypet_name("");
-    setEmptypet_type("");
-    setEmptybreed("");
-    setEmptyage("");
-    setEmptyweight("");
-    setEmptygender("");
-    setEmptycurrent_health_issue("");
-    setEmptyhistory_health_issue("");
-    setEmptyprofile(null);
-
-    setAppointment((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
   const handleDateChange = (date) => {
     setEmptyappointment_date("");
 
@@ -121,6 +104,7 @@ const SetAppointment = () => {
       appointmentForm.pet_type === "" ||
       appointmentForm.breed === "" ||
       appointmentForm.age === "" ||
+      appointmentForm.ageUnit === "" ||
       appointmentForm.weight === "" ||
       appointmentForm.gender === "" ||
       appointmentForm.image === null ||
@@ -139,8 +123,11 @@ const SetAppointment = () => {
       if (appointmentForm.breed === "") {
         setEmptybreed("Pet breed is required");
       }
-      if (appointmentForm.age === "") {
+      if (appointmentForm.age == "") {
         setEmptyage("Pet age is required");
+      }
+      if (appointmentForm.ageUnit == "") {
+        setEmptyageunit("Pet age unit is required");
       }
       if (appointmentForm.weight === "") {
         setEmptyweight("Pet weight is required");
@@ -173,8 +160,6 @@ const SetAppointment = () => {
       String(date.getMonth() + 1).padStart(2, "0"),
       String(date.getDate()).padStart(2, "0"),
     ].join("-");
-
-    console.log("FORMATED : ", formattedDate);
 
     try {
       const res = await axiosIntance.get(
@@ -287,12 +272,48 @@ const SetAppointment = () => {
     );
 
     // filter out unavailable slots
-    const availableSlots = allSlots.filter(
-      (slot) => !unavailable.includes(slot)
-    );
+    let availableSlots = allSlots.filter((slot) => !unavailable.includes(slot));
 
+    //  Extra logic: remove past times if selected date is today
+    if (appointmentForm?.appointment_date) {
+      const selectedDate = new Date(appointmentForm.appointment_date);
+      const today = new Date();
+
+      const formattedSelectedDate = selectedDate.toLocaleDateString("en-CA");
+      const formattedToday = today.toLocaleDateString("en-CA");
+
+      if (formattedSelectedDate === formattedToday) {
+        const currentHour = today.getHours();
+        const currentMinute = today.getMinutes();
+
+        availableSlots = availableSlots.filter((slot) => {
+          const match = slot.match(/^(\d{1,2}):(\d{2})(AM|PM)/);
+          if (!match) return true;
+
+          let hour = parseInt(match[1], 10);
+          let minute = parseInt(match[2], 10);
+          const period = match[3];
+
+          if (period === "PM" && hour !== 12) hour += 12;
+          if (period === "AM" && hour === 12) hour = 0;
+
+          return (
+            hour > currentHour ||
+            (hour === currentHour && minute > currentMinute)
+          );
+        });
+      }
+    }
+    console.log(
+      "availableSlotsavailableSlotsavailableSlots : ",
+      availableSlots
+    );
     setSlots(availableSlots);
-  }, [veterinarianInfo, notAvailableTimeSlot]);
+  }, [
+    veterinarianInfo,
+    notAvailableTimeSlot,
+    appointmentForm.appointment_date,
+  ]);
 
   const handleShowSummary = () => {
     // Check if appointment_date is empty
@@ -340,6 +361,13 @@ const SetAppointment = () => {
 
     setformattedDate(formattedDate);
 
+    const fullAge =
+      appointmentForm.age && appointmentForm.ageUnit
+        ? `${appointmentForm.age} ${appointmentForm.ageUnit}${
+            appointmentForm.age > 1 ? "s" : ""
+          }`
+        : "";
+
     const formData = new FormData();
     formData.append("client_id", currentUser?.user_id);
     formData.append("dr_id", userId.userId);
@@ -347,7 +375,7 @@ const SetAppointment = () => {
     formData.append("pet_name", appointmentForm.pet_name);
     formData.append("pet_type", appointmentForm.pet_type);
     formData.append("breed", appointmentForm.breed);
-    formData.append("age", appointmentForm.age);
+    formData.append("age", fullAge);
     formData.append("weight", appointmentForm.weight);
     formData.append("gender", appointmentForm.gender);
     formData.append(
@@ -374,7 +402,7 @@ const SetAppointment = () => {
     formData.append("title_for_client", "Appointment reminder");
     formData.append(
       "desc_for_client",
-      `Your appointment has been sent to your chosen vet. Please prepare for your selected date and time slot (${formattedDate} - ${selectedTimeSlot}).`
+      `Your appointment for  ${appointmentForm.pet_name} (${appointmentForm.pet_type}) has been sent to your chosen vet. Please prepare for your selected date and time slot (${formattedDate} - ${selectedTimeSlot}).`
     );
 
     if (appointmentForm.image) {
@@ -411,94 +439,94 @@ const SetAppointment = () => {
     }
   };
 
-  const handlePayOnClinick = async () => {
-    setShowLoader4(true);
+  // const handlePayOnClinick = async () => {
+  //   setShowLoader4(true);
 
-    if (!appointmentForm.appointment_date) {
-      console.warn("Appointment date is required.");
-      return false;
-    }
+  //   if (!appointmentForm.appointment_date) {
+  //     console.warn("Appointment date is required.");
+  //     return false;
+  //   }
 
-    const formattedDate = new Date(
-      appointmentForm.appointment_date
-    ).toLocaleDateString("en-CA");
+  //   const formattedDate = new Date(
+  //     appointmentForm.appointment_date
+  //   ).toLocaleDateString("en-CA");
 
-    setformattedDate(formattedDate);
+  //   setformattedDate(formattedDate);
 
-    const formData = new FormData();
-    formData.append("client_id", currentUser?.user_id);
-    formData.append("dr_id", userId.userId);
-    formData.append("service", appointmentForm.service);
-    formData.append("pet_name", appointmentForm.pet_name);
-    formData.append("pet_type", appointmentForm.pet_type);
-    formData.append("breed", appointmentForm.breed);
-    formData.append("age", appointmentForm.age);
-    formData.append("weight", appointmentForm.weight);
-    formData.append("gender", appointmentForm.gender);
-    formData.append(
-      "current_health_issue",
-      appointmentForm.current_health_issue
-    );
-    formData.append(
-      "history_health_issue",
-      appointmentForm.history_health_issue
-    );
-    formData.append("appointment_date", formattedDate);
-    formData.append("appointment_time", selectedTimeSlot);
-    formData.append("payment_method", "Pay at Clinic");
-    formData.append("price", price);
+  //   const formData = new FormData();
+  //   formData.append("client_id", currentUser?.user_id);
+  //   formData.append("dr_id", userId.userId);
+  //   formData.append("service", appointmentForm.service);
+  //   formData.append("pet_name", appointmentForm.pet_name);
+  //   formData.append("pet_type", appointmentForm.pet_type);
+  //   formData.append("breed", appointmentForm.breed);
+  //   formData.append("age", appointmentForm.age);
+  //   formData.append("weight", appointmentForm.weight);
+  //   formData.append("gender", appointmentForm.gender);
+  //   formData.append(
+  //     "current_health_issue",
+  //     appointmentForm.current_health_issue
+  //   );
+  //   formData.append(
+  //     "history_health_issue",
+  //     appointmentForm.history_health_issue
+  //   );
+  //   formData.append("appointment_date", formattedDate);
+  //   formData.append("appointment_time", selectedTimeSlot);
+  //   formData.append("payment_method", "Pay at Clinic");
+  //   formData.append("price", price);
 
-    formData.append("title_for_vet", "New Appointment Request");
-    formData.append(
-      "message_for_vet",
-      `You have received a new appointment request for a ${appointmentForm.pet_type}, requesting the ${appointmentForm.service} service.`
-    );
+  //   formData.append("title_for_vet", "New Appointment Request");
+  //   formData.append(
+  //     "message_for_vet",
+  //     `You have received a new appointment request for a ${appointmentForm.pet_type}, requesting the ${appointmentForm.service} service.`
+  //   );
 
-    // client notification
-    formData.append("title_for_client", "Appointment reminder");
-    formData.append(
-      "desc_for_client",
-      `Your appointment has been sent to your chosen vet. Please prepare for your selected date and time slot (${formattedDate} - ${selectedTimeSlot}).`
-    );
+  //   // client notification
+  //   formData.append("title_for_client", "Appointment reminder");
+  //   formData.append(
+  //     "desc_for_client",
+  //     `Your appointment has been sent to your chosen vet. Please prepare for your selected date and time slot (${formattedDate} - ${selectedTimeSlot}).`
+  //   );
 
-    if (appointmentForm.image) {
-      formData.append("image", appointmentForm.image);
-    }
+  //   if (appointmentForm.image) {
+  //     formData.append("image", appointmentForm.image);
+  //   }
 
-    try {
-      const res = await axiosIntance.post(
-        "client/appointment/setAppointment.php",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+  //   try {
+  //     const res = await axiosIntance.post(
+  //       "client/appointment/setAppointment.php",
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       }
+  //     );
 
-      if (res.data.success) {
-        console.log("RESPONSE : ", res.data.message);
+  //     if (res.data.success) {
+  //       console.log("RESPONSE : ", res.data.message);
 
-        setTimeout(() => {
-          setShowSummaryForm(false);
-        }, 1000);
-        setShowLoader4(false);
-        setshowAppointmentsentModal(true);
-        handleTimeDateSlotToRemove();
-        return true;
-      } else {
-        console.log("ERROR : ", res.data);
-        setShowLoader4(false);
+  //       setTimeout(() => {
+  //         setShowSummaryForm(false);
+  //       }, 1000);
+  //       setShowLoader4(false);
+  //       setshowAppointmentsentModal(true);
+  //       handleTimeDateSlotToRemove();
+  //       return true;
+  //     } else {
+  //       console.log("ERROR : ", res.data);
+  //       setShowLoader4(false);
 
-        return false;
-      }
-    } catch (error) {
-      console.log("Error : ", error);
-      setShowLoader4(false);
+  //       return false;
+  //     }
+  //   } catch (error) {
+  //     console.log("Error : ", error);
+  //     setShowLoader4(false);
 
-      return false;
-    }
-  };
+  //     return false;
+  //   }
+  // };
 
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -589,12 +617,18 @@ const SetAppointment = () => {
   }, [currentUser, veterinarianInfo.specialization]);
 
   const previousAppointment = (item) => {
+    setDisabledField(true);
+
+    // Reset all error states
+    resetMessageError();
+
     setAppointment({
       service: "",
       pet_name: item.pet_name || "",
       pet_type: item.pet_type || "",
       breed: item.breed || "",
       age: item.age || "",
+      ageUnit: "",
       weight: item.weight || "",
       gender: item.gender || "",
       current_health_issue: "",
@@ -606,24 +640,102 @@ const SetAppointment = () => {
     });
   };
 
-  const handleDownload = () => {
-    const element = receiptRef.current;
-    if (!element) {
-      console.error("Receipt element not found");
-      return;
+  const fetchedData = async () => {
+    try {
+      const res = await axiosIntance.get(
+        "admin/treatedpets/getTreatedPets.php"
+      );
+      if (res.data.success) {
+        setTreatedPets(res.data.data);
+        console.log("getTreatedPets : ", res.data.data);
+      } else {
+        console.log("Error : ", res.data);
+      }
+    } catch (error) {
+      console.log("Error : ", error);
     }
+  };
+  useEffect(() => {
+    fetchedData();
+  }, []);
 
-    const opt = {
-      margin: 10,
-      filename: "vetcare-receipt.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+  //handle change appointemnt form
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // Compute the next form state
+    const updatedForm = {
+      ...appointmentForm,
+      [name]: value,
     };
 
-    html2pdf().set(opt).from(element).save();
+    // Reset all error states
+    resetMessageError();
+
+    // Set updated appointment form
+    setAppointment(updatedForm);
+
+    if (!disabledField) {
+      const isDuplicate = data.some(
+        (pet) =>
+          pet.pet_name === updatedForm.pet_name &&
+          pet.pet_type === updatedForm.pet_type
+      );
+
+      if (isDuplicate) {
+        setEmptypet_name(
+          `This pet name is already taken by one of your other ${updatedForm.pet_type}s. Please try adding a unique identifier, like a number or nickname, to differentiate it.`
+        );
+      } else {
+        setEmptypet_name("");
+      }
+    }
   };
 
+  const handleClearField = () => {
+    setDisabledField(false);
+
+    // Reset all error states
+    resetMessageError();
+
+    //clear Field
+    setAppointment({
+      service: "",
+      pet_name: "",
+      pet_type: "",
+      breed: "",
+      age: "",
+      ageUnit: "",
+      weight: "",
+      gender: "",
+      current_health_issue: "",
+      history_health_issue: "",
+      appointment_date: "",
+      appointment_time: "",
+      price: "",
+      image: null,
+    });
+  };
+
+  //resetMessageError
+  const resetMessageError = () => {
+    setEmptyService("");
+    setEmptypet_name("");
+    setEmptypet_type("");
+    setEmptybreed("");
+    setEmptyage("");
+    setEmptyageunit("");
+    setEmptyweight("");
+    setEmptygender("");
+    setEmptycurrent_health_issue("");
+    setEmptyhistory_health_issue("");
+    setEmptyprofile(null);
+  };
+
+  const specs = veterinarianInfo?.specialization || "";
+
+  const splitSpecs = specs.split(" ")[0];
+  console.log("SPECIALIZATION : ", splitSpecs);
   return (
     <>
       <div className="setappointment">
@@ -707,6 +819,15 @@ const SetAppointment = () => {
                             />
 
                             <span>{item.pet_name}</span>
+                            <span
+                              style={{
+                                color: "gray",
+                                fontSize: "10px",
+                                marginTop: "-3px",
+                              }}
+                            >
+                              ({item.pet_type})
+                            </span>
                           </div>
                         ))
                       ) : (
@@ -717,50 +838,57 @@ const SetAppointment = () => {
                 )}
                 {/* previous appointment end */}
 
+                <button className="btn-clear-field" onClick={handleClearField}>
+                  Clear Field
+                </button>
+
                 <div className="form">
                   <div className="service-petname">
                     <div className="input-wrapper-select-services">
                       <label
-                        style={{ color: `${emptyService !== "" ? "red" : ""}` }}
+                        style={{
+                          color: `${emptypet_type !== "" ? "red" : ""}`,
+                        }}
                         htmlFor="type"
                       >
-                        {emptyService !== "" ? emptyService : "Choose Service"}
+                        {emptypet_type !== "" ? emptypet_type : "Pet Type"}
                       </label>
-
                       <select
                         style={{
-                          border: `${
-                            emptyService !== "" ? "2px solid red" : ""
-                          }`,
+                          border: emptypet_type !== "" ? "2px solid red" : "",
                           backgroundColor: "#fff",
                         }}
-                        name="service"
-                        value={appointmentForm.service}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setAppointment((prev) => ({
-                            ...prev,
-                            service: value,
-                          }));
-
-                          const selected = veterinarianServices.find(
-                            (item) => item.vservices === value
-                          );
-                          setPrice(selected ? selected.price : "");
-                        }}
-                        id="service"
+                        value={
+                          veterinarianInfo.petType || appointmentForm.pet_type
+                        }
+                        onChange={handleChange}
+                        name="pet_type"
+                        id="pet_type"
+                        disabled={disabledField}
                       >
-                        <option value="">Services</option>
+                        <option value="" disabled hidden>
+                          Pet Type
+                        </option>
 
-                        {veterinarianServices &&
-                          veterinarianServices.map((item) => (
-                            <option
-                              key={item.vservices_id}
-                              value={item.vservices}
-                            >
-                              {item.vservices} - ₱{item.price}
-                            </option>
-                          ))}
+                        {treatedPets && splitSpecs !== "General"
+                          ? treatedPets
+                              .filter(
+                                (item) =>
+                                  item.status === 1 &&
+                                  item.petname === splitSpecs
+                              )
+                              .map((item, index) => (
+                                <option key={index} value={item.petname}>
+                                  {item.petname}
+                                </option>
+                              ))
+                          : treatedPets
+                              .filter((item) => item.status === 1)
+                              .map((item, index) => (
+                                <option key={index} value={item.petname}>
+                                  {item.petname}
+                                </option>
+                              ))}
                       </select>
                     </div>
 
@@ -783,6 +911,7 @@ const SetAppointment = () => {
                         name="pet_name"
                         value={appointmentForm.pet_name}
                         onChange={handleChange}
+                        disabled={disabledField}
                       />
                     </div>
                   </div>
@@ -790,71 +919,75 @@ const SetAppointment = () => {
                   <div className="type-breed">
                     <div className="input-wrapper">
                       <label
-                        style={{
-                          color: `${emptypet_type !== "" ? "red" : ""}`,
-                        }}
+                        style={{ color: `${emptyService !== "" ? "red" : ""}` }}
                         htmlFor="type"
                       >
-                        {emptypet_type !== "" ? emptypet_type : "Pet Type"}
+                        {emptyService !== "" ? emptyService : "Choose Service"}
                       </label>
+
                       <select
                         style={{
-                          border: emptypet_type !== "" ? "2px solid red" : "",
+                          border: emptyService !== "" ? "2px solid red" : "",
                           backgroundColor: "#fff",
                         }}
-                        value={
-                          veterinarianInfo.petType || appointmentForm.pet_type
-                        }
-                        onChange={handleChange}
-                        name="pet_type"
-                        id="pet_type"
+                        name="service"
+                        value={appointmentForm.service}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setAppointment((prev) => ({
+                            ...prev,
+                            service: value,
+                          }));
+
+                          const selected = veterinarianServices.find(
+                            (item) => item.vservices === value
+                          );
+                          setPrice(selected ? selected.price : "");
+                        }}
+                        id="service"
                       >
-                        <option value="">Select Animal</option>
-                        <option value="Bat">Bat</option>
-                        <option value="Bird">Bird</option>
-                        <option value="Buffalo">Buffalo</option>
-                        <option value="Camel">Camel</option>
-                        <option value="Cat">Cat</option>
-                        <option value="Chicken">Chicken</option>
-                        <option value="Chinchilla">Chinchilla</option>
-                        <option value="Cow">Cow</option>
-                        <option value="Deer">Deer</option>
-                        <option value="Dog">Dog</option>
-                        <option value="Donkey">Donkey</option>
-                        <option value="Duck">Duck</option>
-                        <option value="Ferret">Ferret</option>
-                        <option value="Fish">Fish</option>
-                        <option value="Fox">Fox</option>
-                        <option value="Frog">Frog</option>
-                        <option value="Goat">Goat</option>
-                        <option value="Goose">Goose</option>
-                        <option value="Guinea Pig">Guinea Pig</option>
-                        <option value="Hamster">Hamster</option>
-                        <option value="Hedgehog">Hedgehog</option>
-                        <option value="Horse">Horse</option>
-                        <option value="Iguana">Iguana</option>
-                        <option value="Lizard">Lizard</option>
-                        <option value="Mouse">Mouse</option>
-                        <option value="Mule">Mule</option>
-                        <option value="Ostrich">Ostrich</option>
-                        <option value="Parrot">Parrot</option>
-                        <option value="Peacock">Peacock</option>
-                        <option value="Pig">Pig</option>
-                        <option value="Pigeon">Pigeon</option>
-                        <option value="Quail">Quail</option>
-                        <option value="Rabbit">Rabbit</option>
-                        <option value="Rat">Rat</option>
-                        <option value="Rooster">Rooster</option>
-                        <option value="Sheep">Sheep</option>
-                        <option value="Snake">Snake</option>
-                        <option value="Squirrel">Squirrel</option>
-                        <option value="Tortoise">Tortoise</option>
-                        <option value="Turtle">Turtle</option>
-                        <option value="Turkey">Turkey</option>
-                        <option value="Zebra">Zebra</option>
-                        <option value="Other">Other</option>
+                        <option value="" disabled hidden>
+                          Services
+                        </option>
+
+                        {appointmentForm.pet_type ? (
+                          (() => {
+                            const filteredServices =
+                              veterinarianServices.filter((item) =>
+                                item.vservices
+                                  .toLowerCase()
+                                  .includes(
+                                    appointmentForm.pet_type.toLowerCase()
+                                  )
+                              );
+
+                            if (filteredServices.length === 0) {
+                              return (
+                                <option value="" disabled>
+                                  No services available for{" "}
+                                  {appointmentForm.pet_type}
+                                </option>
+                              );
+                            }
+
+                            return filteredServices.map((item) => (
+                              <option
+                                key={item.vservices_id}
+                                value={item.vservices}
+                              >
+                                {item.vservices} - ₱{item.price}
+                              </option>
+                            ));
+                          })()
+                        ) : (
+                          <option value="" disabled>
+                            Please select a pet type first
+                          </option>
+                        )}
                       </select>
                     </div>
+
+                    {/* HAHAHAHHA */}
                     <div className="input-wrapper">
                       <label
                         style={{ color: `${emptybreed !== "" ? "red" : ""}` }}
@@ -870,6 +1003,7 @@ const SetAppointment = () => {
                         onChange={handleChange}
                         type="text"
                         name="breed"
+                        disabled={disabledField}
                       />
                     </div>
                   </div>
@@ -879,27 +1013,93 @@ const SetAppointment = () => {
                         style={{ color: `${emptyage !== "" ? "red" : ""}` }}
                         htmlFor="age"
                       >
-                        {emptyage !== ""
-                          ? emptyage
-                          : "Pet Age (e.g 1 month, 1 year)"}
+                        {emptyage !== "" ? emptyage : "Pet Age"}
                       </label>
-                      <input
+
+                      <div
                         style={{
-                          border: `${emptyage !== "" ? "2px solid red" : ""}`,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px",
                         }}
-                        value={appointmentForm.age}
-                        onChange={handleChange}
-                        type="text"
-                        name="age"
-                      />
+                      >
+                        {/* Numeric Input */}
+                        <input
+                          style={{
+                            border: `${emptyage !== "" ? "2px solid red" : ""}`,
+                            width: "50px",
+                            textAlign: "center",
+                          }}
+                          value={appointmentForm.age}
+                          onChange={handleChange}
+                          type="number"
+                          name="age"
+                          min="1"
+                        />
+
+                        {/* Radio Buttons for Unit */}
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <label
+                            style={{
+                              fontSize: "10px",
+                              border: `${
+                                emptyageunit !== "" ? "2px solid red" : ""
+                              }`,
+                            }}
+                          >
+                            <input
+                              type="radio"
+                              name="ageUnit"
+                              value="month"
+                              checked={appointmentForm.ageUnit === "month"}
+                              onChange={handleChange}
+                              style={{
+                                height: "12px",
+                                width: "12px",
+                              }}
+                            />
+                            Month(s)
+                          </label>
+
+                          <label
+                            style={{
+                              fontSize: "10px",
+                              border: `${
+                                emptyageunit !== "" ? "2px solid red" : ""
+                              }`,
+                            }}
+                          >
+                            <input
+                              type="radio"
+                              name="ageUnit"
+                              value="year"
+                              checked={appointmentForm.ageUnit === "year"}
+                              onChange={handleChange}
+                              style={{
+                                height: "12px",
+                                width: "12px",
+                              }}
+                            />
+                            Year(s)
+                          </label>
+                        </div>
+                      </div>
                     </div>
+
                     <div className="input-wrapper">
                       <label
                         style={{ color: `${emptyweight !== "" ? "red" : ""}` }}
                         htmlFor="weight"
                       >
                         {" "}
-                        {emptyweight !== "" ? emptyweight : "Pet Weight(kg)"}
+                        {emptyweight !== ""
+                          ? emptyweight
+                          : "Pet weight in kg (type N/A if under 1kg)"}
                       </label>
                       <input
                         style={{
@@ -988,6 +1188,7 @@ const SetAppointment = () => {
                         style={{ display: "none" }}
                         id="file"
                         type="file"
+                        accept="image/*"
                         onChange={(e) => {
                           const file = e.target.files[0];
                           if (file) {
@@ -1053,6 +1254,7 @@ const SetAppointment = () => {
                       onChange={handleChange}
                       name="history_health_issue"
                       id="history"
+                      disabled={disabledField}
                     ></textarea>
                   </div>
                   <div className="button">
@@ -1218,9 +1420,9 @@ const SetAppointment = () => {
             </div>
 
             <div className="buttons">
-              <button className="btn-submit" onClick={handlePayOnClinick}>
+              {/* <button className="btn-submit" onClick={handlePayOnClinick}>
                 {showLoader4 ? <div className="loader"></div> : "Pay at Clinic"}
-              </button>{" "}
+              </button>{" "} */}
               <button
                 className="btn-submit2"
                 onClick={handleSendDataAndPayment}

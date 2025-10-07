@@ -38,8 +38,10 @@ const Soontoexpired = () => {
       item.med_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.specialization.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.orig_stock.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.stock.toLowerCase().includes(searchQuery.toLowerCase())
+      String(item.orig_stock)
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      String(item.stock).toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -81,14 +83,6 @@ const Soontoexpired = () => {
               />
               <FiSearch className="icon" />
             </div>
-
-            <button
-              title="Add New Record"
-              className="btn-addnew"
-              onClick={() => setActiveFormModal("add")}
-            >
-              <IoIosAdd className="icon" />
-            </button>
           </div>
         </div>
         <div className="table">

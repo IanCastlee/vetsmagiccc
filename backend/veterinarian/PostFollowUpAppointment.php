@@ -6,7 +6,7 @@ include("../databaseConnection.php");
 $input = json_decode(file_get_contents('php://input'), true);
 
 if (
-    isset($input['appointment_id'], $input['client_id'],$input['pet_name'], $input['pet_type'], $input['title'], $input['desc'], $input['dr_id'], $input['desc'], $input['price'])
+    isset($input['appointment_id'], $input['client_id'],$input['pet_name'], $input['pet_type'], $input['title'], $input['desc'], $input['dr_id'], $input['desc'], $input['price'], $input['vet_note'])
 ) {
     $appointment_id = $input['appointment_id'];
     $client_id = $input['client_id'];
@@ -16,6 +16,7 @@ if (
     $description = $input['desc'];
     $dr_id = $input['dr_id'];
     $price = $input['price'];
+    $vet_note = $input['vet_note'];
     $nextWeek = 1;
     $sentDate = date("Y-m-d H:i:s");
 
@@ -25,14 +26,18 @@ if (
     if ($insert->execute()) {
 
         $appointmentStatus = 1;
-        $updateAppoinmentStatus = $conn->prepare("UPDATE appointments SET status = ? WHERE appointment_id = ?");
-        $updateAppoinmentStatus->bind_param("ii", $appointmentStatus, $appointment_id);
-        if ($updateAppoinmentStatus->execute()) {
-            $insertNotif = $conn->prepare("INSERT INTO notifications ( reciever_id, title, description, sentDate) VALUES (?, ?, ?, ?)");
-            $insertNotif->bind_param("isss", $client_id, $title, $description, $sentDate);
-            $insertNotif->execute();
+        $updateAppoinmentStatus = $conn->prepare("UPDATE appointments SET status = ?, note_from_vet = ? WHERE appointment_id = ?");
+        $updateAppoinmentStatus->bind_param("isi", $appointmentStatus, $vet_note, $appointment_id);
 
-            echo json_encode(['success' => true, 'message' => "Follow-up appointment and notification added successfully"]);
+        if ($updateAppoinmentStatus->execute()) {
+            // $appointment_id = $stmt->insert_id;
+
+
+            // $insertNotif = $conn->prepare("INSERT INTO notifications (appointment_id, reciever_id, title, description, sentDate) VALUES (?, ?, ?, ?, ?)");
+            // $insertNotif->bind_param("iisss", $appointment_id, $client_id, $title, $description, $sentDate);
+            // $insertNotif->execute();
+
+            echo json_encode(['success' => true, 'message' => "Follow-up appointment successfully"]);
         } else {
             echo json_encode(['success' => false, 'message' => "Database error: " . $conn->error]);
         }

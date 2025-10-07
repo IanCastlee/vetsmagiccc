@@ -13,8 +13,8 @@ import axiosIntance from "../../../axios";
 import Loader from "../loader/Loader";
 import Toaster from "../toaster/Toaster";
 
-const ConfirmationForm = ({ _message, email }) => {
-  const { setFormToShow } = useContext(AuthContext);
+const ConfirmationForm = ({ _message, email, password }) => {
+  const { setFormToShow, setMessageFromMail } = useContext(AuthContext);
   const [code, setCode] = useState(["", "", "", ""]);
   const [showLoader, setShowLoader] = useState(false);
   const [toasterMessage, setToasterMessage] = useState(null);
@@ -38,6 +38,8 @@ const ConfirmationForm = ({ _message, email }) => {
     }
   };
 
+  console.log("PASSWORD : ", password);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -55,12 +57,14 @@ const ConfirmationForm = ({ _message, email }) => {
       const res = await axiosIntance.post("client/auth/Verify.php", {
         otp: finalCode,
         email: email,
+        password: password,
       });
 
       if (res.data.success) {
         setTimeout(() => setShowLoader(false), 2000);
         setMessageFromVerification(res.data.message);
         setToasterMessage(res.data.message);
+        setMessageFromMail({ message: "" });
         setTimeout(() => setToasterMessage(null), 8000);
         setShowSigninButton(true);
       } else {

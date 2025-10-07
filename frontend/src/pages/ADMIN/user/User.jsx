@@ -34,7 +34,6 @@ const User = () => {
   }, []);
 
   //handle Delete
-  // Assuming `setVeterinarian` is your state setter and `veterinarian` is your array
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
@@ -63,7 +62,6 @@ const User = () => {
   const filteredVeterinarians = veterinarian.filter(
     (item) =>
       item.fullname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.specialization.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.address.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -108,7 +106,6 @@ const User = () => {
                 <th>Client ID</th>
                 <th>Fullname</th>
                 <th>Address</th>
-                <th>Email</th>
 
                 <th className="action-header">Action</th>
               </tr>
@@ -121,11 +118,10 @@ const User = () => {
 
                     <td>{item.fullname}</td>
                     <td>{item.address}</td>
-                    <td>{item.email}</td>
                     <td className="btns-wrapper">
                       <button
                         style={{ color: "#fff", backgroundColor: "gray" }}
-                        title="Delete"
+                        title="Set as not active"
                         onClick={() => setShowDelForm(item.user_id)}
                         className="btn"
                       >

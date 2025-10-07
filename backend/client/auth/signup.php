@@ -9,13 +9,12 @@ require '../../vendor/autoload.php';
 
 $input = json_decode(file_get_contents('php://input'), true);
 
-if (isset($input['fullname'], $input['address'], $input['phone'], $input['email'], $input['password'])) {
+if (isset($input['fullname'], $input['address'], $input['phone'], $input['email'])) {
 
     $fullname = $input['fullname'];
     $address = $input['address'];
     $phone = $input['phone'];
     $email = $input['email'];
-    $password = password_hash($input['password'], PASSWORD_DEFAULT);
     $verify_token = rand(1000, 9999);
 
     $stmt_check_email =  $conn->prepare("SELECT * FROM users WHERE email = ?");
@@ -26,9 +25,9 @@ if (isset($input['fullname'], $input['address'], $input['phone'], $input['email'
     if ($result->num_rows > 0) {
         echo json_encode(['success' => false, 'message' => "Email already exists"]);
     } else {
-        $stmt_insert = $conn->prepare("INSERT INTO users (fullname, address, phone, email, password, verify_token) VALUES (?,?,?,?,?,?)");
+        $stmt_insert = $conn->prepare("INSERT INTO users (fullname, address, phone, email, verify_token) VALUES (?,?,?,?,?)");
         if ($stmt_insert) {
-            $stmt_insert->bind_param("ssssss", $fullname, $address, $phone, $email, $password, $verify_token);
+            $stmt_insert->bind_param("sssss", $fullname, $address, $phone, $email, $verify_token);
             if ($stmt_insert->execute()) {
 
                 $mail = new PHPMailer(true);
@@ -65,7 +64,7 @@ if (isset($input['fullname'], $input['address'], $input['phone'], $input['email'
                     $mail->send();
                     echo json_encode([
                         'success' => true,
-                        'message' => "Successfully registered! Check your email ($email) to verify your account. If you don't see the email, please check your Spam or Junk folder.",
+                        'message' => "Check your email ($email) to verify your account. If you don't see the email, please check your Spam or Junk folder.",
 
                         'email' => $email
                     ]);

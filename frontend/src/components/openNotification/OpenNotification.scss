@@ -1,0 +1,82 @@
+.open-notif-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 4999;
+  background-color: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .open-notif-details {
+    width: 500px;
+    height: auto;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+
+    .open-pet-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      border-bottom: 1px solid rgb(239, 234, 234);
+      padding-bottom: 20px;
+      h2 {
+        font-size: 20px;
+      }
+
+      .close-open {
+        font-size: 1.125rem;
+        cursor: pointer;
+      }
+    }
+
+    .image-pet-deatils {
+      display: flex;
+      gap: 20px;
+      .view-medimg2 {
+        height: 130px;
+        width: 130px;
+        object-fit: cover;
+      }
+
+      .open-pet-details {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .span-details {
+          font-size: 0.875rem;
+          color: #363434;
+        }
+      }
+    }
+  }
+
+  .appointment-open-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+
+    .span-details {
+      font-size: 0.875rem;
+      color: #363434;
+    }
+  }
+
+  .open-status-wrapper {
+    display: flex;
+    justify-content: end;
+    .open-status {
+      color: blue;
+      font-weight: 500;
+      font-size: 0.875rem;
+      background-color: #eeeee7;
+      padding: 2px 10px;
+      border-radius: 20px;
+    }
+  }
+}

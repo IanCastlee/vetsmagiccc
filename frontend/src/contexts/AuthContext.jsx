@@ -13,6 +13,7 @@ export const AuthContextProvider = ({ children }) => {
   const [messageFromMail, setMessageFromMail] = useState({
     message: null,
     email: null,
+    password: "",
   });
 
   const [modalToShow, setModlToShow] = useState("");
@@ -59,6 +60,7 @@ export const AuthContextProvider = ({ children }) => {
         <ConfirmationForm
           _message={messageFromMail.message}
           email={messageFromMail.email}
+          password={messageFromMail.password}
         />
       )}
     </AuthContext.Provider>

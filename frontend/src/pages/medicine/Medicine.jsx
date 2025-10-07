@@ -123,7 +123,7 @@ const Medicine = () => {
               <div className="search-input-icon">
                 <input
                   type="text"
-                  placeholder="Search Medicine"
+                  placeholder="Search"
                   value={searchQuery}
                   onChange={handleSearch}
                 />

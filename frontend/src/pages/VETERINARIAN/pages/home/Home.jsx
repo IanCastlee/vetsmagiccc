@@ -32,7 +32,9 @@ const Home = () => {
   const [appointment, setAppointment] = useState([]);
   const [price, setPrice] = useState("");
   const [clickedDoneId, setClickedDoneId] = useState(null);
+
   const [clickedCancelId, setClickedCancelId] = useState(null);
+  const [clickedCancelClientId, setClickedCancelClientId] = useState(null);
 
   const [showVaccinationModal, setShowVaccinationModal] = useState(false);
 
@@ -180,6 +182,7 @@ const Home = () => {
           } - Petname:  ${clickedToFollowUp.pet_name}, (${
             clickedToFollowUp.pet_type
           })`,
+          vet_note: manualMessage,
 
           dr_id: clickedToFollowUp.dr_id,
           price: price,
@@ -283,13 +286,12 @@ const Home = () => {
   }, [manualMessage]);
 
   //setClickedCancelId
-
   const handleCancelAppointment = async (e) => {
     e.preventDefault();
 
     try {
       const res = await axiosIntance.post(
-        `admin/appointment/setAppointmentCanceled.php?appointment_id=${clickedCancelId}&note_from_vet=${encodeURIComponent(
+        `admin/appointment/setAppointmentCanceled.php?appointment_id=${clickedCancelId}&client_id=${clickedCancelClientId}&note_from_vet=${encodeURIComponent(
           noteFromVetForm
         )}`
       );
@@ -302,6 +304,7 @@ const Home = () => {
         );
         setAppointment(handleUpdateAut);
         setClickedCancelId(null);
+        setClickedCancelClientId(null);
         showSuccessAlert_cancel();
       } else {
         console.log("Delete failed:", res.data);
@@ -398,7 +401,7 @@ const Home = () => {
         console.log("Vaccination added successfully:", res.data.message);
         setVaccinationForm("");
 
-        // ✅ Re-fetch updated vaccination list
+        // Re-fetch updated vaccination list
         if (clickedAppointmentItem) {
           const updateRes = await axiosIntance.post(
             `veterinarian/getVaccination.php`,
@@ -487,6 +490,10 @@ const Home = () => {
     } finally {
       setLoader(false);
     }
+  };
+
+  const mclicked = (clientId) => {
+    setClickedCancelClientId(clientId);
   };
 
   return (
@@ -655,9 +662,10 @@ const Home = () => {
                                   </button>
                                   <button
                                     className="btn"
-                                    onClick={() =>
-                                      setClickedCancelId(item.appointment_id)
-                                    }
+                                    onClick={() => {
+                                      setClickedCancelId(item.appointment_id);
+                                      mclicked(item.clientId);
+                                    }}
                                   >
                                     <TbCancel className="icon" />
                                     Cancel
@@ -793,7 +801,7 @@ const Home = () => {
             transition={{ duration: 0.5 }}
             className="modal-viewmore"
           >
-            <div className="top">
+            <div className="top-title-wrappperr">
               <div className="left">
                 <h6>Appointment Details</h6>
               </div>
@@ -862,8 +870,7 @@ const Home = () => {
                   <strong>Service:</strong> {moreInfo.service}
                 </span>
                 <span>
-                  <strong>Health Issues:</strong>{" "}
-                  {moreInfo.current_health_issue}
+                  <strong>Health Issue:</strong> {moreInfo.current_health_issue}
                 </span>
                 <span>
                   <strong>Medical History:</strong>{" "}
@@ -954,37 +961,18 @@ const Home = () => {
                 />
               </div>
               <div className="form">
-                {/* <div className="card-checklist">
-                  {followUpData &&
-                    followUpData.map((item) => (
-                      <div key={item.id} className="check-item">
-                        <input
-                          type="radio"
-                          name="follow-up"
-                          value={item.desc}
-                          checked={selectedFollowUpMessage === item.desc}
-                          onChange={() => {
-                            setSelectedFollowUpMessage(item.desc);
-                            setManualMessage("");
-                          }}
-                        />
-                        <span>{item.desc}</span>
-                      </div>
-                    ))}
-                </div> */}
-
                 <div className="input-wrapper">
                   <label htmlFor="inpt-other-concern">
-                    Add a note or message for this follow-up check-up
+                    Add a note or message for this follow-up check-up,
+                    diagnosis, or prescription.
                   </label>
 
                   <textarea
+                    style={{ whiteSpace: "pre-wrap", border: "none" }}
                     id="inpt-other-concern"
                     className="inpt-other-concern__"
                     type="text"
-                    style={{ border: "none" }}
                     value={manualMessage}
-                    placeholder="message"
                     onChange={(e) => {
                       setManualMessage(e.target.value);
                       setSelectedFollowUpMessage(null);
@@ -1049,41 +1037,25 @@ const Home = () => {
                 marginBottom: "20px",
               }}
             >
-              <h6 style={{ fontSize: "1rem", color: "#000" }}>Confirmation</h6>
+              <h6 style={{ fontSize: "1rem", color: "#000" }}>
+                {clickedCancelId
+                  ? "Cancellation"
+                  : "Add Note, Diagnosis, or Prescription"}
+              </h6>
             </div>
-
-            {/* <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "5px",
-                justifyContent: "center",
-              }}
-            >
-              {clickedDoneId !== null ? (
-                <FaRegCircleCheck
-                  style={{ color: "green", fontSize: "40px" }}
-                />
-              ) : clickedCancelId !== null ? (
-                <MdDoNotDisturbAlt style={{ color: "red", fontSize: "45px" }} />
-              ) : (
-                ""
-              )}
-              <p>
-                {clickedDoneId !== null
-                  ? "Has this appointment been completed?"
-                  : clickedCancelId !== null
-                  ? "Has this appointment been cancelled?"
-                  : ""}
-              </p>
-            </div> */}
 
             <div className="add-note">
               <textarea
+                style={{ whiteSpace: "pre-wrap" }}
+                rows={7}
                 name="note"
                 onChange={(e) => setNoteFromVetForm(e.target.value)}
                 value={noteFromVetForm}
-                placeholder="Add note for this appointment"
+                placeholder={
+                  clickedCancelId
+                    ? "Reason for cancellation"
+                    : "Add Note, Diagnosis, or Prescription"
+                }
               ></textarea>
             </div>
 
@@ -1105,7 +1077,7 @@ const Home = () => {
                     : ""
                 }
               >
-                {clickedCancelId ? "Send Note, Cancel" : "Send Note, Done"}
+                {clickedCancelId ? "Send, Cancel" : "Send, Done"}
               </button>
               <button
                 className="btn-no"

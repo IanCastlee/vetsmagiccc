@@ -5,7 +5,7 @@ import "./ForgotPassword.scss";
 
 //IMAGE
 import catdog from "../../assets/imges/signinimaeg.png";
-import logo from "../../assets/icons/logo.png";
+import logo from "../../assets/icons/vetmagic.png";
 
 //ICONS
 import axiosIntance from "../../../axios";
@@ -41,6 +41,12 @@ const ForgotPassword = () => {
     e.preventDefault();
     setshowLoader(true);
 
+    // Clear previous errors
+    setEmptyEmail("");
+    setEmptyNPassword("");
+    setEmptyCPassword("");
+
+    // Empty fields check
     if (
       confirm.email === "" ||
       confirm.npassword === "" ||
@@ -55,17 +61,37 @@ const ForgotPassword = () => {
       if (confirm.cpassword === "") {
         setEmptyCPassword("Confirm your New Password");
       }
-      setshowLoader(false);
 
+      setshowLoader(false);
       return;
     }
 
+    // Gmail validation
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    if (!gmailRegex.test(confirm.email)) {
+      setEmptyEmail("Please enter a valid email address.");
+      setshowLoader(false);
+      return;
+    }
+
+    // Password match check
     if (confirm.npassword !== confirm.cpassword) {
-      setEmptyCPassword("New Password and Confirmation Password do not match.");
+      setEmptyCPassword("Passwords and confirm password do not match.");
       setshowLoader(false);
       return;
     }
 
+    // Password strength validation
+    const passwordCriteria = /^(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
+    if (!passwordCriteria.test(confirm.npassword)) {
+      setEmptyNPassword(
+        "Password must be at least 8 characters long and include a capital letter and a number."
+      );
+      setshowLoader(false);
+      return;
+    }
+
+    // Submit to server
     try {
       const res = await axiosIntance.post("client/auth/Forgotpassword.php", {
         email: confirm.email,
@@ -78,6 +104,7 @@ const ForgotPassword = () => {
           setMessageFromMail({
             message: res.data.message,
             email: res.data.email,
+            password: confirm.cpassword,
           });
           setFormToShow("confirm");
         }, 2000);
@@ -88,7 +115,6 @@ const ForgotPassword = () => {
       }
     } catch (error) {
       setshowLoader(false);
-
       console.log("Error : ", error);
     }
   };

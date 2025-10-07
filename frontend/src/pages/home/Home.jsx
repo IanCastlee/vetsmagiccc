@@ -10,6 +10,7 @@ import dogImage from "../../assets/imges/dog.png";
 import { Link } from "react-router-dom";
 import axiosIntance from "../../../axios";
 import { useContext, useEffect, useRef, useState } from "react";
+import msgImg from "../../assets/icons/chat.png";
 
 //ICONS
 import { CiSearch } from "react-icons/ci";
@@ -22,6 +23,7 @@ import { PiCalendarPlusLight } from "react-icons/pi";
 import Loader3 from "../../components/loader/Loader3";
 import { uploadUrl } from "../../../fileurl";
 import Footer from "../../components/footer/Footer";
+import Chatbot from "../../components/chatbot/Chatbot";
 
 const Home = () => {
   const { setFormToShow, currentUser } = useContext(AuthContext);
@@ -32,6 +34,7 @@ const Home = () => {
   const [clientProfile, setClientProfile] = useState([]);
   const [loaderDot, setLoaderDot] = useState(false);
   const targetRef = useRef(null);
+  const [showChatModal, setShowChatModal] = useState(false);
 
   // get veterinarian data
   useEffect(() => {
@@ -184,7 +187,7 @@ const Home = () => {
               className="dog-img"
             />
 
-            <div className="trusted-wrapper">
+            {/* <div className="trusted-wrapper">
               <span>Trusted by</span>
               <div className="trusted">
                 {loaderDot ? (
@@ -206,10 +209,8 @@ const Home = () => {
                     </div>
                   ))
                 )}
-
-                <span>+5</span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -312,6 +313,15 @@ const Home = () => {
       </div>
 
       <Footer />
+
+      <img
+        src={msgImg}
+        onClick={() => setShowChatModal(true)}
+        alt="ChatBot"
+        className="chatbotBtn"
+      />
+
+      {showChatModal && <Chatbot close={() => setShowChatModal(false)} />}
     </>
   );
 };

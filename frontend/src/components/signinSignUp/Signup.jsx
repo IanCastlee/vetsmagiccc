@@ -18,7 +18,8 @@ import Toaster from "../toaster/Toaster";
 import { AuthContext } from "../../contexts/AuthContext";
 
 const Signup = () => {
-  const { setFormToShow, setMessageFromMail } = useContext(AuthContext);
+  const { setFormToShow, setMessageFromMail, password } =
+    useContext(AuthContext);
   const [formToShow, setformToShow] = useState("1");
   const [showSignInForm, setshowSignInForm] = useState(false);
   const [showLoader, setshowLoader] = useState(false);
@@ -34,6 +35,7 @@ const Signup = () => {
   const [emptyEmail, setEmptyEmail] = useState("");
   const [emptyPassword, setEmptyPassword] = useState("");
   const [emptyCPassword, setEmptyCPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [signUpdata, setSignUptData] = useState({
     fullname: "",
@@ -178,15 +180,12 @@ const Signup = () => {
         setTimeout(() => {
           setshowLoader(false);
           setMessageFromMail({
-            message: res.data.message,
+            message: `Check your email ${signUpdata.email} to verify your account. If you don't see the email, please check your Spam or Junk folder.`,
             email: res.data.email,
+            password: signUpdata.cpassword,
           });
           setFormToShow("confirm");
         }, 2000);
-        // setToasterMessage(res.data.message);
-        // setTimeout(() => {
-        //   setToasterMessage(null);
-        // }, 8000);
       } else {
         setshowLoader(false);
         console.log(res.data);
@@ -199,7 +198,7 @@ const Signup = () => {
 
   return (
     <>
-      <div className="signin">
+      <div className="signup">
         <motion.div
           initial={{ opacity: 0, y: -200 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -354,7 +353,7 @@ const Signup = () => {
                   </label>
                   <input
                     id="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter your Password"
                     name="password"
                     onChange={handleSignUpDataChange}
@@ -372,12 +371,19 @@ const Signup = () => {
                   </label>
                   <input
                     id="cpassword"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Confirm your Password"
                     name="cpassword"
                     onChange={handleSignUpDataChange}
                     value={signUpdata.cpassword}
                   />
+                </div>
+                <div className="showpass-wrapper">
+                  <input
+                    type="checkbox"
+                    onChange={(e) => setShowPassword(e.target.checked)}
+                  />
+                  <span>Show password</span>
                 </div>
 
                 <div className="iagree">
@@ -392,7 +398,7 @@ const Signup = () => {
                       onChange={(e) => setAgree(e.target.checked)}
                     />
                     <p onClick={() => setShowTerms(true)}>
-                      I agree to the terms and condations
+                      I agree to the terms and conditions
                     </p>
                   </div>
                 </div>
@@ -430,7 +436,7 @@ const Signup = () => {
       {showTerms && <TermsAndCondations close={() => setShowTerms(false)} />}
       {showTermsNote && (
         <div className="note-terms">
-          <p>To continue, You need to agree to the terms and condations</p>
+          <p>To continue, You need to agree to the terms and conditions</p>
         </div>
       )}
     </>

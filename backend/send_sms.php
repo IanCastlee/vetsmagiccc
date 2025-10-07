@@ -4,6 +4,9 @@ include("./databaseConnection.php");
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 use ClickSend\Api\SMSApi;
 use ClickSend\Configuration;
 use ClickSend\Model\SmsMessage;
@@ -12,15 +15,22 @@ use ClickSend\Model\SmsMessageCollection;
 header('Content-Type: application/json');
 
 $data = json_decode(file_get_contents('php://input'), true);
-$phone = $data['phone'];
-$message = $data['message'];
+$phone = $data['phone'] ?? null;
+$message = $data['message'] ?? null;
+
+if (!$phone || !$message) {
+    echo json_encode(['success' => false, 'error' => 'Phone number or message is missing.']);
+    exit;
+}
 
 $config = Configuration::getDefaultConfiguration()
-    ->setUsername('ml99997955@gmail.com')
-    ->setPassword('63960B66-617B-D559-B739-891A8A41BD8A');
+    ->setUsername($_ENV['CLICKSEND_USERNAME'])
+    ->setPassword($_ENV['CLICKSEND_API_KEY']);
 
+// Initialize SMS API
 $apiInstance = new SMSApi(null, $config);
 
+// Create SMS message
 $msg = new SmsMessage([
     'source' => 'php',
     'from' => 'VETCARE',
@@ -31,6 +41,7 @@ $msg = new SmsMessage([
 
 $msgCollection = new SmsMessageCollection(['messages' => [$msg]]);
 
+// Try sending SMS
 try {
     $result = $apiInstance->smsSendPost($msgCollection);
     echo json_encode(['success' => true, 'response' => $result]);

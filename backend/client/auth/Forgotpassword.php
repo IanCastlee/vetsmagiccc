@@ -13,8 +13,7 @@ if (isset($input['email'], $input['password'])) {
 
 
     $email = $input['email'];
-    $password = password_hash($input['password'], PASSWORD_DEFAULT);
-    $status = 0;
+    // $password = password_hash($input['password'], PASSWORD_DEFAULT);
     $verify_token = rand(1000, 9999);
 
     $stmt_check_email =  $conn->prepare("SELECT * FROM users WHERE email = ?");
@@ -23,9 +22,9 @@ if (isset($input['email'], $input['password'])) {
     $result = $stmt_check_email->get_result();
 
     if ($result->num_rows > 0) {
-        $update_status = $conn->prepare("UPDATE users SET password = ?, verify_token = ?, status = ? WHERE email = ?");
+        $update_status = $conn->prepare("UPDATE users SET  verify_token = ? WHERE email = ?");
         if ($update_status) {
-            $update_status->bind_param("ssis", $password, $verify_token, $status, $email);
+            $update_status->bind_param("ss", $verify_token, $email);
             if ($update_status->execute()) {
 
                 $mail = new PHPMailer(true);
