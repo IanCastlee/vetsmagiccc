@@ -298,3 +298,9 @@ You are here to support pet parents with questions about VetsMagic — and to gu
 }
 
 export default Chatbot;
+
+// import React from "react";
+
+// export default function Chatbot() {
+//   return <div>Chatbot</div>;
+// }

@@ -12,7 +12,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { FaArrowLeft } from "react-icons/fa6";
 
 // HOOKS & HELPERS
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosIntance from "../../../axios";
 import { uploadUrl } from "../../../fileurl";
@@ -21,8 +21,10 @@ import { categories } from "../../../constant/catogories";
 // COMPONENTS
 import Loader3 from "../../components/loader/Loader3";
 import Emptydata from "../../components/emptydata/Emptydata";
+import { AuthContext } from "../../contexts/AuthContext";
 
-const MedicineCard = React.memo(({ item, onClick }) => {
+// Medicine Card
+const MedicineCard = React.memo(({ item, onReserve }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -30,7 +32,6 @@ const MedicineCard = React.memo(({ item, onClick }) => {
       transition={{ duration: 0.7 }}
       className="card"
       key={item.medicine_id}
-      onClick={() => onClick(item)}
     >
       <div className="med-items">
         <div className="item-card">
@@ -45,23 +46,41 @@ const MedicineCard = React.memo(({ item, onClick }) => {
           <div className="right">
             <div className="info">
               <span className="med-name">{item.med_name}</span>
-              <span>Stock : {item.stock}</span>
-              <span>Price : ₱ {item.price}</span>
+              <span>Stock: {item.stock}</span>
+              <span>Price: ₱ {item.price}</span>
             </div>
+            <button
+              onClick={() => onReserve(item)}
+              style={{
+                backgroundColor: "#007BFF",
+                color: "white",
+                border: "none",
+                padding: "5px 20px",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontSize: "12px",
+              }}
+            >
+              Reserve
+            </button>
           </div>
         </div>
       </div>
     </motion.div>
   );
 });
+
 const Medicine = () => {
+  const { currentUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [medicineData, setMedicineData] = useState([]);
   const [loader, setLoader] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [clickeMedicineData, setClickeMedicineData] = useState(null);
+  const [selectedMedicine, setSelectedMedicine] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [notes, setNotes] = useState("");
 
   useEffect(() => {
     const getMedicine = async () => {
@@ -96,18 +115,58 @@ const Medicine = () => {
       activeCategory === "All" || item.category === activeCategory;
     const matchesSearch =
       item.med_name.toLowerCase().includes(searchQuery) ||
-      item.specialization.toLowerCase().includes(searchQuery);
+      (item.specialization || "").toLowerCase().includes(searchQuery);
     return matchesCategory && matchesSearch;
   });
 
-  const clickedReadMore = (item) => {
-    setClickeMedicineData(item);
+  const handleReserveClick = (item) => {
+    setSelectedMedicine(item);
+    setQuantity(1);
+    setNotes("");
     setShowModal(true);
   };
 
   const closeModal = () => {
-    setClickeMedicineData(null);
     setShowModal(false);
+    setSelectedMedicine(null);
+  };
+
+  const handleSaveReservation = async () => {
+    if (!selectedMedicine || !quantity || quantity <= 0) {
+      alert("Please enter a valid quantity.");
+      return;
+    }
+
+    try {
+      const payload = {
+        item_id: selectedMedicine.medicine_id,
+        user_id: currentUser.user_id,
+        price: selectedMedicine.price,
+        qty: parseInt(quantity, 10),
+        note: notes || "",
+      };
+
+      console.log("Sending reservation:", payload); // Debug log
+
+      const res = await axiosIntance.post(
+        "client/shop_reservation/reserve_medicine.php",
+        payload,
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      if (res.data.success) {
+        alert("✅ Reservation saved successfully!");
+        setShowModal(false);
+        // Optional: Refresh the medicine data to update stock
+        const updated = await axiosIntance.get("admin/shop/getShop.php");
+        setMedicineData(updated.data.data);
+      } else {
+        alert("⚠️ " + res.data.message);
+      }
+    } catch (err) {
+      console.error("Error saving reservation:", err);
+      alert("An error occurred while saving reservation.");
+    }
   };
 
   return (
@@ -190,7 +249,7 @@ const Medicine = () => {
                       <MedicineCard
                         item={item}
                         key={item.medicine_id}
-                        onClick={clickedReadMore}
+                        onReserve={handleReserveClick}
                       />
                     ))
                   )}
@@ -199,56 +258,105 @@ const Medicine = () => {
             </div>
           </div>
         </div>
-      </div>
 
-      {showModal && clickeMedicineData && (
-        <div className="modal-viewmore-overlay">
-          <div className="modal-viewmore">
-            <div className="top">
-              <div className="left" />
-              <IoCloseOutline onClick={closeModal} className="close-icon" />
-            </div>
+        {/* Reservation Modal */}
+        {showModal && selectedMedicine && (
+          <div className="modal-overlay">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="modal-content"
+            >
+              <button className="close-btn" onClick={closeModal}>
+                <IoCloseOutline size={24} />
+              </button>
 
-            <div className="content">
-              <div className="image-wraper">
-                <LazyLoadImage
-                  src={`${uploadUrl.uploadurl}/${clickeMedicineData.med_image}`}
-                  alt={clickeMedicineData.med_name}
-                  effect="blur"
-                  className="view-medimg"
+              <div className="modal-body">
+                <img
+                  src={`${uploadUrl.uploadurl}/${selectedMedicine.med_image}`}
+                  alt="medicine"
+                  className="modal-img"
                 />
-              </div>
+                <h2>{selectedMedicine.med_name}</h2>
+                <p>Price: ₱ {selectedMedicine.price}</p>
+                <p>Stock: {selectedMedicine.stock}</p>
 
-              <span className="med-name-modal">
-                {clickeMedicineData.med_name}
-              </span>
-              <span>
-                <strong>Price:</strong> ₱{clickeMedicineData.price}
-              </span>
-              <span>
-                <strong>Category:</strong> {clickeMedicineData.category}
-              </span>
-              {/* <span>
-                <strong>Specialization:</strong>{" "}
-                {clickeMedicineData.specialization}
-              </span> */}
-              {activeCategory !== "Accessories" && (
-                <span>
-                  <strong>Dosage:</strong> {clickeMedicineData.dosage}
-                </span>
-              )}
-              <span>
-                <strong>Stock:</strong> {clickeMedicineData.stock}
-              </span>
-              <span>
-                <strong>Description:</strong> {clickeMedicineData.description}
-              </span>
-            </div>
+                <div className="input-group">
+                  <label>Quantity:</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max={selectedMedicine.stock}
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label>Notes:</label>
+                  <textarea
+                    rows="3"
+                    placeholder="Add special notes..."
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                  ></textarea>
+                </div>
+
+                <button className="save-btn" onClick={handleSaveReservation}>
+                  Save Reservation
+                </button>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 };
 
 export default Medicine;
+
+//  {showModal && clickeMedicineData && (
+//         <div className="modal-viewmore-overlay">
+//           <div className="modal-viewmore">
+//             <div className="top">
+//               <div className="left" />
+//               <IoCloseOutline onClick={closeModal} className="close-icon" />
+//             </div>
+
+//             <div className="content">
+//               <div className="image-wraper">
+//                 <LazyLoadImage
+//                   src={`${uploadUrl.uploadurl}/${clickeMedicineData.med_image}`}
+//                   alt={clickeMedicineData.med_name}
+//                   effect="blur"
+//                   className="view-medimg"
+//                 />
+//               </div>
+
+//               <span className="med-name-modal">
+//                 {clickeMedicineData.med_name}
+//               </span>
+//               <span>
+//                 <strong>Price:</strong> ₱{clickeMedicineData.price}
+//               </span>
+//               <span>
+//                 <strong>Category:</strong> {clickeMedicineData.category}
+//               </span>
+
+//               {activeCategory !== "Accessories" && (
+//                 <span>
+//                   <strong>Dosage:</strong> {clickeMedicineData.dosage}
+//                 </span>
+//               )}
+//               <span>
+//                 <strong>Stock:</strong> {clickeMedicineData.stock}
+//               </span>
+//               <span>
+//                 <strong>Description:</strong> {clickeMedicineData.description}
+//               </span>
+//             </div>
+//           </div>
+//         </div>
+//       )}

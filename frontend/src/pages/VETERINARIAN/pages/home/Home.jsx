@@ -634,7 +634,7 @@ const Home = () => {
                                   />
                                 </div>
                                 <div className="menu">
-                                  <button
+                                  {/* <button
                                     className="btn"
                                     onClick={() =>
                                       clickedToFollowUpItem(
@@ -650,7 +650,7 @@ const Home = () => {
                                   >
                                     <FaRegCircleCheck className="icon" />
                                     Follow Up
-                                  </button>
+                                  </button> */}
                                   <button
                                     onClick={() =>
                                       setClickedDoneId(item.appointment_id)

@@ -106,7 +106,7 @@ const MobileSidebar = ({ close }) => {
           <Link className="btn-link" to={"/home/"} onClick={close}>
             <TfiHome className="icon" /> Home
           </Link>
-          {currentUser !== null && (
+          {/* {currentUser !== null && (
             <Link
               className="btn-link"
               onClick={() => {
@@ -117,7 +117,7 @@ const MobileSidebar = ({ close }) => {
               <SlRefresh className="icon" />
               Follow-up Check-up
             </Link>
-          )}
+          )} */}
           {currentUser !== null && (
             <Link className="btn-link" to="/myappointment/" onClick={close}>
               <PiCalendarPlusLight className="icon" /> Appointment

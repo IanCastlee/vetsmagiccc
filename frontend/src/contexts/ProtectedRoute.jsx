@@ -21,6 +21,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     "/signin/",
     "/notfound",
     "/sms",
+    "/terms",
     // "/paymongo",
   ];
 
@@ -55,12 +56,15 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       "/admin/home",
       "/admin/active-veterinarian",
       "/admin/not-active-veterinarian",
+      "/admin/cancelled-appointment",
       "/admin/pending-appointment",
       "/admin/done-appointment",
       "/admin/followup-appointment",
       "/admin/appointment-history",
       "/admin/completed-followup-appointment",
       "/admin/shop",
+      "/admin/shop-reservation",
+      "/admin/shop-reservation-history",
       "/admin/low-stock",
       "/admin/soon-expired",
       "/admin/active-user",

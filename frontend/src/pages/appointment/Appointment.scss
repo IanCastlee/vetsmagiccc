@@ -611,6 +611,88 @@
   }
 }
 
+//cancellation
+.cancel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+
+  .cancel-box {
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    width: 400px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+    h3 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 15px;
+
+      .reason-btn {
+        background: #f1f1f1;
+        border: none;
+        border-radius: 6px;
+        padding: 8px;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover,
+        &.active {
+          background: #3498db;
+          color: #fff;
+        }
+      }
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: none;
+      margin-bottom: 15px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+
+      .submit-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+      }
+
+      .cancel-btn {
+        background: #ccc;
+        color: #333;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
 @media (max-width: 786px) {
   .appointment {
     width: 100%;

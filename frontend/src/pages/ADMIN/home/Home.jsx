@@ -454,7 +454,7 @@ const Home = () => {
 
             {activeChart && (
               <ChartContainer style={{ marginTop: "20px", paddingTop: "30px" }}>
-                <AreaChart
+                <BarChart
                   data={appointmentStats.monthly}
                   width={600}
                   height={300}
@@ -464,28 +464,6 @@ const Home = () => {
                     <linearGradient id="bgGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#e0f0ff" />
                       <stop offset="100%" stopColor="#c0ddf9" />
-                    </linearGradient>
-
-                    <linearGradient
-                      id="colorAppointments"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="5%" stopColor="#3498db" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="#2980b9" stopOpacity={0} />
-                    </linearGradient>
-
-                    <linearGradient
-                      id="colorPayments"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop offset="5%" stopColor="#5dade2" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="#2e86c1" stopOpacity={0} />
                     </linearGradient>
                   </defs>
 
@@ -504,23 +482,23 @@ const Home = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <Tooltip />
                   <Legend />
-                  <Area
-                    type="monotone"
+
+                  {/* Bars */}
+                  <Bar
                     dataKey="total_appointments"
-                    stroke="#27ae60"
-                    fillOpacity={1}
-                    fill="url(#colorAppointments)"
+                    fill="#27ae60"
                     name="Appointments"
+                    barSize={30}
+                    radius={[5, 5, 0, 0]}
                   />
-                  <Area
-                    type="monotone"
+                  <Bar
                     dataKey="total_payment"
-                    stroke="#e74c3c"
-                    fillOpacity={1}
-                    fill="url(#colorPayments)"
+                    fill="#e74c3c"
                     name="Earned"
+                    barSize={30}
+                    radius={[5, 5, 0, 0]}
                   />
-                </AreaChart>
+                </BarChart>
               </ChartContainer>
             )}
 
@@ -530,7 +508,7 @@ const Home = () => {
               </h4>
             )}
           </div>
-
+          {/* 
           <div className="bot">
             <span className="title" style={{ marginBottom: "12px" }}>
               Most Selling Products
@@ -571,7 +549,7 @@ const Home = () => {
                 ).toLocaleString()}
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

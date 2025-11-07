@@ -118,7 +118,6 @@ const Signin = () => {
                   className="sign-up-btn"
                   onClick={() => {
                     setFormToShow("signup");
-                    nav;
                   }}
                 >
                   SIGN UP

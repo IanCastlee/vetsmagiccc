@@ -29,7 +29,9 @@ const Signup = () => {
   const [agree, setAgree] = useState(false);
   const [showTermsNote, setShowTermsNote] = useState(false);
 
-  const [emptyFullname, setEmptyFullname] = useState("");
+  const [emptyFirstname, setEmptyFirstname] = useState("");
+  const [emptyLastname, setEmptyLastname] = useState("");
+  const [emptySuffix, setEmptySuffix] = useState("");
   const [emptyAddress, setEmptyAddress] = useState("");
   const [emptyPhone, setEmptyPhone] = useState("");
   const [emptyEmail, setEmptyEmail] = useState("");
@@ -38,7 +40,9 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [signUpdata, setSignUptData] = useState({
-    fullname: "",
+    firstname: "",
+    lastname: "",
+    suffix: "",
     address: "",
     phone: "",
     email: "",
@@ -49,7 +53,9 @@ const Signup = () => {
   const handleSignUpDataChange = (e) => {
     const { name, value } = e.target;
 
-    setEmptyFullname("");
+    setEmptyFirstname("");
+    setEmptyLastname("");
+    setEmptySuffix("");
     setEmptyAddress("");
     setEmptyPhone("");
     setEmptyEmail("");
@@ -66,13 +72,18 @@ const Signup = () => {
     let hasError = false;
 
     // Reset previous error messages
-    setEmptyFullname("");
+    setEmptyFirstname("");
+    setEmptyLastname("");
     setEmptyAddress("");
     setEmptyPhone("");
 
     // Check for empty fields
-    if (signUpdata.fullname === "") {
-      setEmptyFullname("Fullname is required");
+    if (signUpdata.firstname === "") {
+      setEmptyFirstname("Firstname is required");
+      hasError = true;
+    }
+    if (signUpdata.lastname === "") {
+      setEmptyLastname("Lastname is required");
       hasError = true;
     }
 
@@ -159,8 +170,12 @@ const Signup = () => {
     }
 
     try {
+      const fullname = `${signUpdata.firstname} ${signUpdata.lastname}${
+        signUpdata.suffix ? ` ${signUpdata.suffix}` : ""
+      }`;
+
       const res = await axiosIntance.post("client/auth/Signup.php", {
-        fullname: signUpdata.fullname,
+        fullname: fullname,
         address: signUpdata.address,
         phone: `+63${signUpdata.phone}`,
         email: signUpdata.email,
@@ -168,7 +183,9 @@ const Signup = () => {
       });
       if (res.data.success) {
         setSignUptData({
-          fullname: "",
+          firstname: "",
+          lastname: "",
+          suffix: "",
           address: "",
           phone: "",
           email: "",
@@ -242,22 +259,79 @@ const Signup = () => {
             </h3>
             {formToShow === "1" && (
               <div className="form">
-                <div className="input-wrapper">
-                  <label
-                    style={{ color: emptyFullname !== "" ? "red" : "" }}
-                    htmlFor="fullname"
-                  >
-                    {emptyFullname !== "" ? emptyFullname : "Fullname"}
-                  </label>
-                  <input
-                    id="fullname"
-                    type="fullname"
-                    placeholder="Enter your fullname"
-                    name="fullname"
-                    onChange={handleSignUpDataChange}
-                    value={signUpdata.fullname}
-                  />
+                <p style={{ fontSize: "10px" }}>
+                  {signUpdata.firstname +
+                    " " +
+                    signUpdata.lastname +
+                    " " +
+                    signUpdata.suffix}
+                </p>
+                <div className="fullname-wrapper">
+                  <div className="input-wrapper">
+                    <label
+                      style={{ color: emptyFirstname !== "" ? "red" : "" }}
+                      htmlFor="fullname"
+                    >
+                      {emptyFirstname !== "" ? emptyFirstname : "Firstname"}
+                    </label>
+                    <input
+                      id="firstname"
+                      type="firstname"
+                      placeholder="Firstname"
+                      name="firstname"
+                      onChange={handleSignUpDataChange}
+                      value={signUpdata.firstname}
+                    />
+                  </div>
+                  <div className="input-wrapper">
+                    <label
+                      style={{ color: emptyLastname !== "" ? "red" : "" }}
+                      htmlFor="lastname"
+                    >
+                      {emptyLastname !== "" ? emptyLastname : "Lastname"}
+                    </label>
+                    <input
+                      id="lastname"
+                      type="lastname"
+                      placeholder="Lastname"
+                      name="lastname"
+                      onChange={handleSignUpDataChange}
+                      value={signUpdata.lastname}
+                    />
+                  </div>
+                  <div className="input-wrapper-suff">
+                    <label
+                      style={{ color: emptySuffix !== "" ? "red" : "" }}
+                      htmlFor="suffix"
+                    >
+                      {emptySuffix !== "" ? emptySuffix : "Suff"}
+                    </label>
+                    <select
+                      id="suffix"
+                      name="suffix"
+                      value={signUpdata.suffix}
+                      onChange={handleSignUpDataChange}
+                      style={{
+                        width: "100%",
+                        height: "40px",
+                        borderRadius: "5px",
+                        border: "1px solid #161179",
+                        padding: "0 10px",
+                      }}
+                    >
+                      <option disabled value="">
+                        Select suffix (optional)
+                      </option>
+                      <option value="Jr">Jr</option>
+                      <option value="Sr">Sr</option>
+                      <option value="II">II</option>
+                      <option value="III">III</option>
+                      <option value="IV">IV</option>
+                      <option value="V">V</option>
+                    </select>
+                  </div>
                 </div>
+
                 <div className="input-wrapper">
                   <label
                     style={{ color: emptyAddress !== "" ? "red" : "" }}

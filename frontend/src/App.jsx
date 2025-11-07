@@ -49,6 +49,10 @@ import Appointmenthistory from "./pages/ADMIN/appointment/Appointmenthistory";
 import Soontoexpired from "./pages/ADMIN/shop/Soontoexpired";
 import TreatedPets from "./pages/ADMIN/treated_pets/TreatedPets";
 import Paymongo from "./Paymongo";
+import CancelledAppointment from "./pages/ADMIN/appointment/CancelledAppointment";
+import ShopReservation from "./pages/ADMIN/shop/ShopReservation";
+import ShopReservationHistory from "./pages/ADMIN/shop/ShopReservationHistory";
+// import TermsAndCondations from "./components/termsAndCondations/TermsAndCondations";
 
 //CLIENT
 const Client = () => {
@@ -70,6 +74,7 @@ const Client = () => {
 
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        {/* <Route path="/terms" element={<TermsAndCondations />} /> */}
         <Route path="/home/" element={<Home />} />
         <Route
           path="/view-veterinarian/:userId"
@@ -128,7 +133,6 @@ const Admin = () => {
                 path="/not-active-veterinarian/"
                 element={<NotActiveVeterinarian />}
               />
-
               <Route
                 path="/pending-appointment/"
                 element={<DoneAppointment />}
@@ -143,17 +147,23 @@ const Admin = () => {
                 element={<Appointmenthistory />}
               />
               <Route
+                path="/cancelled-appointment/"
+                element={<CancelledAppointment />}
+              />
+              <Route
                 path="/completed-followup-appointment/"
                 element={<CompletedFollowUpAppointment />}
               />
-
               <Route path="/shop/" element={<Shop />} />
+              <Route path="/shop-reservation/" element={<ShopReservation />} />
+              <Route
+                path="/shop-reservation-history/"
+                element={<ShopReservationHistory />}
+              />
               <Route path="/low-stock/" element={<LowStock />} />
               <Route path="/soon-expired/" element={<Soontoexpired />} />
-
               <Route path="/active-user/" element={<User />} />
               <Route path="/not-active-user/" element={<Notactiveuser />} />
-
               <Route path="/service/" element={<Service />} />
               <Route path="/treated_pet/" element={<TreatedPets />} />
               <Route path="/announcement/" element={<Announcement />} />

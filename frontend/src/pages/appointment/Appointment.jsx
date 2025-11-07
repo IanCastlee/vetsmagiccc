@@ -27,7 +27,7 @@ import Emptydata from "../../components/emptydata/Emptydata";
 import { LiaEdit } from "react-icons/lia";
 import { PiPrinterLight } from "react-icons/pi";
 
-const Appointment = () => {
+const Appointment = ({ onSubmit, onClose }) => {
   const { currentUser } = useContext(AuthContext);
   const receiptRef = useRef();
 
@@ -41,10 +41,26 @@ const Appointment = () => {
     id: "",
   });
 
-  console.log("activeAppointment", activeAppointment);
+  // jhdfjh
+  const [reason, setReason] = useState("");
+  const [customReason, setCustomReason] = useState("");
+  const [appointment_id, setAppointmentId] = useState(null);
+  const [userIdC, setUserIdC] = useState(null);
 
-  //get Appointment
-  useEffect(() => {
+  // SELECT REASON
+  const handleReasonSelect = (text) => {
+    setReason(text);
+    setCustomReason("");
+  };
+
+  // CLICK CANCEL (show form)
+  const handleClickToCancel = ({ appointment_id, user_id }) => {
+    setAppointmentId(appointment_id);
+    setUserIdC(user_id);
+  };
+
+  //Fetch data
+  const fetchAppointentData = () => {
     const activeAppointment = async () => {
       setShowLoader(true);
       try {
@@ -71,7 +87,84 @@ const Appointment = () => {
     };
 
     activeAppointment();
+  };
+
+  useEffect(() => {
+    fetchAppointentData();
   }, []);
+
+  //alert
+  const showSuccessAlert_cancel = () => {
+    Swal.fire({
+      title: "Success!",
+      text: "Appointment Cancelled",
+      icon: "success",
+      confirmButtonText: "OK",
+      background: "rgba(0, 0, 0, 0.9)",
+      color: "lightgrey",
+    });
+  };
+
+  // SUBMIT CANCELLATION FORM
+  const handleSubmitCancel = async (e) => {
+    e.preventDefault();
+
+    const finalReason = customReason || reason;
+    if (!finalReason.trim()) {
+      alert("Please select or enter a reason for cancellation.");
+      return;
+    }
+
+    try {
+      const res = await axiosIntance.post(
+        `admin/appointment/setAppointmentCanceled.php?appointment_id=${appointment_id}&client_id=${userIdC}&note_from_vet=${encodeURIComponent(
+          finalReason
+        )}`
+      );
+
+      if (res.data.success) {
+        console.log("RES:", res.data.message);
+        showSuccessAlert_cancel();
+        fetchAppointentData();
+        setAppointmentId(null);
+        setUserIdC(null);
+      } else {
+        console.log("Delete failed:", res.data);
+      }
+    } catch (error) {
+      console.log("ERROR:", error);
+    }
+  };
+  //setClickedCancelId
+  // const handleCancelAppointment = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const res = await axiosIntance.post(
+  //       `admin/appointment/setAppointmentCanceled.php?appointment_id=${clickedCancelId}&client_id=${clickedCancelClientId}&note_from_vet=${encodeURIComponent(
+  //         noteFromVetForm
+  //       )}`
+  //     );
+
+  //     if (res.data.success) {
+  //       console.log("RES : ", res.data.message);
+
+  //       const handleUpdateAut = appointment.filter(
+  //         (item) => item.appointment_id !== clickedCancelId
+  //       );
+  //       setAppointment(handleUpdateAut);
+  //       setClickedCancelId(null);
+  //       setClickedCancelClientId(null);
+  //       showSuccessAlert_cancel();
+  //     } else {
+  //       console.log("Delete failed:", res.data);
+  //     }
+  //   } catch (error) {
+  //     console.log("ERROR:", error);
+  //   }
+  // };
+
+  //get Appointment
 
   const handleClickedAppointment = (time, duration, id) => {
     handleTimeDateSlotToRemove();
@@ -464,28 +557,84 @@ const Appointment = () => {
                                     {item.appointment_time}
                                   </span>
 
-                                  <p
+                                  <div
                                     style={{
+                                      width: "100%",
                                       display: "flex",
-                                      justifyContent: "start",
-                                      alignItems: "center",
+                                      justifyContent: "space-between",
+                                      marginTop: "10px",
                                     }}
-                                    className="price"
                                   >
-                                    <IoPricetagsOutline className="iconn" />₱
-                                    {item.paid_payment}
-                                    <span
+                                    <p
                                       style={{
-                                        color: "gray",
-                                        fontSize: "12px",
-                                        marginBottom: "5px",
-                                        marginLeft: "5px",
+                                        display: "flex",
+                                        justifyContent: "start",
+                                        alignItems: "center",
                                       }}
                                       className="price"
                                     >
-                                      ({item.payment_method})
-                                    </span>
-                                  </p>
+                                      <IoPricetagsOutline className="iconn" />₱
+                                      {item.paid_payment}
+                                      <span
+                                        style={{
+                                          color: "gray",
+                                          fontSize: "12px",
+                                          marginBottom: "5px",
+                                          marginLeft: "5px",
+                                        }}
+                                        className="price"
+                                      >
+                                        ({item.payment_method})
+                                      </span>
+                                    </p>
+                                    {(() => {
+                                      const createdAtDate = new Date(
+                                        item.createdAt
+                                      );
+                                      const now = new Date();
+                                      const diffInMs = now - createdAtDate; // difference in milliseconds
+
+                                      if (
+                                        diffInMs >= 0 &&
+                                        diffInMs <= 24 * 60 * 60 * 1000
+                                      ) {
+                                        // show button only if createdAt is in the past 24 hours
+                                        return (
+                                          <button
+                                            style={{
+                                              backgroundColor: "#ccc",
+                                              color: "#333",
+                                              border: "none",
+                                              borderRadius: "5px",
+                                              padding: "8px 16px",
+                                              cursor: "pointer",
+                                              fontWeight: "500",
+                                              transition:
+                                                "background-color 0.3s",
+                                            }}
+                                            onMouseEnter={(e) =>
+                                              (e.target.style.backgroundColor =
+                                                "#bbb")
+                                            }
+                                            onMouseLeave={(e) =>
+                                              (e.target.style.backgroundColor =
+                                                "#ccc")
+                                            }
+                                            onClick={() =>
+                                              handleClickToCancel({
+                                                appointment_id:
+                                                  item.appointment_id,
+                                                user_id: item.client_id,
+                                              })
+                                            }
+                                          >
+                                            Cancel
+                                          </button>
+                                        );
+                                      }
+                                      return null;
+                                    })()}
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -722,6 +871,52 @@ const Appointment = () => {
         </div>
       )}
       <Footer />
+
+      {appointment_id && (
+        <div className="cancel-overlay">
+          <div className="cancel-box">
+            <h3>Reason for Cancellation</h3>
+            <form onSubmit={handleSubmitCancel}>
+              <div className="suggestions">
+                {[
+                  "I’m not available on the selected date",
+                  "I booked by mistake",
+                  "I want to reschedule",
+                  "Other",
+                ].map((item, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className={`reason-btn ${reason === item ? "active" : ""}`}
+                    onClick={() => handleReasonSelect(item)}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+
+              <textarea
+                placeholder="Or type your own reason..."
+                value={customReason}
+                onChange={(e) => setCustomReason(e.target.value)}
+              ></textarea>
+
+              <div className="actions">
+                <button type="submit" className="submit-btn">
+                  Confirm Cancel
+                </button>
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={() => setAppointmentId(null)}
+                >
+                  Close
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 };

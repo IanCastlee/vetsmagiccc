@@ -150,7 +150,8 @@ const SetAppointment = () => {
       }
       return;
     }
-    setshowDateTime("2");
+    // setshowDateTime("2");
+    setShowSummaryForm(true);
   };
   //timeslots to remove
   const handleTimeDateSlotToRemove = async () => {
@@ -330,7 +331,7 @@ const SetAppointment = () => {
     ).toLocaleDateString("en-CA");
 
     setformattedDate(formattedDate);
-    setShowSummaryForm(true);
+    setshowDateTime("2");
   };
 
   useEffect(() => {
@@ -438,95 +439,6 @@ const SetAppointment = () => {
       return false;
     }
   };
-
-  // const handlePayOnClinick = async () => {
-  //   setShowLoader4(true);
-
-  //   if (!appointmentForm.appointment_date) {
-  //     console.warn("Appointment date is required.");
-  //     return false;
-  //   }
-
-  //   const formattedDate = new Date(
-  //     appointmentForm.appointment_date
-  //   ).toLocaleDateString("en-CA");
-
-  //   setformattedDate(formattedDate);
-
-  //   const formData = new FormData();
-  //   formData.append("client_id", currentUser?.user_id);
-  //   formData.append("dr_id", userId.userId);
-  //   formData.append("service", appointmentForm.service);
-  //   formData.append("pet_name", appointmentForm.pet_name);
-  //   formData.append("pet_type", appointmentForm.pet_type);
-  //   formData.append("breed", appointmentForm.breed);
-  //   formData.append("age", appointmentForm.age);
-  //   formData.append("weight", appointmentForm.weight);
-  //   formData.append("gender", appointmentForm.gender);
-  //   formData.append(
-  //     "current_health_issue",
-  //     appointmentForm.current_health_issue
-  //   );
-  //   formData.append(
-  //     "history_health_issue",
-  //     appointmentForm.history_health_issue
-  //   );
-  //   formData.append("appointment_date", formattedDate);
-  //   formData.append("appointment_time", selectedTimeSlot);
-  //   formData.append("payment_method", "Pay at Clinic");
-  //   formData.append("price", price);
-
-  //   formData.append("title_for_vet", "New Appointment Request");
-  //   formData.append(
-  //     "message_for_vet",
-  //     `You have received a new appointment request for a ${appointmentForm.pet_type}, requesting the ${appointmentForm.service} service.`
-  //   );
-
-  //   // client notification
-  //   formData.append("title_for_client", "Appointment reminder");
-  //   formData.append(
-  //     "desc_for_client",
-  //     `Your appointment has been sent to your chosen vet. Please prepare for your selected date and time slot (${formattedDate} - ${selectedTimeSlot}).`
-  //   );
-
-  //   if (appointmentForm.image) {
-  //     formData.append("image", appointmentForm.image);
-  //   }
-
-  //   try {
-  //     const res = await axiosIntance.post(
-  //       "client/appointment/setAppointment.php",
-  //       formData,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       }
-  //     );
-
-  //     if (res.data.success) {
-  //       console.log("RESPONSE : ", res.data.message);
-
-  //       setTimeout(() => {
-  //         setShowSummaryForm(false);
-  //       }, 1000);
-  //       setShowLoader4(false);
-  //       setshowAppointmentsentModal(true);
-  //       handleTimeDateSlotToRemove();
-  //       return true;
-  //     } else {
-  //       console.log("ERROR : ", res.data);
-  //       setShowLoader4(false);
-
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     console.log("Error : ", error);
-  //     setShowLoader4(false);
-
-  //     return false;
-  //   }
-  // };
 
   const handlePayment = async (e) => {
     e.preventDefault();
@@ -735,7 +647,6 @@ const SetAppointment = () => {
   const specs = veterinarianInfo?.specialization || "";
 
   const splitSpecs = specs.split(" ")[0];
-  console.log("SPECIALIZATION : ", splitSpecs);
   return (
     <>
       <div className="setappointment">
@@ -785,7 +696,7 @@ const SetAppointment = () => {
               {veterinarianInfo?.specialization}
             </small>
 
-            {showDateTime === "1" && (
+            {showDateTime === "2" && (
               <div className="petinfo-form">
                 <div className="note">
                   <p>
@@ -1258,12 +1169,15 @@ const SetAppointment = () => {
                     ></textarea>
                   </div>
                   <div className="button">
-                    <FaArrowRight onClick={handleNext} className="next-icon" />
+                    {/* <FaArrowRight onClick={handleNext} className="next-icon" /> */}
+                    <button className="btn-setappointment" onClick={handleNext}>
+                      Proceed to Summary & Payment
+                    </button>
                   </div>
                 </div>
               </div>
             )}
-            {showDateTime === "2" && (
+            {showDateTime === "1" && (
               <motion.div
                 initial={{ opacity: 0, x: 100 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -1311,7 +1225,7 @@ const SetAppointment = () => {
               </motion.div>
             )}
 
-            {showDateTime === "2" && (
+            {showDateTime === "1" && (
               <motion.div
                 initial={{ opacity: 0, x: 100 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -1352,15 +1266,20 @@ const SetAppointment = () => {
                 )}
 
                 <div className="set-appointment-wrapper">
-                  <FaArrowLeft
+                  {/* <FaArrowLeft
                     className="back-icon"
                     onClick={() => setshowDateTime("1")}
-                  />
+                  /> */}
                   <button
+                    disabled={!selectedTimeSlot}
                     className="btn-setappointment"
                     onClick={handleShowSummary}
+                    style={{
+                      backgroundColor: selectedTimeSlot ? "#4CAF50" : "#ccc",
+                      cursor: selectedTimeSlot ? "pointer" : "not-allowed",
+                    }}
                   >
-                    Continue
+                    Continue to Pet Details
                   </button>
                 </div>
               </motion.div>
@@ -1420,9 +1339,6 @@ const SetAppointment = () => {
             </div>
 
             <div className="buttons">
-              {/* <button className="btn-submit" onClick={handlePayOnClinick}>
-                {showLoader4 ? <div className="loader"></div> : "Pay at Clinic"}
-              </button>{" "} */}
               <button
                 className="btn-submit2"
                 onClick={handleSendDataAndPayment}

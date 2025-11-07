@@ -123,7 +123,7 @@ const Navbar = ({ isHome }) => {
                   Appointment
                 </Link>
               )}
-              {currentUser !== null && (
+              {/* {currentUser !== null && (
                 <Link
                   title="Follow-up Appointment"
                   onClick={() => {
@@ -134,16 +134,18 @@ const Navbar = ({ isHome }) => {
                   <SlRefresh className="nav-icon" />
                   <FaCircleExclamation className="exclamation-icon" />
                 </Link>
-              )}{" "}
-              <Link
-                title="Notification"
-                className="list-icon-notif"
-                onClick={() => setModlToShow("announcement")}
-              >
-                <PiMegaphone className="nav-icon" />
+              )}{" "} */}
+              {currentUser !== null && (
+                <Link
+                  title="Announcement"
+                  className="list-icon-notif"
+                  onClick={() => setModlToShow("announcement")}
+                >
+                  <PiMegaphone className="nav-icon" />
 
-                <FaCircleExclamation className="exclamation-icon" />
-              </Link>
+                  <FaCircleExclamation className="exclamation-icon" />
+                </Link>
+              )}
               <Link
                 title="Notification"
                 className="list-icon-notif"

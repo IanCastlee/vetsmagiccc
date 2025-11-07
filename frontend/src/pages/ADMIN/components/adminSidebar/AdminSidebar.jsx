@@ -113,21 +113,38 @@ const AdminSidebar = () => {
               <Link to="/admin/done-appointment/" className="btn-li">
                 Completed Appointments
               </Link>
-              <Link to="/admin/followup-appointment/" className="btn-li">
-                Follow-up Appointments
+              <Link to="/admin/cancelled-appointment/" className="btn-li">
+                Cancelled Appointments
               </Link>
-              <Link
+              {/* <Link
                 to="/admin/completed-followup-appointment/"
                 className="btn-li"
               >
                 Completed FA
-              </Link>
+              </Link> */}
               <Link to="/admin/appointment-history/" className="btn-li">
                 Appointment History
               </Link>
             </div>
           )}
-
+          <li
+            className={`item ${
+              activeLink === "shop_reservation" ? "active" : ""
+            }`}
+          >
+            <Link
+              className="btn-li"
+              to="/admin/shop-reservation/"
+              onClick={() => {
+                setActiveLink("shop_reservation");
+                toggleSidebar;
+                setActiveDropdown("");
+              }}
+            >
+              <MdOutlineMedicalServices className="link-icon" />
+              Shop Reservation
+            </Link>
+          </li>
           <li
             className={`item ${activeLink === "vet" ? "active" : ""}`}
             onClick={() => {

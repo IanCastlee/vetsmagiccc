@@ -19,7 +19,6 @@ const Footer = () => {
       try {
         const res = await axiosIntance.get("client/service/getGetservices.php");
         if (res.data.success) {
-          console.log("services : ", res.data.data);
           setServices(res.data.data);
 
           setClientProfile(res.data.dta);
@@ -27,7 +26,7 @@ const Footer = () => {
           console.log("Error from db  : ", res.data);
         }
       } catch (error) {
-        console.log("Error from fetching services : ", error);
+        // console.log("Error from fetching services : ", error);
       }
     };
 

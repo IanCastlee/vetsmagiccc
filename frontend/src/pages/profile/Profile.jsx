@@ -409,7 +409,7 @@ const Profile = () => {
                 <br />
 
                 <div className="medical-history">
-                  <h6 className="ptitle_">Appointment History</h6>
+                  <h6 className="ptitle_">Medical Record</h6>
 
                   <div className="booking__">
                     {clickedAppointment.booking_history.length > 0 ? (

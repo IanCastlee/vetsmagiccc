@@ -405,6 +405,22 @@
               cursor: pointer;
             }
           }
+
+          .btn-setappointment {
+            width: 100%;
+            padding: 7px 0;
+            font-size: 0.75rem;
+            background-color: #007bff;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            height: 37px;
+
+            &:hover {
+              background-color: #0069d9;
+            }
+          }
         }
       }
 

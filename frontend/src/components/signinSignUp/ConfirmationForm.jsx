@@ -38,8 +38,6 @@ const ConfirmationForm = ({ _message, email, password }) => {
     }
   };
 
-  console.log("PASSWORD : ", password);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -61,6 +59,9 @@ const ConfirmationForm = ({ _message, email, password }) => {
       });
 
       if (res.data.success) {
+        setTimeout(() => {
+          setFormToShow("signin");
+        }, 3000);
         setTimeout(() => setShowLoader(false), 2000);
         setMessageFromVerification(res.data.message);
         setToasterMessage(res.data.message);

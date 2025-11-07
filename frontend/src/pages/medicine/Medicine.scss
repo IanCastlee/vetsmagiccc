@@ -302,6 +302,156 @@
       }
     }
   }
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+
+    .modal-content {
+      background: #fff;
+      border-radius: 12px;
+      padding: 25px 20px;
+      width: 380px;
+      max-width: 90%;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      position: relative;
+      text-align: center;
+      animation: fadeIn 0.3s ease-in-out;
+
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #333;
+        transition: transform 0.2s ease;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+
+      .modal-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .modal-img {
+          width: 120px;
+          height: 120px;
+          object-fit: cover;
+          border-radius: 10px;
+          margin-bottom: 15px;
+          border: 1px solid #e0e0e0;
+        }
+
+        h2 {
+          font-size: 1.3rem;
+          margin: 5px 0;
+          color: #222;
+        }
+
+        p {
+          font-size: 0.95rem;
+          color: #555;
+          margin-bottom: 15px;
+        }
+
+        .input-group {
+          width: 100%;
+          margin-top: 10px;
+          text-align: left;
+
+          label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #333;
+          }
+
+          input,
+          textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease;
+
+            &:focus {
+              border-color: #007bff;
+              outline: none;
+            }
+          }
+
+          textarea {
+            resize: none;
+          }
+        }
+
+        .save-btn {
+          margin-top: 18px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          padding: 10px 25px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-weight: 500;
+          transition: background-color 0.2s ease;
+
+          &:hover {
+            background-color: #0056b3;
+          }
+
+          &:active {
+            transform: scale(0.98);
+          }
+        }
+      }
+    }
+  }
+
+  // 🔥 Simple fade-in animation
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  // ✅ Responsive tweaks
+  @media (max-width: 480px) {
+    .modal-overlay {
+      .modal-content {
+        width: 90%;
+        padding: 20px;
+
+        .modal-body {
+          .modal-img {
+            width: 100px;
+            height: 100px;
+          }
+
+          h2 {
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
+  }
 }
 
 .modal-viewmore-overlay {

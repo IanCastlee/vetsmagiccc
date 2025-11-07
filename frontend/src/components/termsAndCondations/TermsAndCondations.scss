@@ -2,10 +2,10 @@
   width: 100%;
   position: fixed;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.9);
   top: 0;
   left: 0;
-  z-index: 3333;
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,8 +19,8 @@
     color: gray;
   }
   .terms-cons {
-    width: 900px;
-    height: 90%;
+    width: 97%;
+    height: 97%;
     background-color: #fff;
     border-radius: 7px;
     padding: 30px;
@@ -72,6 +72,38 @@
             font-size: 0.875rem;
             color: #000;
           }
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+
+      .agree-btn,
+      .disagree-btn {
+        padding: 10px 25px;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .agree-btn {
+        background-color: #28a745;
+        &:hover {
+          background-color: #218838;
+        }
+      }
+
+      .disagree-btn {
+        background-color: #dc3545;
+        &:hover {
+          background-color: #c82333;
         }
       }
     }

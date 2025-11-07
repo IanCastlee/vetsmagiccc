@@ -10,7 +10,6 @@ import dogImage from "../../assets/imges/dog.png";
 import { Link } from "react-router-dom";
 import axiosIntance from "../../../axios";
 import { useContext, useEffect, useRef, useState } from "react";
-import msgImg from "../../assets/icons/chat.png";
 
 //ICONS
 import { CiSearch } from "react-icons/ci";
@@ -81,7 +80,6 @@ const Home = () => {
       try {
         const res = await axiosIntance.get("client/service/getGetservices.php");
         if (res.data.success) {
-          console.log("services : ", res.data.data);
           setServices(res.data.data);
 
           setClientProfile(res.data.dta);
@@ -105,7 +103,6 @@ const Home = () => {
           "client/appointment/GetTrustedClient.php"
         );
         if (res.data.success) {
-          console.log("DATA :  ", res.data.data);
           setClientProfile(res.data.data);
           setLoaderDot(false);
         } else {
@@ -174,9 +171,9 @@ const Home = () => {
                   </motion.span>
                 </AnimatePresence>
               </motion.h6>
-              <div className="buttons">
+              {/* <div className="buttons">
                 <button onClick={handleScroll}>Book Now</button>
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="hero-right">
@@ -186,31 +183,6 @@ const Home = () => {
               effect="blur"
               className="dog-img"
             />
-
-            {/* <div className="trusted-wrapper">
-              <span>Trusted by</span>
-              <div className="trusted">
-                {loaderDot ? (
-                  <h6>...</h6>
-                ) : (
-                  clientProfile &&
-                  clientProfile.slice(0, 3).map((item, index) => (
-                    <div className="img-card" key={index}>
-                      {item.profile ? (
-                        <img
-                          src={`${uploadUrl.uploadurl}/${item?.profile}`}
-                          className="client-profile"
-                        />
-                      ) : (
-                        <div className="initial-fallback">
-                          {item.fullname?.charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                    </div>
-                  ))
-                )}
-              </div>
-            </div> */}
           </div>
         </div>
 
@@ -292,13 +264,13 @@ const Home = () => {
                       <button className="btn-set-appointment">
                         {currentUser === null ? (
                           <Link onClick={() => setFormToShow("signin")}>
-                            <PiCalendarPlusLight className="btn-icon" /> Set
-                            Appointment
+                            <PiCalendarPlusLight className="btn-icon" /> Book
+                            Now
                           </Link>
                         ) : (
                           <Link to={`/set-appointment/${item.user_id}`}>
-                            <PiCalendarPlusLight className="btn-icon" /> Set
-                            Appointment
+                            <PiCalendarPlusLight className="btn-icon" /> Book
+                            Now
                           </Link>
                         )}
                       </button>
@@ -314,12 +286,12 @@ const Home = () => {
 
       <Footer />
 
-      <img
+      {/* <img
         src={msgImg}
         onClick={() => setShowChatModal(true)}
         alt="ChatBot"
         className="chatbotBtn"
-      />
+      /> */}
 
       {showChatModal && <Chatbot close={() => setShowChatModal(false)} />}
     </>
