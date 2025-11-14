@@ -197,7 +197,7 @@ const ActiveVeterinarian = () => {
 
     try {
       const res = await axiosIntance.post(
-        "admin/veterinarian/PostVeterinarian.php",
+        "admin/veterinarian/postVeterinarian.php",
         formData,
         {
           headers: {
@@ -228,7 +228,7 @@ const ActiveVeterinarian = () => {
     setShowLoader(true);
     try {
       const res = await axiosIntance.post(
-        "admin/veterinarian/PostVetServices.php",
+        "admin/veterinarian/postVetServices.php",
         {
           user_id: clickedUserId,
           service: servicesForm.service,
@@ -279,7 +279,7 @@ const ActiveVeterinarian = () => {
 
     try {
       const res = await axiosIntance.post(
-        "admin/veterinarian/UpdateVeterinarian.php",
+        "admin/veterinarian/updateVeterinarian.php",
         formData,
         {
           headers: {
@@ -324,7 +324,7 @@ const ActiveVeterinarian = () => {
 
     try {
       const res = await axiosIntance.post(
-        "admin/veterinarian/UpdateVetSevices.php",
+        "admin/veterinarian/updateVetSevices.php",
         formData,
         {
           headers: {
@@ -356,7 +356,7 @@ const ActiveVeterinarian = () => {
     e.preventDefault();
     try {
       const res = await axiosIntance.post(
-        `admin/veterinarian/SetAsNotActiveVeterinarian.php?user_id=${showDelForm}`
+        `admin/veterinarian/setAsNotActiveVeterinarian.php?user_id=${showDelForm}`
       );
 
       if (res.data.success) {
@@ -380,7 +380,7 @@ const ActiveVeterinarian = () => {
     e.preventDefault();
     try {
       const res = await axiosIntance.post(
-        `admin/veterinarian/RemoveService.php?service_id=${showDelServiceId}`
+        `admin/veterinarian/removeService.php?service_id=${showDelServiceId}`
       );
 
       if (res.data.success) {

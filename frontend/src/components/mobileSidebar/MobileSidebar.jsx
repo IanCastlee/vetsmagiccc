@@ -41,7 +41,7 @@ const MobileSidebar = ({ close }) => {
     setTimeout(async () => {
       try {
         const res = await axiosIntance.post(
-          "client/auth/Logout.php",
+          "client/auth/logout.php",
           {},
           { withCredentials: true }
         );

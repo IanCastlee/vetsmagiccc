@@ -879,6 +879,78 @@
     }
   }
 }
+.grooming-overlay {
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(4px); // Adds subtle blur for a premium look
+
+  .suggestions {
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    gap: 8px;
+    width: 280px;
+    padding: 24px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    animation: fadeIn 0.3s ease-in-out;
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #333;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 6px;
+    }
+
+    .groom-btn {
+      height: 38px;
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background-color: #f8f9fa;
+      color: #333;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+
+      &.active {
+        background-color: #007bff;
+        color: #fff;
+        border-color: #007bff;
+      }
+    }
+  }
+}
+
+// Smooth fade-in animation
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
 //TABLET
 @media (min-width: 786px) and (max-width: 1024px) {

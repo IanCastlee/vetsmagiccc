@@ -52,7 +52,7 @@ const ConfirmationForm = ({ _message, email, password }) => {
     setShowLoader(true);
 
     try {
-      const res = await axiosIntance.post("client/auth/Verify.php", {
+      const res = await axiosIntance.post("client/auth/verify.php", {
         otp: finalCode,
         email: email,
         password: password,

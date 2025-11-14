@@ -57,9 +57,11 @@ const TermsAndConditions = ({ onAgree, onDisagree, close }) => {
             <span>3. Appointment</span>
             <ul>
               <li>
-                All bookings are final. Once a booking is confirmed, it cannot
-                be canceled, refunded, or rescheduled.
+                Users can cancel their booking only if it is at least 1 day
+                before the appointment. Bookings within 24 hours of the
+                appointment cannot be canceled and refunded.
               </li>
+
               <li>
                 Please ensure all details are correct before submitting your
                 booking.

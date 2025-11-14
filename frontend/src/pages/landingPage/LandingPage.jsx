@@ -12,10 +12,10 @@ const LandingPage = () => {
     const hasAgreed = localStorage.getItem("termsAgreed");
 
     if (!hasAgreed) {
-      setShowTerms(true); // show modal
+      setShowTerms(true);
     } else {
-      setShowTerms(false); // hide modal
-      navigate("/home"); // redirect
+      setShowTerms(false);
+      navigate("/home");
     }
   }, [navigate]);
 

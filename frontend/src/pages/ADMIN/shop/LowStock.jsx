@@ -15,7 +15,7 @@ const LowStock = () => {
   useEffect(() => {
     const veterinarian = async () => {
       try {
-        const res = await axiosIntance.get("admin/shop/GetLowStockProduct.php");
+        const res = await axiosIntance.get("admin/shop/getLowStockProduct.php");
         if (res.data.success) {
           setDoneAppointment(res.data.data);
           console.log("DATA : ", res.data.data);

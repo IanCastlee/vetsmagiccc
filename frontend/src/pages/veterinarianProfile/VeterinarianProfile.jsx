@@ -29,7 +29,7 @@ const VeterinarianProfile = () => {
     const getClickedVeterinarian = async () => {
       try {
         const res = await axiosIntance.post(
-          "admin/veterinarian/GetClickedVeterinarian.php",
+          "admin/veterinarian/getClickedVeterinarian.php",
           { user_id: userId.userId }
         );
 

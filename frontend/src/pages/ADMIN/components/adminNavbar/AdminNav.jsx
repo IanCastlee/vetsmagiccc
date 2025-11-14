@@ -33,7 +33,7 @@ const AdminNav = ({ isHome }) => {
   useEffect(() => {
     const getNotification = async () => {
       setLoader(true);
-      const res = await axiosIntance.get("client/notif/GetNotification.php");
+      const res = await axiosIntance.get("client/notif/getNotification.php");
       if (res.data.success) {
         console.log("NOTIFICATION : ", res.data.data);
         setNotif(res.data.data);
@@ -51,8 +51,6 @@ const AdminNav = ({ isHome }) => {
     setShowAll(true);
     setVisibleNotif(notif);
   };
-
-  console.log("IS HOME ? ", isHome);
 
   return (
     <>

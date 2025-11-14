@@ -60,7 +60,7 @@ const Signin = () => {
     }
 
     try {
-      const res = await axiosIntance.post("client/auth/Signin.php", {
+      const res = await axiosIntance.post("client/auth/signin.php", {
         email: signinData.email,
         password: signinData.password,
       });

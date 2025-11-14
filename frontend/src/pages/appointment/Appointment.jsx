@@ -881,7 +881,7 @@ const Appointment = ({ onSubmit, onClose }) => {
                 {[
                   "I’m not available on the selected date",
                   "I booked by mistake",
-                  "I want to reschedule",
+
                   "Other",
                 ].map((item, index) => (
                   <button

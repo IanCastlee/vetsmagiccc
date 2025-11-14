@@ -74,7 +74,6 @@ const Notification = ({ close }) => {
     fetchNotifCount();
   }, []);
 
-  console.log("djfdjhfjhdf", clickedAppointId);
   return (
     <>
       <div className="notificationnn-overlay">

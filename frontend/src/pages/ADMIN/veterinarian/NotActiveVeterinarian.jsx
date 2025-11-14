@@ -20,7 +20,7 @@ const NotActiveVeterinarian = () => {
     const veterinarian = async () => {
       try {
         const res = await axiosIntance.get(
-          "admin/veterinarian/NotActiveVeterinarian.php"
+          "admin/veterinarian/notActiveVeterinarian.php"
         );
         if (res.data.success) {
           setVeterinarian(res.data.data);
@@ -42,7 +42,7 @@ const NotActiveVeterinarian = () => {
     e.preventDefault();
     try {
       const res = await axiosIntance.post(
-        `admin/veterinarian/SetAsActiveVeterinarian.php?user_id=${showDelForm}`
+        `admin/veterinarian/setAsActiveVeterinarian.php?user_id=${showDelForm}`
       );
 
       if (res.data.success) {

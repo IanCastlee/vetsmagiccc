@@ -256,7 +256,7 @@ const Home = () => {
                   </div>
                 </div>
 
-                <div className="card">
+                {/* <div className="card">
                   <div className="topp">
                     <div className="left">
                       <span>Follow-up Appointment</span>
@@ -270,9 +270,9 @@ const Home = () => {
                       <FiArrowRightCircle className="info-icon" />
                     </Link>
                   </div>
-                </div>
+                </div> */}
 
-                <div className="card">
+                {/* <div className="card">
                   <div className="topp">
                     <div className="left">
                       <span>Completed Follow-up Appointment</span>
@@ -286,7 +286,7 @@ const Home = () => {
                       <FiArrowRightCircle className="info-icon" />
                     </Link>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 

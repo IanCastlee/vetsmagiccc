@@ -93,7 +93,7 @@ const ForgotPassword = () => {
 
     // Submit to server
     try {
-      const res = await axiosIntance.post("client/auth/Forgotpassword.php", {
+      const res = await axiosIntance.post("client/auth/forgotpassword.php", {
         email: confirm.email,
         password: confirm.cpassword,
       });

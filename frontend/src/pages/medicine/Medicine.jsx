@@ -25,6 +25,8 @@ import { AuthContext } from "../../contexts/AuthContext";
 
 // Medicine Card
 const MedicineCard = React.memo(({ item, onReserve }) => {
+  const { currentUser } = useContext(AuthContext);
+  const { setFormToShow } = useContext(AuthContext);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -49,20 +51,37 @@ const MedicineCard = React.memo(({ item, onReserve }) => {
               <span>Stock: {item.stock}</span>
               <span>Price: ₱ {item.price}</span>
             </div>
-            <button
-              onClick={() => onReserve(item)}
-              style={{
-                backgroundColor: "#007BFF",
-                color: "white",
-                border: "none",
-                padding: "5px 20px",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "12px",
-              }}
-            >
-              Reserve
-            </button>
+            {currentUser ? (
+              <button
+                onClick={() => onReserve(item)}
+                style={{
+                  backgroundColor: "#007BFF",
+                  color: "white",
+                  border: "none",
+                  padding: "5px 20px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontSize: "12px",
+                }}
+              >
+                Reserve
+              </button>
+            ) : (
+              <button
+                onClick={() => setFormToShow("signin")}
+                style={{
+                  backgroundColor: "#007BFF",
+                  color: "white",
+                  border: "none",
+                  padding: "5px 20px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontSize: "12px",
+                }}
+              >
+                Reserve
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -72,6 +91,7 @@ const MedicineCard = React.memo(({ item, onReserve }) => {
 
 const Medicine = () => {
   const { currentUser } = useContext(AuthContext);
+
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [medicineData, setMedicineData] = useState([]);
@@ -145,8 +165,6 @@ const Medicine = () => {
         qty: parseInt(quantity, 10),
         note: notes || "",
       };
-
-      console.log("Sending reservation:", payload); // Debug log
 
       const res = await axiosIntance.post(
         "client/shop_reservation/reserve_medicine.php",

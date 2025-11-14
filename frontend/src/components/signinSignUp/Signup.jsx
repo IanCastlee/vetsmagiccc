@@ -174,7 +174,7 @@ const Signup = () => {
         signUpdata.suffix ? ` ${signUpdata.suffix}` : ""
       }`;
 
-      const res = await axiosIntance.post("client/auth/Signup.php", {
+      const res = await axiosIntance.post("client/auth/signup.php", {
         fullname: fullname,
         address: signUpdata.address,
         phone: `+63${signUpdata.phone}`,
@@ -266,69 +266,101 @@ const Signup = () => {
                     " " +
                     signUpdata.suffix}
                 </p>
-                <div className="fullname-wrapper">
-                  <div className="input-wrapper">
-                    <label
-                      style={{ color: emptyFirstname !== "" ? "red" : "" }}
-                      htmlFor="fullname"
-                    >
-                      {emptyFirstname !== "" ? emptyFirstname : "Firstname"}
-                    </label>
-                    <input
-                      id="firstname"
-                      type="firstname"
-                      placeholder="Firstname"
-                      name="firstname"
-                      onChange={handleSignUpDataChange}
-                      value={signUpdata.firstname}
-                    />
+                <div
+                  className="fullname-wrapper"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                  }}
+                >
+                  {/* Row 1 */}
+                  <div style={{ display: "flex", gap: "2px" }}>
+                    <div className="input-wrapper" style={{ flex: 1 }}>
+                      <label
+                        style={{ color: emptyFirstname !== "" ? "red" : "" }}
+                        htmlFor="firstname"
+                      >
+                        {emptyFirstname !== "" ? emptyFirstname : "Firstname"}
+                      </label>
+                      <input
+                        id="firstname"
+                        type="text"
+                        placeholder="Firstname"
+                        name="firstname"
+                        onChange={handleSignUpDataChange}
+                        value={signUpdata.firstname}
+                      />
+                    </div>
+
+                    <div className="input-wrapper" style={{ flex: 1 }}>
+                      <label
+                        style={{ color: emptyLastname !== "" ? "red" : "" }}
+                        htmlFor="lastname"
+                      >
+                        {emptyLastname !== "" ? emptyLastname : "Lastname"}
+                      </label>
+                      <input
+                        id="lastname"
+                        type="text"
+                        placeholder="Lastname"
+                        name="lastname"
+                        onChange={handleSignUpDataChange}
+                        value={signUpdata.lastname}
+                      />
+                    </div>
                   </div>
-                  <div className="input-wrapper">
-                    <label
-                      style={{ color: emptyLastname !== "" ? "red" : "" }}
-                      htmlFor="lastname"
-                    >
-                      {emptyLastname !== "" ? emptyLastname : "Lastname"}
-                    </label>
-                    <input
-                      id="lastname"
-                      type="lastname"
-                      placeholder="Lastname"
-                      name="lastname"
-                      onChange={handleSignUpDataChange}
-                      value={signUpdata.lastname}
-                    />
-                  </div>
-                  <div className="input-wrapper-suff">
-                    <label
-                      style={{ color: emptySuffix !== "" ? "red" : "" }}
-                      htmlFor="suffix"
-                    >
-                      {emptySuffix !== "" ? emptySuffix : "Suff"}
-                    </label>
-                    <select
-                      id="suffix"
-                      name="suffix"
-                      value={signUpdata.suffix}
-                      onChange={handleSignUpDataChange}
-                      style={{
-                        width: "100%",
-                        height: "40px",
-                        borderRadius: "5px",
-                        border: "1px solid #161179",
-                        padding: "0 10px",
-                      }}
-                    >
-                      <option disabled value="">
-                        Select suffix (optional)
-                      </option>
-                      <option value="Jr">Jr</option>
-                      <option value="Sr">Sr</option>
-                      <option value="II">II</option>
-                      <option value="III">III</option>
-                      <option value="IV">IV</option>
-                      <option value="V">V</option>
-                    </select>
+
+                  {/* Row 2 */}
+                  <div style={{ display: "flex", gap: "1rem" }}>
+                    <div className="input-wrapper" style={{ flex: 1 }}>
+                      <label
+                        style={{ color: emptyFirstname !== "" ? "red" : "" }}
+                        htmlFor="middlename"
+                      >
+                        {emptyFirstname !== "" ? emptyFirstname : "Middlename"}
+                      </label>
+                      <input
+                        id="middlename"
+                        type="text"
+                        placeholder="Middlename"
+                        // name="middlename"
+                        // onChange={handleSignUpDataChange}
+                        // value={signUpdata.middlename}
+                      />
+                    </div>
+
+                    <div className="input-wrapper-suff" style={{ flex: 1 }}>
+                      <label
+                        style={{ color: emptySuffix !== "" ? "red" : "" }}
+                        htmlFor="suffix"
+                      >
+                        {emptySuffix !== "" ? emptySuffix : "Suffix"}
+                      </label>
+                      <select
+                        id="suffix"
+                        name="suffix"
+                        value={signUpdata.suffix}
+                        onChange={handleSignUpDataChange}
+                        style={{
+                          width: "100%",
+                          height: "40px",
+                          borderRadius: "5px",
+                          border: "1px solid #161179",
+                          padding: "0 10px",
+                        }}
+                      >
+                        <option disabled value="">
+                          Select suffix (optional)
+                        </option>
+                        <option value="Jr">Jr</option>
+                        <option value="Sr">Sr</option>
+                        <option value="II">II</option>
+                        <option value="III">III</option>
+                        <option value="IV">IV</option>
+                        <option value="V">V</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 

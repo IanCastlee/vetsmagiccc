@@ -56,7 +56,7 @@ const Navbar = ({ isHome }) => {
     setTimeout(async () => {
       try {
         const res = await axiosIntance.post(
-          "client/auth/Logout.php",
+          "client/auth/logout.php",
           {},
           { withCredentials: true }
         );
@@ -146,21 +146,23 @@ const Navbar = ({ isHome }) => {
                   <FaCircleExclamation className="exclamation-icon" />
                 </Link>
               )}
-              <Link
-                title="Notification"
-                className="list-icon-notif"
-                onClick={() => setShowActiveModal("notif")}
-              >
-                <AiOutlineBell className="nav-icon" />
+              {currentUser && (
+                <Link
+                  title="Notification"
+                  className="list-icon-notif"
+                  onClick={() => setShowActiveModal("notif")}
+                >
+                  <AiOutlineBell className="nav-icon" />
 
-                {activeNotifCount > 0 && (
-                  <div className="dot-wrapper">
-                    <span>
-                      {activeNotifCount > 9 ? "9+" : activeNotifCount}
-                    </span>
-                  </div>
-                )}
-              </Link>
+                  {activeNotifCount > 0 && (
+                    <div className="dot-wrapper">
+                      <span>
+                        {activeNotifCount > 9 ? "9+" : activeNotifCount}
+                      </span>
+                    </div>
+                  )}
+                </Link>
+              )}
               {currentUser !== null && (
                 <div
                   style={{ display: "flex", alignItems: "center" }}

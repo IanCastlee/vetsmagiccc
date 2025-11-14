@@ -15,7 +15,7 @@ const Soontoexpired = () => {
   useEffect(() => {
     const veterinarian = async () => {
       try {
-        const res = await axiosIntance.get("admin/shop/GetSoontoExpired.php");
+        const res = await axiosIntance.get("admin/shop/getSoontoExpired.php");
         if (res.data.success) {
           setDoneAppointment(res.data.data);
           console.log("DATA : ", res.data.data);

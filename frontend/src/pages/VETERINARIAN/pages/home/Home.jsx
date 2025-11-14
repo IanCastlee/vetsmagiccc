@@ -44,7 +44,7 @@ const Home = () => {
     const getClickedVeterinarian = async () => {
       try {
         const res = await axiosIntance.post(
-          "admin/veterinarian/GetClickedVeterinarian.php",
+          "admin/veterinarian/getClickedVeterinarian.php",
           { user_id: vetId.vetId }
         );
         if (res.data.success) {
@@ -367,7 +367,7 @@ const Home = () => {
     setGetVaccination([]);
     setShowVaccinationModal(true);
     setClickedAppointmentId(item.appointment_id);
-    setClickedAppointmentItem(item); // ✅ Store the full item for later use
+    setClickedAppointmentItem(item);
 
     try {
       const res = await axiosIntance.post(`veterinarian/getVaccination.php`, {

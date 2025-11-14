@@ -15,7 +15,7 @@ const Appointmenthistory = () => {
     const veterinarian = async () => {
       try {
         const res = await axiosIntance.get(
-          "admin/appointment/GetAppointmentHistory.php"
+          "admin/appointment/getAppointmentHistory.php"
         );
         if (res.data.success) {
           setDoneAppointment(res.data.data);

@@ -71,7 +71,7 @@ const Profile = () => {
     const getUserInfo = async () => {
       try {
         const res = await axiosIntance.get(
-          `client/profile/GetUserInfo.php?userId=${currentUser.user_id}`
+          `client/profile/getUserInfo.php?userId=${currentUser.user_id}`
         );
         if (res.data.success) {
           console.log("DATA : ", res.data.data);
@@ -114,7 +114,7 @@ const Profile = () => {
 
     try {
       const res = await axiosIntance.post(
-        "client/profile/UpdateUserInfo.php",
+        "client/profile/updateUserInfo.php",
         formdata
       );
       if (res.data.success) {
@@ -134,7 +134,7 @@ const Profile = () => {
 
       try {
         const res = await axiosIntance.get(
-          `client/profile/GetPrevAppointment.php?user_id=${currentUser.user_id}`
+          `client/profile/getPrevAppointment.php?user_id=${currentUser.user_id}`
         );
 
         if (res.data.success) {
@@ -197,8 +197,6 @@ const Profile = () => {
       weight: "",
     });
   };
-
-  console.log("clickedAppointment : ", clickedAppointment.booking_history);
 
   return (
     <>

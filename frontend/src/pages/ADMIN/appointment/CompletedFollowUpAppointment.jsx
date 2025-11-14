@@ -15,7 +15,7 @@ const FollowupAppointment = () => {
     const veterinarian = async () => {
       try {
         const res = await axiosIntance.get(
-          "admin/appointment/GetCompletedFollowUpAppointment.php"
+          "admin/appointment/getCompletedFollowUpAppointment.php"
         );
         if (res.data.success) {
           setDoneAppointment(res.data.data);

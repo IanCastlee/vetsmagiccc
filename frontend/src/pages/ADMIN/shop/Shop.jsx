@@ -158,7 +158,7 @@ const Shop = () => {
 
     try {
       const res = await axiosIntance.post(
-        "admin/shop/UpdateMedicine.php",
+        "admin/shop/updateMedicine.php",
         formData,
         {
           headers: {
@@ -197,12 +197,10 @@ const Shop = () => {
     e.preventDefault();
     try {
       const res = await axiosIntance.post(
-        `admin/shop/RemoveMedicine.php?medicine_id=${showDelForm}`
+        `admin/shop/removeMedicine.php?medicine_id=${showDelForm}`
       );
 
       if (res.data.success) {
-        console.log("RES : ", res.data.message);
-
         setData((prevData) =>
           prevData.filter((d) => d.medicine_id !== showDelForm)
         );

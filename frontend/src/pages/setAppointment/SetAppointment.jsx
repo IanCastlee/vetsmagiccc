@@ -42,6 +42,9 @@ const SetAppointment = () => {
   const [previewImage, setPreviewImage] = useState(null);
   const [treatedPets, setTreatedPets] = useState([]);
 
+  const [groomingType, setGroomingType] = useState("");
+  const [showGroomingTypeForm, setShowGroomingTypeForm] = useState(false);
+
   const [disabledField, setDisabledField] = useState(false);
 
   const navigate = useNavigate();
@@ -95,7 +98,6 @@ const SetAppointment = () => {
       appointment_date: date,
     }));
   };
-
   //handleNext
   const handleNext = () => {
     if (
@@ -185,7 +187,7 @@ const SetAppointment = () => {
     const getClickedVeterinarian = async () => {
       try {
         const res = await axiosIntance.post(
-          "admin/veterinarian/GetClickedVeterinarian.php",
+          "admin/veterinarian/getClickedVeterinarian.php",
           { user_id: userId.userId }
         );
 
@@ -369,10 +371,21 @@ const SetAppointment = () => {
           }`
         : "";
 
+    let serviceValue = appointmentForm.service;
+
+    // Check if the service includes "grooming"
+    if (appointmentForm.service?.toLowerCase().includes("grooming")) {
+      if (groomingType) {
+        serviceValue += ` - ${groomingType}`;
+      }
+    }
+
     const formData = new FormData();
+    formData.append("email", currentUser.email);
     formData.append("client_id", currentUser?.user_id);
     formData.append("dr_id", userId.userId);
-    formData.append("service", appointmentForm.service);
+    formData.append("service", serviceValue);
+
     formData.append("pet_name", appointmentForm.pet_name);
     formData.append("pet_type", appointmentForm.pet_type);
     formData.append("breed", appointmentForm.breed);
@@ -440,11 +453,7 @@ const SetAppointment = () => {
     }
   };
 
-  const handlePayment = async (e) => {
-    e.preventDefault();
-
-    setShowLoader3(true);
-
+  const handlePayment = async (paymentTab) => {
     try {
       const data = {
         description: `Payment for ${appointmentForm.service}`,
@@ -460,17 +469,23 @@ const SetAppointment = () => {
       });
 
       if (response.data.checkout_url) {
-        setTimeout(() => {
-          setShowLoader3(false);
-          window.open(response.data.checkout_url, "_blank");
-        }, 2000);
+        // stop loader because everything is ready
+        setShowLoader3(false);
+
+        // Redirect the pre-opened tab
+        paymentTab.location.href = response.data.checkout_url;
       } else {
         setShowLoader3(false);
-        console.log("Error: Unable to fetch the checkout URL.");
-        console.log("Err :", response.data);
+        paymentTab.document.write(
+          "<h3>Error: Unable to fetch payment link.</h3>"
+        );
+        paymentTab.close();
+        console.log("Payment error:", response.data);
       }
     } catch (error) {
       setShowLoader3(false);
+      paymentTab.document.write("<h3>Payment Error</h3>");
+      paymentTab.close();
       console.error("Error:", error);
     }
   };
@@ -478,14 +493,25 @@ const SetAppointment = () => {
   const handleSendDataAndPayment = async (e) => {
     e.preventDefault();
 
+    // Open blank tab early to prevent popup blocking
+    const paymentTab = window.open("", "_blank");
+    paymentTab.document.write("<h3>Preparing your payment...</h3>");
+
+    setShowLoader3(true);
+
     const submitResult = await handleSubmitAppointment();
 
     if (submitResult === true) {
-      await handlePayment(e);
-      setTimeout(() => {
-        setShowSummaryForm(false);
-      }, 7000);
+      // Hide summary form NOW since appointment was saved
+      setShowSummaryForm(false);
+
+      // Continue to payment
+      await handlePayment(paymentTab);
     } else {
+      paymentTab.document.write(
+        "<h3>Appointment failed. Payment cancelled.</h3>"
+      );
+      paymentTab.close();
       console.log("Appointment submission failed. Payment cancelled.");
     }
   };
@@ -647,6 +673,22 @@ const SetAppointment = () => {
   const specs = veterinarianInfo?.specialization || "";
 
   const splitSpecs = specs.split(" ")[0];
+
+  const handleGroomingTypeSelect = (text) => {
+    setGroomingType(text);
+  };
+
+  useEffect(() => {
+    if (
+      groomingType === "" &&
+      appointmentForm?.service.toLowerCase().includes("grooming")
+    ) {
+      setShowGroomingTypeForm(true);
+    } else {
+      setShowGroomingTypeForm(false);
+    }
+  }, [appointmentForm.service, groomingType]);
+
   return (
     <>
       <div className="setappointment">
@@ -836,6 +878,36 @@ const SetAppointment = () => {
                         {emptyService !== "" ? emptyService : "Choose Service"}
                       </label>
 
+                      {appointmentForm?.service
+                        .toLowerCase()
+                        .includes("grooming") && (
+                        <div
+                          style={{
+                            display: "flex",
+                            item: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <p style={{ fontSize: "12px", marginBottom: "2px" }}>
+                            {appointmentForm?.service +
+                              " " +
+                              "(" +
+                              groomingType +
+                              ")"}
+                          </p>
+                          <button
+                            style={{
+                              cursor: "pointer",
+                              fontSize: "10px",
+                              marginBottom: "2px",
+                            }}
+                            onClick={() => setShowGroomingTypeForm(true)}
+                          >
+                            Show Type
+                          </button>
+                        </div>
+                      )}
+
                       <select
                         style={{
                           border: emptyService !== "" ? "2px solid red" : "",
@@ -1008,9 +1080,7 @@ const SetAppointment = () => {
                         htmlFor="weight"
                       >
                         {" "}
-                        {emptyweight !== ""
-                          ? emptyweight
-                          : "Pet weight in kg (type N/A if under 1kg)"}
+                        {emptyweight !== "" ? emptyweight : "Pet weight"}
                       </label>
                       <input
                         style={{
@@ -1020,8 +1090,9 @@ const SetAppointment = () => {
                         }}
                         value={appointmentForm.weight}
                         onChange={handleChange}
-                        type="number"
+                        type="text"
                         name="weight"
+                        placeholder="e.g. 2.5 kg (pet’s weight)"
                       />
                     </div>
                   </div>
@@ -1366,7 +1437,6 @@ const SetAppointment = () => {
           </span>
         </motion.div>
       )}
-
       {showAppointmentsentModal && !showLoader4 && (
         <div className="appointment-sent-backdrop">
           <div className="appointment-sent-modal">
@@ -1391,6 +1461,35 @@ const SetAppointment = () => {
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showGroomingTypeForm && (
+        <div className="grooming-overlay">
+          <div className="suggestions">
+            <h3>Type</h3>
+            {[
+              "Full Groom",
+              "Bath and Brush",
+              "Basic Trim",
+              "De-shedding Treatment",
+              "Puppy Groom",
+              "Nail Clipping",
+              "Ear Cleaning",
+              "Teeth Brushing",
+              "Flea and Tick Treatment",
+              "Medicated Bath",
+            ].map((item, index) => (
+              <button
+                key={index}
+                type="button"
+                className={`groom-btn ${groomingType === item ? "active" : ""}`}
+                onClick={() => handleGroomingTypeSelect(item)}
+              >
+                {item}
+              </button>
+            ))}
           </div>
         </div>
       )}

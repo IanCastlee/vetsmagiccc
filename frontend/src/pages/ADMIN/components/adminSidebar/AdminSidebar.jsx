@@ -17,6 +17,7 @@ import { IoMdLogOut } from "react-icons/io";
 import axiosIntance from "../../../../../axios";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import LogoutUI from "../../../../components/logoutUI/LogoutUI";
+import { MdOutlinePending } from "react-icons/md";
 
 const AdminSidebar = () => {
   const { setFormToShow, setCurrentUser } = useContext(AuthContext);
@@ -46,7 +47,7 @@ const AdminSidebar = () => {
     setTimeout(async () => {
       try {
         const res = await axiosIntance.post(
-          "client/auth/Logout.php",
+          "client/auth/logout.php",
           {},
           { withCredentials: true }
         );
@@ -141,7 +142,7 @@ const AdminSidebar = () => {
                 setActiveDropdown("");
               }}
             >
-              <MdOutlineMedicalServices className="link-icon" />
+              <MdOutlinePending className="link-icon" />
               Shop Reservation
             </Link>
           </li>

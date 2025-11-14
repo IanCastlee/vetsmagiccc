@@ -100,7 +100,7 @@ const Home = () => {
       setLoaderDot(true);
       try {
         const res = await axiosIntance.get(
-          "client/appointment/GetTrustedClient.php"
+          "client/appointment/getTrustedClient.php"
         );
         if (res.data.success) {
           setClientProfile(res.data.data);
