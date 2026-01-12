@@ -52,6 +52,7 @@ import Paymongo from "./Paymongo";
 import CancelledAppointment from "./pages/ADMIN/appointment/CancelledAppointment";
 import ShopReservation from "./pages/ADMIN/shop/ShopReservation";
 import ShopReservationHistory from "./pages/ADMIN/shop/ShopReservationHistory";
+import About from "./pages/about/About";
 // import TermsAndCondations from "./components/termsAndCondations/TermsAndCondations";
 
 //CLIENT
@@ -92,6 +93,7 @@ const Client = () => {
         <Route path="/test/" element={<Test />} />
         <Route path="/notfound/" element={<NotFound />} />
         <Route path="/paymongo" element={<Paymongo />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </>
   );

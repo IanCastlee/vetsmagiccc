@@ -154,7 +154,7 @@ if (
 
                 $mail->Body = "
                     <h2>Your appointment has been set. Please prepare for your chosen date.</h2>
-                    <p>Thank you for booking with VETCARE. Below are your appointment details:</p>
+                    <p>Thank you for booking with VETSMAGIC. Below are your appointment details:</p>
 
                     <h3>Appointment Information:</h3>
                     <p><strong>Service:</strong> $service</p>
@@ -175,7 +175,7 @@ if (
 
                     <br>
                     <p>If you have any questions, feel free to reply to this email.</p>
-                    <p><strong>VETCARE Team</strong></p>
+                    <p><strong>VETSMAGIC Team</strong></p>
                 ";
 
                 $mail->send();

@@ -21,6 +21,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     "/signin/",
     "/notfound",
     "/sms",
+    "/about",
     "/terms",
     // "/paymongo",
   ];

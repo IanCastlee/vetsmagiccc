@@ -1,0 +1,187 @@
+.about-container {
+  padding: 120px 20px;
+  max-width: 1100px;
+  margin: auto;
+
+  .about-title {
+    font-size: 2.4rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 25px;
+
+    span {
+      color: #007bff;
+      font-weight: 800;
+    }
+  }
+
+  .about-description {
+    text-align: center;
+    font-size: 1.15rem;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 60px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Team Sections */
+  .team-section {
+    margin-top: 50px;
+    text-align: center;
+
+    h2 {
+      color: #007bff;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .team-members {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 25px;
+    }
+
+    /* Default team card (staff) */
+    .team-card {
+      width: 260px;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+      &:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #333;
+      }
+
+      p {
+        margin-top: 5px;
+        color: #666;
+        font-size: 0.95rem;
+      }
+    }
+
+    /* 🔵 Veterinarian Card (Large Version) */
+    .vet-card {
+      width: 100%;
+      max-width: 700px;
+      padding: 35px;
+      text-align: left;
+      position: relative;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .vet-photo {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #007bff;
+        margin-bottom: 20px;
+      }
+
+      h3 {
+        font-size: 1.6rem;
+        text-align: center;
+        margin-bottom: 5px;
+      }
+
+      .role {
+        font-size: 1.1rem;
+        color: #007bff;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .about-text {
+        font-size: 1rem;
+        color: #444;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        text-align: left;
+        white-space: pre-line; // keeps formatting
+      }
+
+      .vet-info {
+        width: 100%;
+        padding: 15px 20px;
+        background: #f8faff;
+        border-radius: 10px;
+        border-left: 4px solid #007bff;
+
+        p {
+          margin: 6px 0;
+          font-size: 0.95rem;
+          color: #444;
+
+          strong {
+            color: #007bff;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .about-container {
+    .vet-card {
+      padding: 25px;
+
+      .vet-photo {
+        width: 130px;
+        height: 130px;
+      }
+
+      h3 {
+        font-size: 1.4rem;
+      }
+
+      .about-text {
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .about-container {
+    padding: 30px 15px;
+
+    .about-title {
+      font-size: 1.9rem;
+    }
+
+    .about-description {
+      font-size: 1rem;
+    }
+
+    .team-card {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .vet-card {
+      width: 100%;
+      max-width: 100%;
+      padding: 20px;
+    }
+  }
+}

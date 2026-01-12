@@ -508,7 +508,7 @@ const Home = () => {
               </h4>
             )}
           </div>
-          {/* 
+
           <div className="bot">
             <span className="title" style={{ marginBottom: "12px" }}>
               Most Selling Products
@@ -549,7 +549,7 @@ const Home = () => {
                 ).toLocaleString()}
               </p>
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </>

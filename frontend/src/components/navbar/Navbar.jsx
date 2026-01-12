@@ -123,6 +123,16 @@ const Navbar = ({ isHome }) => {
                   Appointment
                 </Link>
               )}
+              <Link
+                to="/about/"
+                onClick={() => setActiveLink("about")}
+                title="About Us"
+                className={`list-icon ${
+                  activeLink === "about" ? "active" : ""
+                } `}
+              >
+                About Us
+              </Link>
               {/* {currentUser !== null && (
                 <Link
                   title="Follow-up Appointment"

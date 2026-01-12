@@ -26,7 +26,7 @@ const Signup = () => {
   const [toasterMessage, setToasterMessage] = useState(null);
 
   const [showTerms, setShowTerms] = useState(false);
-  const [agree, setAgree] = useState(false);
+  const [agree, setAgree] = useState(true);
   const [showTermsNote, setShowTermsNote] = useState(false);
 
   const [emptyFirstname, setEmptyFirstname] = useState("");
@@ -492,22 +492,6 @@ const Signup = () => {
                   <span>Show password</span>
                 </div>
 
-                <div className="iagree">
-                  <p>
-                    By using this website, you agree to these Terms and
-                    Conditions. If you don’t agree, please don’t use the site.
-                  </p>
-
-                  <div className="check-pharse">
-                    <input
-                      type="checkbox"
-                      onChange={(e) => setAgree(e.target.checked)}
-                    />
-                    <p onClick={() => setShowTerms(true)}>
-                      I agree to the terms and conditions
-                    </p>
-                  </div>
-                </div>
                 <div className="button-wrapper">
                   <FaArrowCircleLeft
                     onClick={() => setformToShow("1")}

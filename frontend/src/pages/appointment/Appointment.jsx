@@ -381,6 +381,7 @@ const Appointment = ({ onSubmit, onClose }) => {
 
   const [showReceipt, setShowReceipt] = useState(false);
   const [appointmentFormReceipt, setAppointmentFormReceipt] = useState({
+    appointment_id: "",
     appointment_date: "",
     appointment_time: "",
     breed: "",
@@ -396,6 +397,7 @@ const Appointment = ({ onSubmit, onClose }) => {
     console.log("ITEM  : ", item);
     setShowReceipt(true);
     setAppointmentFormReceipt({
+      appointment_id: item.appointment_id,
       appointment_date: item.appointment_date,
       appointment_time: item.appointment_time,
       breed: item.breed,
@@ -466,14 +468,15 @@ const Appointment = ({ onSubmit, onClose }) => {
                   style={{ borderTop: "3px dotted gray", marginTop: "20px" }}
                 ></div>
               </section>
+
               <span
                 style={{
                   textAlign: "center",
                   marginTop: "20px",
-                  fontSize: "14px",
+                  fontSize: "10px",
                 }}
               >
-                Thank You!!!
+                Receipt no :{appointmentFormReceipt.appointment_id}
               </span>
             </div>
           </div>
@@ -545,6 +548,17 @@ const Appointment = ({ onSubmit, onClose }) => {
                                 <span className="date">
                                   <CiStethoscope className="iconn" />
                                   Dr. {item.drFullname}
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "12px",
+                                    color: "gray",
+                                    marginLeft: "15px",
+                                    marginBottom: "10px",
+                                  }}
+                                  className="date"
+                                >
+                                  Attending Staff: Mr. Jose Marie
                                 </span>
                                 <span className="date">
                                   <CiCalendarDate className="iconn" />

@@ -350,106 +350,98 @@ const SetAppointment = () => {
   }, []);
 
   //handle submit
+  // Prevent double execution
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Handle appointment submission (NO CHANGES NEEDED HERE)
   const handleSubmitAppointment = async () => {
     setShowLoader3(true);
 
-    if (!appointmentForm.appointment_date) {
-      console.warn("Appointment date is required.");
-      return false;
-    }
-
-    const formattedDate = new Date(
-      appointmentForm.appointment_date
-    ).toLocaleDateString("en-CA");
-
-    setformattedDate(formattedDate);
-
-    const fullAge =
-      appointmentForm.age && appointmentForm.ageUnit
-        ? `${appointmentForm.age} ${appointmentForm.ageUnit}${
-            appointmentForm.age > 1 ? "s" : ""
-          }`
-        : "";
-
-    let serviceValue = appointmentForm.service;
-
-    // Check if the service includes "grooming"
-    if (appointmentForm.service?.toLowerCase().includes("grooming")) {
-      if (groomingType) {
-        serviceValue += ` - ${groomingType}`;
-      }
-    }
-
-    const formData = new FormData();
-    formData.append("email", currentUser.email);
-    formData.append("client_id", currentUser?.user_id);
-    formData.append("dr_id", userId.userId);
-    formData.append("service", serviceValue);
-
-    formData.append("pet_name", appointmentForm.pet_name);
-    formData.append("pet_type", appointmentForm.pet_type);
-    formData.append("breed", appointmentForm.breed);
-    formData.append("age", fullAge);
-    formData.append("weight", appointmentForm.weight);
-    formData.append("gender", appointmentForm.gender);
-    formData.append(
-      "current_health_issue",
-      appointmentForm.current_health_issue
-    );
-    formData.append(
-      "history_health_issue",
-      appointmentForm.history_health_issue
-    );
-    formData.append("appointment_date", formattedDate);
-    formData.append("appointment_time", selectedTimeSlot);
-    formData.append("payment_method", "Online Payment");
-
-    formData.append("price", price);
-
-    formData.append("title_for_vet", "New Appointment Request");
-    formData.append(
-      "message_for_vet",
-      `You have received a new appointment request for a ${appointmentForm.pet_type}, requesting the ${appointmentForm.service} service.`
-    );
-
-    // client notification
-    formData.append("title_for_client", "Appointment reminder");
-    formData.append(
-      "desc_for_client",
-      `Your appointment for  ${appointmentForm.pet_name} (${appointmentForm.pet_type}) has been sent to your chosen vet. Please prepare for your selected date and time slot (${formattedDate} - ${selectedTimeSlot}).`
-    );
-
-    if (appointmentForm.image) {
-      formData.append("image", appointmentForm.image);
-    }
-
     try {
+      if (!appointmentForm.appointment_date) {
+        console.warn("Appointment date is required.");
+        return false;
+      }
+
+      const formattedDate = new Date(
+        appointmentForm.appointment_date
+      ).toLocaleDateString("en-CA");
+
+      const fullAge =
+        appointmentForm.age && appointmentForm.ageUnit
+          ? `${appointmentForm.age} ${appointmentForm.ageUnit}${
+              appointmentForm.age > 1 ? "s" : ""
+            }`
+          : "";
+
+      let serviceValue = appointmentForm.service;
+
+      if (appointmentForm.service?.toLowerCase().includes("grooming")) {
+        if (groomingType) {
+          serviceValue += ` - ${groomingType}`;
+        }
+      }
+
+      const formData = new FormData();
+      formData.append("email", currentUser.email);
+      formData.append("client_id", currentUser?.user_id);
+      formData.append("dr_id", userId.userId);
+      formData.append("service", serviceValue);
+      formData.append("pet_name", appointmentForm.pet_name);
+      formData.append("pet_type", appointmentForm.pet_type);
+      formData.append("breed", appointmentForm.breed);
+      formData.append("age", fullAge);
+      formData.append("weight", appointmentForm.weight);
+      formData.append("gender", appointmentForm.gender);
+      formData.append(
+        "current_health_issue",
+        appointmentForm.current_health_issue
+      );
+      formData.append(
+        "history_health_issue",
+        appointmentForm.history_health_issue
+      );
+      formData.append("appointment_date", formattedDate);
+      formData.append("appointment_time", selectedTimeSlot);
+      formData.append("payment_method", "Online Payment");
+      formData.append("price", price);
+
+      // notifications
+      formData.append("title_for_vet", "New Appointment Request");
+      formData.append(
+        "message_for_vet",
+        `You have received a new appointment request for a ${appointmentForm.pet_type}, requesting the ${appointmentForm.service} service.`
+      );
+
+      formData.append("title_for_client", "Appointment reminder");
+      formData.append(
+        "desc_for_client",
+        `Your appointment for ${appointmentForm.pet_name} (${appointmentForm.pet_type}) has been sent to your chosen vet. Please prepare for your selected date and time slot (${formattedDate} - ${selectedTimeSlot}).`
+      );
+
+      if (appointmentForm.image) {
+        formData.append("image", appointmentForm.image);
+      }
+
       const res = await axiosIntance.post(
         "client/appointment/setAppointment.php",
         formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
 
       if (res.data.success) {
-        console.log("RESPONSE : ", res.data.message);
-        setShowLoader3(true);
+        console.log("RESPONSE:", res.data.message);
         handleTimeDateSlotToRemove();
         return true;
       } else {
-        console.log("ERROR : ", res.data);
-        setShowLoader3(true);
-
+        console.log("ERROR:", res.data);
         return false;
       }
     } catch (error) {
-      console.log("Error : ", error);
-      setShowLoader3(true);
-
+      console.log("Error:", error);
       return false;
+    } finally {
+      setShowLoader3(false);
     }
   };
 
@@ -463,37 +455,33 @@ const SetAppointment = () => {
 
       const response = await axiosIntance.post("paymongo.php", data, {
         withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
 
-      if (response.data.checkout_url) {
-        // stop loader because everything is ready
-        setShowLoader3(false);
-
-        // Redirect the pre-opened tab
-        paymentTab.location.href = response.data.checkout_url;
-      } else {
+      if (!response.data.checkout_url) {
         setShowLoader3(false);
         paymentTab.document.write(
           "<h3>Error: Unable to fetch payment link.</h3>"
         );
-        paymentTab.close();
-        console.log("Payment error:", response.data);
+        return;
       }
+
+      setShowLoader3(false);
+      paymentTab.location.href = response.data.checkout_url;
     } catch (error) {
       setShowLoader3(false);
       paymentTab.document.write("<h3>Payment Error</h3>");
-      paymentTab.close();
-      console.error("Error:", error);
+      console.error("Payment Error:", error);
     }
   };
 
   const handleSendDataAndPayment = async (e) => {
     e.preventDefault();
 
-    // Open blank tab early to prevent popup blocking
+    // PREVENT DOUBLE CLICK
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const paymentTab = window.open("", "_blank");
     paymentTab.document.write("<h3>Preparing your payment...</h3>");
 
@@ -501,19 +489,22 @@ const SetAppointment = () => {
 
     const submitResult = await handleSubmitAppointment();
 
-    if (submitResult === true) {
-      // Hide summary form NOW since appointment was saved
-      setShowSummaryForm(false);
-
-      // Continue to payment
-      await handlePayment(paymentTab);
-    } else {
+    if (!submitResult) {
       paymentTab.document.write(
         "<h3>Appointment failed. Payment cancelled.</h3>"
       );
-      paymentTab.close();
-      console.log("Appointment submission failed. Payment cancelled.");
+      setTimeout(() => paymentTab.close(), 1500);
+      setIsSubmitting(false);
+      return;
     }
+
+    setShowSummaryForm(false);
+
+    // Continue to payment
+    await handlePayment(paymentTab);
+
+    // Unlock after done
+    setIsSubmitting(false);
   };
 
   //handleTimeDateSlotToRemove();
@@ -571,8 +562,8 @@ const SetAppointment = () => {
       gender: item.gender || "",
       current_health_issue: "",
       history_health_issue: item.services || "",
-      appointment_date: "",
-      appointment_time: "",
+      appointment_date: appointmentForm.appointment_date || "",
+      appointment_time: selectedTimeSlot || "",
       price: "",
       image: null,
     });
